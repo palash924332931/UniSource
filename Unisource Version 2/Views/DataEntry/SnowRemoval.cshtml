@@ -1,0 +1,1675 @@
+﻿@{
+    ViewBag.Title = "Blank";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#propertyImage').error(function () {
+                $("#propertyImage").attr("src", "../Content/imgs/noimages.png");
+            });
+            if ("@Session["uniadmin"]" != null) {
+                if ("@Session["uniadmin"].ToString()" != "Yes") {
+                    $(".admin-user-permission").css("display", "none");
+                }
+            }
+            if (checkIsNull(fnGetParameterByName("category"), "") == "edit") {
+                classSnowRemoval.loadInformationFromDB();
+            } else {
+                classSnowRemoval.loadPropertiesInformationList();
+            }
+            $("#liquidantiicinglog_timein").val("");
+            $("#liquidantiicinglog_timeout").val("");
+
+        });
+        //panel expand collups
+        $('.collapse').on('shown.bs.collapse', function () {
+            $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+        }).on('hidden.bs.collapse', function () {
+            $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+        });
+
+        var classSnowRemoval = {
+            propertyID: checkIsNull(fnGetParameterByName("propertyID"), ""),
+            batchID: checkIsNull(fnGetParameterByName("specificID"), ""),
+            category: checkIsNull(fnGetParameterByName("category"), ""),
+            fieldName: "siteconditions_accumulationinches|siteconditions_accumulationtype|siteconditions_drifting|siteconditions_ice|siteconditions_traffic|~|weatherconditions_currentprecipitation|weatherconditions_currentconditions|~|plowingandclearing_roadsandlotsplowingstatus|plowingandclearing_entranceexit|plowingandclearing_handicap|plowingandclearing_roadandroadways|plowingandclearing_roadandroadwaysfront|plowingandclearing_roadandroadwaysrear|plowingandclearing_roadandroadwaysside|plowingandclearing_roadandroadwaysother|plowingandclearing_parkingspotsareas|plowingandclearing_loadingdocks|plowingandclearing_drivethru|plowingandclearing_ramps|plowingandclearing_deliveryarea|plowingandclearing_comments|~|walksclearing_clearsidewalksstatus|walksclearing_entrancedoors|walksclearing_servicedoors|walksclearing_ramps|walksclearing_steps|walksclearing_gfbidblock|walksclearing_privatewalks|walksclearing_citywalks|walksclearing_comments|walksclearing_snowremoval|walksclearing_stackingonsite^walksclearing_stackingonsitehrs|walksclearing_removal^walksclearing_removalhrs|walksclearing_snowfield|~|deicingandantiicing_roadsandlotsdeicingstatus|deicingandantiicing_entranceexit|deicingandantiicing_handicap|deicingandantiicing_roadandroadways|deicingandantiicing_roadandroadwaysfront|deicingandantiicing_roadandroadwaysrear|deicingandantiicing_roadandroadwaysside|deicingandantiicing_roadandroadwaysother|deicingandantiicing_parkingspotsareas|deicingandantiicing_loadingdocks|deicingandantiicing_drivethru|deicingandantiicing_ramps|deicingandantiicing_deliveryarea|deicingandantiicing_comments|deicingandantiicing_materialsusedsalt^deicingandantiicing_saltbags^deicingandantiicing_saltlbs|deicingandantiicing_materialsusedcalcium^deicingandantiicing_calciumbags^deicingandantiicing_calciumlbs|~|walksdeicing_deicesidewalksstatus|walksdeicing_entrancedoors|walksdeicing_servicedoors|walksdeicing_ramps|walksdeicing_steps|walksdeicing_privatewalks|walksdeicing_citywalks|walksdeicing_comments|walksdeicing_materialsusedblend^walksdeicing_blendbags^walksdeicing_blendlbs|walksdeicing_materialsusedcalcium^walksdeicing_calciumbags^walksdeicing_calciumlbs|walksdeicing_noserviceperformedsitecheckonly|~|liquidantiicinglog_applicator|liquidantiicinglog_trucknumber|liquidantiicinglog_timein|liquidantiicinglog_timeout|liquidantiicinglog_goundtemperaturein^liquidantiicinglog_goundtemperatureout|liquidantiicinglog_airtemperaturein^liquidantiicinglog_airtemperatureinout|liquidantiicinglog_siteconditions|liquidantiicinglog_surfaceswet^liquidantiicinglog_surfacesdry|liquidantiicinglog_fallingsnowice^liquidantiicinglog_fallingsnowrain|liquidantiicinglog_materialtypeapplied|liquidantiicinglog_amountintankgallonsstart^liquidantiicinglog_amountintankgallonsstop|liquidantiicinglog_totalgallonsused|liquidantiicinglog_areastreated|liquidantiicinglog_tipsnozzlesused|liquidantiicinglog_groundspeed|liquidantiicinglog_trafficconditions|liquidantiicinglog_notes|~",
+            fieldType: "text|dropdown|radio|radio|dropdown|~|dropdown|dropdown|~|percentage-text|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|text|~|percentage-text|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|text|checkbox|checkbox^text|checkbox^text|text|~|percentage-text|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|text|checkbox^text^text|checkbox^text^text|~|percentage-text|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|text|checkbox^text^text|checkbox^text^text|radio|~|text|text|text|text|text^text|text^text|text|text^text|text^text|text|text^text|text|text|text|text|radio|text|~",
+
+            loadInformationFromDB: function () {
+                var fieldNameArry = this.fieldName.split('|');
+                var fieldTypeArry = this.fieldType.split('|');
+                var propertyID = this.propertyID;
+                var batchID = this.batchID
+                var category = this.category;
+                fnProgress(true);
+                if (category == "edit") {
+                    $(".editPropertise").css("display", "block");
+                    $(".newProperties").css("display", "none");
+                } else {
+
+                }
+
+                $.ajax({
+                    url: "@Url.Action("SnowRemopval", "DataEntry")",
+                    data: { PropertyID: propertyID, BatchID: batchID, ItemCategory: "Inspection", Action: "GetInfo" },
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        $.each(data, function (i, record) {
+                            var statusOfInspected = false;
+                            var approvalStatus = record["approvalstatus"];
+                            $("#vendorname").val(record["vendorname"]);
+                            $("#arrivalTime").val(record["timearrival"]);
+                            $("#departureTime").val(record["timedeparture"]);
+                            $("#dateperformed").val(record["dateperformed"]);
+                            $("#approvalList").val(record["approvalstatus"]);
+
+                            $("#propertyID").html(record.propertyid);
+                            $("#address").html(record.Address);
+                            $("#propertyName").html(record.propertyName);
+                            $("#propertyImage").attr("src", "../PropertyPictures/" + record.propertyid + ".jpg");
+                            //to show side menu
+                            classUniSource.fnSiteSubMenuShow(record.propertyid, record.propertyName, "liSnowRemoval");
+
+                            for (var i = 0; i < fieldNameArry.length; i++) {
+                                if ($.trim(fieldTypeArry[i]) == "text") {
+                                    $("#" + fieldNameArry[i]).val(record[fieldNameArry[i]]);
+                                } else if ($.trim(fieldTypeArry[i]) == "radio") {
+                                    if (fieldNameArry[i] == "walksdeicing_noserviceperformedsitecheckonly") {
+                                        if (record[fieldNameArry[i]] == '1') {
+                                            $("#" + fieldNameArry[i] + "-Change").prop('checked', true);
+                                        } else if (record[fieldNameArry[i]] == '0') {
+                                            $("#" + fieldNameArry[i] + "-NoChange").prop('checked', true);
+                                        }
+                                    } else {
+                                        if (record[fieldNameArry[i]] == '1') {
+                                            $("#" + fieldNameArry[i] + "-Yes").prop('checked', true);
+                                        } else if (record[fieldNameArry[i]] == '2') {
+                                            $("#" + fieldNameArry[i] + "-No").prop('checked', true);
+                                        }
+                                    }
+
+                                } else if ($.trim(fieldTypeArry[i]) == "dropdown") {
+                                    $("#" + fieldNameArry[i]).val(record[fieldNameArry[i]]);
+                                } else if ($.trim(fieldTypeArry[i]) == "checkbox") {
+                                    if (checkIsNull(record[fieldNameArry[i]], 0) == 1) {
+                                        $("#" + fieldNameArry[i]).prop('checked', true);
+                                    }
+                                    //$("#" + fieldNameArry[i]).attr('checked', true);
+                                } else if ($.trim(fieldTypeArry[i]) == "percentage-text") {
+                                    if (checkIsNull(record[fieldNameArry[i]], 0) == 100) {
+                                        //alert(checkIsNull(record[fieldNameArry[i]], 0));
+                                        $("#" + fieldNameArry[i] + "-100").attr('checked', true);
+                                    } else if (checkIsNull(record[fieldNameArry[i]], 0) != 100 && checkIsNull(record[fieldNameArry[i]], 0) != 0) {
+                                        // $("#" + fieldNameArry[i] + "-000").prop('checked', true);
+                                        $("#" + fieldNameArry[i] + "-000").attr('checked', true);
+                                        $("#" + fieldNameArry[i] + "-val").val(checkIsNull(record[fieldNameArry[i]], ""));
+
+                                    }
+                                    //$("#" + fieldNameArry[i]).val(record[fieldNameArry[i]]);
+                                }
+                                else if ($.trim(fieldTypeArry[i]).indexOf("^") != -1) {
+                                    var multipleColumnTypeArray = $.trim(fieldTypeArry[i]).split("^");
+                                    var multiplecolumnNameArray = $.trim(fieldNameArry[i]).split("^");
+                                    //var multipleTitleOfTableArray = $.trim(titleOfTableArray[i]).split("^");
+                                    var innerloopCondition = false;
+                                    if ($.trim(fieldTypeArry[i]).indexOf("checkbox") == -1) {
+                                        //titleVal = multipleTitleOfTableArray[0];
+                                        innerloopCondition = true;
+
+                                        for (var m = 0; m < multiplecolumnNameArray.length; m++) {
+                                            if (multipleColumnTypeArray[m] == "checkbox") {
+                                                var checkedStatus = checkIsNull(record[multiplecolumnNameArray[m]], "0");
+                                                //titleVal = multipleTitleOfTableArray[m];
+                                                if (checkedStatus == 1) {
+                                                    $("#" + multiplecolumnNameArray[m]).prop('checked', true);
+                                                }
+
+                                            } else if (multipleColumnTypeArray[m] == "text" && innerloopCondition == true) {
+                                                if (checkIsNull(record[multiplecolumnNameArray[m]], "") != "") {
+                                                    $("#" + multiplecolumnNameArray[m]).val(record[multiplecolumnNameArray[m]]);
+                                                }
+                                            }
+                                        }
+
+                                    } else {
+                                        for (var m = 0; m < multiplecolumnNameArray.length; m++) {
+                                            if (multipleColumnTypeArray[m] == "checkbox") {
+                                                var checkedStatus = checkIsNull(record[multiplecolumnNameArray[m]], "0");
+                                                //titleVal = multipleTitleOfTableArray[m];
+                                                if (checkedStatus == 1) {
+                                                    innerloopCondition = true;
+                                                    $("#" + multiplecolumnNameArray[m]).prop('checked', true);
+                                                }
+
+                                            } else if (multipleColumnTypeArray[m] == "text" && innerloopCondition == true) {
+                                                if (checkIsNull(record[multiplecolumnNameArray[m]], "") != "") {
+                                                    $("#" + multiplecolumnNameArray[m]).val(record[multiplecolumnNameArray[m]]);
+                                                    //colmnValue = colmnValue + $("#" + multiplecolumnNameArrayArray[m]).val() + " " + multipleTitleOfTableArray[m] + " ";
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+
+
+                            }
+                            //$("#approvalList").val(approvalStatus);
+                            fnProgress(false);
+                        });
+
+                    },
+                    error: function () {
+                        alertify.alert("Failed! Please try again.");
+                        fnProgress(false);
+                        return false;
+                    }
+                });
+
+            },
+            reviewSnowRemovalReport: function () {
+                var columnNameArray = this.fieldName.split('|');
+                var ColumnTypeArray = this.fieldType.split('|');
+                var category = this.category;
+                $("#saveModalInformation").attr("disabled", true);
+                $("#modalHeader").html("<b>Review & Submit Snow Report</b>");
+                alertify.success("Showing review");
+                var titleOfTable = "Accumulation (inches)|Accumulation (type)|Drifting|Ice|Traffic|SITE CONDITIONS|Current precipitation|Current conditions|WEATHER CONDITIONS|	Roads & Lots, Plowing|	Entrance / Exit|Handicap|Road & Roadways|Front|	Rear|Side|	Other|	Parking Spots / Areas|	Loading Docks|	Drive-Thru|	Ramps|	Delivery Area|	Comments|	PLOWING & CLEARING|	Roads & Lots, Plowing|	Entrance Doors|	Service Doors|	Ramps|	Steps|	GF BID Block^|	Private Walks|	City Walks|	Comments|	Snow Removal|	Stacking on Site^hrs.|	Removal^hrs.|	Snow Field|	WALKS (CLEARING) |	Roads & Lots, Plowing|	Entrance / Exit|	Handicap|	Road & Roadways|	Front|	Rear|	Side|	Other|	Parking Spots / Areas|	Loading Docks|	Drive-Thru|	Ramps|	Delivery Area|	Comments|	Materials Used - Salt^lbs.^tons|	Materials Used - Calcium^bags^lbs.|	DE-ICING & ANTI-ICING|	Roads & Lots, Plowing|	Entrance Doors|	Service Doors|	Ramps|	Steps|	Private Walks|	City Walks|	Comments|Materials Used - Blend^bags^lbs|Materials Used - Calcium^bags^lbs.|No Service Performed (Site Check Only)|WALKS (DE-ICING)|Applicator|Truck Number|Time In|Time Out|Gound Temperature^In^Out|Air Temperature^In^Out|Site Conditions|Surfaces^Wet^Dry|Falling Snow^Ice^Rain|Material Type Applied|Amount in Tank (Gallons)^Start^Stop|Total Gallons Used|Areas Treated|Tips/Nozzles Used|Ground Speed|Traffic Conditions|Notes|LIQUID ANTI-ICING LOG";
+                var titleOfTableArray = titleOfTable.split("|");
+                //var ColumnTypeArray = ColumnType.split("|");
+                var propertyID = checkIsNull($("#propertyID").html(), "");
+                if (propertyID == "") {
+                    $("#tbPropertiesList").focus();
+                    alertify.alert("Please select property.");
+                    fnProgress(false);
+                    return false;
+                }
+                var verndorName = checkIsNull($("#vendorname").val(), " ");
+                if (verndorName == " ") {
+                    $("#vendorname").focus();
+                    alertify.alert("Please enter the required filed value.");
+                    //$("#vendorname").focus();
+                    return false;
+                }
+                var datePerformed = checkIsNull($("#dateperformed").val(), " ");
+                if (datePerformed == " ") {
+                    $("#dateperformed").focus();
+                    alertify.alert("Please enter the required filed value.");
+                    return false;
+                }
+                $('#propertyReviewModal').modal('show');
+                var reviewTable = "";
+                var statusCheck = false;
+                var reviewTableObject = "";
+                for (var i = 0; i < columnNameArray.length; i++) {
+                    if (columnNameArray[i] == "~" && statusCheck == true) {
+                        reviewTableObject = "<table  class='table table-bordered'><tr style='background-color:#dff0d8;text-align:center'><td colspan='2'>" + titleOfTableArray[i] + "</td></tr>" + reviewTableObject + "</table><br/>";
+                        reviewTable = reviewTable + reviewTableObject;
+                        reviewTableObject = "";
+                        statusCheck = false;
+                    } else {
+                        var colmnValue = "";
+                        var titleVal = "";
+                        if ($.trim(ColumnTypeArray[i]) == "text") {
+                            colmnValue = $("#" + $.trim(columnNameArray[i])).val();
+                            titleVal = titleOfTableArray[i];
+                        } else if ($.trim(ColumnTypeArray[i]) == "dropdown") {
+                            colmnValue = $("#" + $.trim(columnNameArray[i])).val();
+                            titleVal = titleOfTableArray[i];
+                        } else if ($.trim(ColumnTypeArray[i]) == "checkbox") {
+                            colmnValue = $("#" + $.trim(columnNameArray[i])).prop("checked");
+                            titleVal = titleOfTableArray[i];
+                            if (colmnValue) {
+                                colmnValue = "<input type='checkbox' checked disabled>";
+                            } else {
+                                colmnValue = "";
+                            }
+                        } else if ($.trim(ColumnTypeArray[i]) == "radio") {
+                            titleVal = titleOfTableArray[i];
+                            $("." + $.trim(columnNameArray[i])).each(function () {
+                                if ($(this).prop("checked")) {
+                                    colmnValue = $(this).attr("id").split("-")[1];
+                                }
+                            });
+                        } else if ($.trim(ColumnTypeArray[i]) == "percentage-text") {
+                            titleVal = titleOfTableArray[i];
+                            $("." + $.trim(columnNameArray[i])).each(function () {
+                                if ($(this).prop("checked")) {
+                                    if ($(this).attr("id") == "" + $.trim(columnNameArray[i]) + "-100") {
+                                        colmnValue = " All areas per contract";
+                                    } else {
+                                        if (checkIsNull($("#" + $.trim(columnNameArray[i]) + "-val").val(), 0) != 0) {
+                                            colmnValue = +$("#" + $.trim(columnNameArray[i]) + "-val").val() + " %";
+                                        }
+
+                                    }
+
+                                }
+                            });
+                        } else if ($.trim(ColumnTypeArray[i]).indexOf("^") != -1) {
+                            var multipleColumnTypeArray = $.trim(ColumnTypeArray[i]).split("^");
+                            var multiplecolumnNameArrayArray = $.trim(columnNameArray[i]).split("^");
+                            var multipleTitleOfTableArray = $.trim(titleOfTableArray[i]).split("^");
+                            var innerloopCondition = false;
+                            if ($.trim(ColumnTypeArray[i]).indexOf("checkbox") == -1) {
+                                titleVal = multipleTitleOfTableArray[0];
+                                innerloopCondition = true;
+
+                                for (var m = 0; m < multiplecolumnNameArrayArray.length; m++) {
+                                    if (multipleColumnTypeArray[m] == "checkbox") {
+                                        var checkedStatus = $("#" + multiplecolumnNameArrayArray[m]).prop("checked");
+                                        titleVal = multipleTitleOfTableArray[m];
+                                        innerloopCondition = true;
+                                    } else if (multipleColumnTypeArray[m] == "text" && innerloopCondition == true) {
+                                        if (checkIsNull($("#" + multiplecolumnNameArrayArray[m]).val(), "") != "") {
+                                            colmnValue = colmnValue + " " + multipleTitleOfTableArray[m + 1] + " " + $("#" + multiplecolumnNameArrayArray[m]).val() + " ";
+                                        }
+                                    }
+                                }
+
+                            } else {
+
+                                for (var m = 0; m < multiplecolumnNameArrayArray.length; m++) {
+                                    if (multipleColumnTypeArray[m] == "checkbox") {
+                                        var checkedStatus = $("#" + multiplecolumnNameArrayArray[m]).prop("checked");
+                                        titleVal = multipleTitleOfTableArray[m];
+                                        if (checkedStatus == true) {
+                                            innerloopCondition = true;
+                                        }
+
+                                    } else if (multipleColumnTypeArray[m] == "text" && innerloopCondition == true) {
+                                        if (checkIsNull($("#" + multiplecolumnNameArrayArray[m]).val(), "") != "") {
+                                            colmnValue = colmnValue + $("#" + multiplecolumnNameArrayArray[m]).val() + " " + multipleTitleOfTableArray[m] + " ";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        //to check data already in dom
+                        if (checkIsNull(colmnValue, "") != "") {
+                            statusCheck = true;
+                            reviewTableObject = reviewTableObject + "<tr>\
+                                                                    <td style='width:35%'>" + titleVal + "</td><td>" + colmnValue + "</td></tr>";
+                        }
+                    }
+
+                }
+
+                var statusInforOfPI = "";
+                if (category != 'new') {
+                    statusInforOfPI = "<b>Update Status: </b> " + $("#approvalList :selected").text();
+                }
+                $("#modalBody").html(reviewTable + statusInforOfPI + '<br/><br/>' + '<input type="checkbox" id="confirmCheckbox" onclick="fnConfirmationCheckbox(this)"> I hereby certify that all information given is true to the best of my knowledge and belief.');
+
+            },
+            insertSnowInformation: function () {
+                var propertyID = this.propertyID;
+                var category = this.category;
+                var columnName = this.fieldName;
+                var ColumnType = this.fieldType;
+                var action = "New Item";
+                $("#saveModalInformation").attr("disabled", true);
+                $("#modalHeader").html("<b>Review & Submit Snow Report</b>");
+                alertify.success("Showing review");
+                var propertyID = checkIsNull($("#propertyID").html(), "");
+                if (propertyID == "") {
+                    alertify.alert("Please select property.");
+                    return false;
+                }
+
+                var columnNameArray = columnName.split("|");
+                var ColumnTypeArray = ColumnType.split("|");
+                var statusCheck = false;
+                var valuesArray = "";
+                var batchId = checkIsNull(fnGetParameterByName("specificID"), "");
+                var verndorName = checkIsNull($("#vendorname").val(), " ");
+                var arrivalTime = checkIsNull($("#arrivalTime").val(), " ");;
+                var departureTime = checkIsNull($("#departureTime").val(), " ");;
+                var approvalStatus = checkIsNull($("#approvalList").val(), " ");
+                var datePerformed = checkIsNull($("#dateperformed").val(), " ");
+                //alert("approvalStatus:" + approvalStatus + ":arrivalTime:" + arrivalTime + " departureTime" + departureTime);
+
+                if (category == "edit") {
+                    action = "Update";
+
+                } else {
+                    approvalStatus = 0;
+                    //datePerformed = fnConvertDate(datePerformed, "mm-dd-yyyy", "yyyy-mm-dd");
+                }
+
+                var sendMail = $("#servicemail").prop("checked") == true ? "true" : "false";
+                alertify.confirm("Do you want to save your information?", function (e) {
+                    if (e) {
+                        fnProgress(true);
+                        //alert(columnNameArray.length);
+                        for (var i = 0; i < columnNameArray.length; i++) {
+                            if (columnNameArray[i] == "~") {
+                                //statusCheck = false;
+                            } else {
+                                var colmnValue = "";
+                                if ($.trim(ColumnTypeArray[i]) == "text") {
+                                    colmnValue = $("#" + $.trim(columnNameArray[i])).val();
+                                    valuesArray = valuesArray + colmnValue + "|";
+                                } else if ($.trim(ColumnTypeArray[i]) == "dropdown") {
+                                    colmnValue = $("#" + $.trim(columnNameArray[i])).val();
+                                    valuesArray = valuesArray + colmnValue + "|";
+                                } else if ($.trim(ColumnTypeArray[i]) == "checkbox") {
+                                    colmnValue = $("#" + $.trim(columnNameArray[i])).prop("checked");
+                                    if (colmnValue == true) {
+                                        colmnValue = 1;
+                                    } else {
+                                        colmnValue = 0;
+                                    }
+                                    valuesArray = valuesArray + colmnValue + "|";
+                                } else if ($.trim(ColumnTypeArray[i]) == "radio") {
+                                    colmnValue = "";
+                                    $("." + $.trim(columnNameArray[i])).each(function () {
+                                        if ($(this).prop("checked")) {
+                                            //colmnValue = $(this).attr("id").split("-")[1];
+                                            colmnValue = $(this).val();
+                                            valuesArray = valuesArray + colmnValue + "|";
+                                        }
+                                    });
+                                    if (colmnValue == "") {
+                                        valuesArray = valuesArray + "|";
+                                    }
+                                } else if ($.trim(ColumnTypeArray[i]) == "percentage-text") {
+                                    var statusChecked = false;
+                                    $("." + $.trim(columnNameArray[i])).each(function () {
+                                        if ($(this).prop("checked")) {
+                                            statusChecked = true;
+                                            if ($(this).attr("id") == "" + $.trim(columnNameArray[i]) + "-100") {
+                                                //colmnValue = " All areas per contract";
+                                                valuesArray = valuesArray + "100|";
+                                            } else if ($(this).attr("id") == "" + $.trim(columnNameArray[i]) + "-000") {
+                                                colmnValue = +$("#" + $.trim(columnNameArray[i]) + "-val").val();
+                                                valuesArray = valuesArray + colmnValue + "|";
+                                            }
+
+                                        }
+                                    });
+
+                                    if (statusChecked == false) {
+                                        valuesArray = valuesArray + "|";
+                                    }
+                                } else if ($.trim(ColumnTypeArray[i]).indexOf("^") != -1) {
+                                    var multipleColumnTypeArray = $.trim(ColumnTypeArray[i]).split("^");
+                                    var multiplecolumnNameArrayArray = $.trim(columnNameArray[i]).split("^");
+                                    //var multipleTitleOfTableArray = $.trim(titleOfTableArray[i]).split("^");
+                                    var innerloopCondition = false;
+                                    if ($.trim(ColumnTypeArray[i]).indexOf("checkbox") == -1) {
+                                        //titleVal = titleVal + multipleTitleOfTableArray[0];
+
+                                        for (var m = 0; m < multiplecolumnNameArrayArray.length; m++) {
+                                            if (multipleColumnTypeArray[m] == "checkbox") {
+                                                var checkedStatus = $("#" + multiplecolumnNameArrayArray[m]).prop("checked");
+                                                if (checkedStatus == true) {
+                                                    checkedStatus = 1;
+                                                } else {
+                                                    checkedStatus = 0;
+                                                }
+                                                valuesArray = valuesArray + checkedStatus + "|";
+                                                titleVal = titleVal + multipleTitleOfTableArray[m];
+                                                innerloopCondition = true;
+                                            } else if (multipleColumnTypeArray[m] == "text") {
+                                                valuesArray = valuesArray + $("#" + multiplecolumnNameArrayArray[m]).val() + "|";
+                                            }
+                                        }
+
+                                    } else {
+                                        for (var m = 0; m < multiplecolumnNameArrayArray.length; m++) {
+                                            if (multipleColumnTypeArray[m] == "checkbox") {
+                                                var checkedStatus = $("#" + multiplecolumnNameArrayArray[m]).prop("checked");
+                                                if (checkedStatus == true) {
+                                                    checkedStatus = 1;
+                                                } else {
+                                                    checkedStatus = 0;
+                                                }
+                                                valuesArray = valuesArray + checkedStatus + "|";
+                                                innerloopCondition = true;
+                                            } else if (multipleColumnTypeArray[m] == "text") {
+                                                valuesArray = valuesArray + $("#" + multiplecolumnNameArrayArray[m]).val() + "|";
+                                                // colmnValue = colmnValue + $("#" + multiplecolumnNameArrayArray[m]).val() + " " + multipleTitleOfTableArray[m] + " ";
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                        }
+
+                        //to send request data to save or update
+
+                        $.ajax({
+                            type: "POST", //HTTP POST Method
+                            url: '@Url.Action("SnowRemopval", "DataEntry")',
+                            data: {
+                                Action: action,
+                                PropertyID: propertyID,
+                                ValesArray: valuesArray,
+                                BatchID: batchId,
+                                VendorName: verndorName,
+                                ArrivalTime: arrivalTime,
+                                DepartureTime: departureTime,
+                                DatePerformed: datePerformed,
+                                ApprovalStatus: approvalStatus
+                            },
+                            datatype: "json",
+                            success: function (data) {
+                                $("#propertyReviewModal").modal("hide");
+                                window.location = data;
+                                fnProgress(false);
+                            },
+                            error: function (result) {
+                                alertify.alert("fail");
+                                fnProgress(true);
+                            }
+
+                        });
+                    } else {
+                        alertify.error("You've clicked Cancel");
+                        fnProgress(false);
+                        return false;
+                    }
+                });
+
+            },
+            loadPropertiesInformationList: function () {
+                //get all items of property
+                var category = this.category;
+                var propertyID = this.propertyID;
+                try {
+                    var propertyDataSet = [];
+                    var serchList = [];
+                    $.ajax({
+                        url: "@Url.Action("GetAllPropertyList", "DataEntry")",
+                        data: "",
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            $.each(data, function (i, record) {
+                                serchList.push(record.displayname);
+                                propertyDataSet.push({ DisplayName: record.displayname, PropertyID: record.propertyid, Address: record.address1, TaxRate: record.tax_rate });
+                                //propertyDataSet.push({ DisplayName: record.displayname, PropertyID: record.propertyid, Address: record.address1 });
+                            });
+
+                            //to show property information after loading dom
+                            if (propertyID != "") {
+                                for (var i = 0; i < propertyDataSet.length; i++) {
+                                    //to show information check condition
+                                    if (propertyID == propertyDataSet[i]["PropertyID"]) {
+                                        $("#propertyID").html(propertyDataSet[i]["PropertyID"]);
+                                        $("#address").html(propertyDataSet[i]["Address"]);
+                                        $("#propertyName").html(propertyDataSet[i]["DisplayName"]);
+                                        $("#propertyImage").attr("src", "../PropertyPictures/" + propertyDataSet[i]["PropertyID"] + ".jpg");
+                                        //to build left site menu
+                                        classUniSource.fnSiteSubMenuShow(propertyID, propertyDataSet[i]["DisplayName"], "liSnowRemoval");
+                                        break;
+                                    }
+                                }
+                            } else {
+                                return false;
+                            }
+
+                            $('#propertyImage').error(function () {
+                                $("#propertyImage").attr("src", "../Content/imgs/noimages.png");
+                            });
+
+                            //to bind search properties
+                            $('#tbPropertiesList').autocomplete({
+                                source: serchList,
+                                minLength: 0,
+                                scroll: true,
+                                change: function () {
+                                    var proertyName = $(this).val();
+                                    for (var i = 0; i < propertyDataSet.length; i++) {
+                                        //to show information check condition
+                                        if (proertyName == propertyDataSet[i]["DisplayName"]) {
+                                            $("#propertyID").html(propertyDataSet[i]["PropertyID"]);
+                                            $("#address").html(propertyDataSet[i]["Address"]);
+                                            $("#propertyName").html(propertyDataSet[i]["DisplayName"]);
+                                            $("#esttax").val(propertyDataSet[i]["TaxRate"]);// for text rate
+                                            $("#propertyImage").attr("src", "../PropertyPictures/" + propertyDataSet[i]["PropertyID"] + ".jpg");
+                                            break;
+                                        }
+                                    }
+                                }
+                            }).focus(function () {
+                                $(this).autocomplete("search", "");
+                            });
+                            fnProgress(false);
+                        },
+                        error: function () {
+                            //alert("Failed! Please try again.");
+                        }
+                    });
+                    } catch (err) {
+                        alritify.alert(err.message);
+                    }
+
+            },
+            cancelBtnAction: function () {
+                var propertyID = this.propertyID;
+                var batchID = this.batchID;
+                if (propertyID == "") {
+                    alertify.alert("System Fail to Action");
+                    return false;
+                }
+                alertify.confirm("Do you want to Back to Snow Report?", function (e) {
+                    if (e) {
+                        alertify.success("Back to Inspection List");
+                        window.location = "/Details/ProductDetails?category=Snow Removal&property=" + propertyID + "";
+                    }
+                    else {
+                        alertify.error("You've clicked Cancel");
+                        return false;
+                    }
+                });
+
+
+            },
+            checkStatusForDelete: function (attr) {
+                var propertyID = this.propertyID;
+                var batchID = this.batchID;
+                if ($(attr).val() == "Delete") {
+                    if (propertyID == "" || batchID == "") {
+                        return false;
+                    }
+                    alertify.confirm("Do you want to delete your information?", function (e) {
+                        if (e) {
+                            fnProgress(true);
+                            alertify.error("Deleting your info.");
+                            $.ajax({
+                                type: "POST", //HTTP POST Method
+                                url: '@Url.Action("DeleteRecord", "DataEntry")',
+                                data: {
+                                    PropertyID: propertyID,
+                                    UniqueID: batchID,
+                                    Category: "Snow Removal"
+                                },
+                                datatype: "json",
+                                success: function (data) {
+                                    if (data == "Deleted") {
+                                        window.location = "/Details/ProductDetails?category=Snow Removal&property=" + propertyID;
+                                    } else {
+                                        alertify.alert("Fail to delete your information.");
+                                    }
+                                    fnProgress(false);
+                                },
+                                error: function (result) {
+                                    fnProgress(false);
+                                    alertify.alert("fail");
+                                }
+
+                            });
+                        } else {
+                            alertify.error("You've clicked Cancel");
+                            fnProgress(false);
+                            return false;
+                        }
+                    });
+                }
+
+            }
+        };
+
+        function fnConfirmationCheckbox(attrb) {
+            if ($("#confirmCheckbox").prop("checked")) {
+                $("#saveModalInformation").attr("disabled", false);
+            } else {
+                $("#saveModalInformation").attr("disabled", true);
+            }
+        }
+
+
+
+        //email send option visible
+        $("#approvalList").change("click", function () {
+            var approvalstatus = Number(checkIsNull($("#approvalList").val(), 0));
+            if (approvalstatus == 1) {
+                $("#mailcheck").css("display", "block");
+                $("#servicemail").prop("checked", true);
+            }
+            else {
+                $("#mailcheck").css("display", "none");
+                $("#servicemail").prop("checked", false);
+            }
+
+        });
+
+        //custom click dropdown
+        $("#propertySearch").click(function () {
+            $('#tbPropertiesList').focus();
+        });
+    </script>
+}
+
+<div class="col-lg-12" style="padding-left: 0px; padding-right: 0px;">
+    <h2 class="page-header" id="wpheader"></h2>
+</div>
+<div class="row">
+    <div class="col-md-9">
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <div class="input-group newProperties" id="adv-search" style="padding-bottom: 10px;">
+                    <input type="text" id="tbPropertiesList" class="form-control" placeholder="Select a Property" />
+                    <span class="btn input-group-addon" id="propertySearch"><span class="caret" aria-hidden="true"></span></span>
+                </div>
+                <table align="center">
+                    <tr>
+                        <td>
+                            <label for="usr">Snow Report For: &nbsp;</label><label id="propertyID"></label>
+                            -
+                            <label id="propertyName"></label>
+                        </td>
+                    </tr>
+                </table>
+                <div class="form-group">
+                    <label>Vendor:</label>
+                    <input class="form-control input-sm" id="vendorname" />
+                </div>
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="control-label custom-label">Date Performed</label>
+                            <div class='input-group date-picker' id='dateestimate'>
+                                <input type="text" id="dateperformed" data-format="yyyy-dd-dd" class="date-picker form-control input-sm">
+                                <label for="dateperformed" class="input-group-addon btn">
+                                    <span class="fa fa-calendar"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="control-label custom-label">Arrival</label>
+                            <div class="input-group timepicker">
+                                <input id="arrivalTime" type="text" class="form-control input-small">
+                                <label for="arrivalTime" class="input-group-addon btn">
+                                    <span class="glyphicon glyphicon-time"></span>
+                                </label>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="form-group">
+                            <label class="control-label custom-label">Departure</label>
+                            <div class="input-group timepicker">
+                                <input id="departureTime" type="text" class="form-control input-small">
+                                <label for="departureTime" class="input-group-addon btn">
+                                    <span class="glyphicon glyphicon-time"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-success">
+                <div class="panel-heading" role="tab" id="heading1" data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-controls="collapse1">
+                    <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                    <div class="text-center">
+                        <b>SITE CONDITIONS</b>
+                        <div id="inspected-SITECONDITIONS" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                    </div>
+                </div>
+                <div id="collapse1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading1">
+                    <div class="panel-body">
+                        <div id="SITECONDITIONS" class="inspected">
+                            <table class="table table-striped table-bordered table-hover snowreport">
+                                <tbody>
+                                    <tr>
+                                        <td class="col-md-4">Accumulation (inches)</td>
+                                        <td class="col-md-8">
+                                            <input type="text" class="form-control input-sm" style="width: 150px;" id="siteconditions_accumulationinches" maxlength="50">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Accumulation (type)</td>
+                                        <td class="col-md-8">
+                                            <select style="width: 150px;" class="form-control" id="siteconditions_accumulationtype">
+                                                <option value="">-select one-</option>
+                                                <option value="POWDERY">POWDERY</option>
+                                                <option value="MODERATE">MODERATE</option>
+                                                <option value="WET/HEAVY">WET/HEAVY</option>
+                                                <option value="SLUSH">SLUSH</option>
+                                                <option value="JUST PLOWED">JUST PLOWED</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Drifting</td>
+                                        <td class="col-md-8">
+                                            <div class="radio-inline">
+                                                <label>
+                                                    <input class="siteconditions_drifting" type="radio" name="siteconditions_drifting" id="siteconditions_drifting-Yes" value="1">Yes
+                                                </label>
+                                            </div>
+                                            <div class="radio-inline">
+                                                <label>
+                                                    <input class="siteconditions_drifting" type="radio" name="siteconditions_drifting" id="siteconditions_drifting-No" value="2">No
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Ice</td>
+                                        <td class="col-md-8">
+                                            <div class="radio-inline">
+                                                <label>
+                                                    <input class="siteconditions_ice" type="radio" name="siteconditions_ice" id="siteconditions_ice-Yes" value="1">Yes
+                                                </label>
+                                            </div>
+                                            <div class="radio-inline">
+                                                <label>
+                                                    <input class="siteconditions_ice" type="radio" name="siteconditions_ice" id="siteconditions_ice-No" value="2">No
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Traffic</td>
+                                        <td class="col-md-8">
+                                            <select style="width: 150px;" class="form-control" id="siteconditions_traffic">
+                                                <option value="">-select one-</option>
+                                                <option value="None">None</option>
+                                                <option value="OCCASIONAL">OCCASIONAL</option>
+                                                <option value="Light">Light</option>
+                                                <option value="Moderate">Moderate</option>
+                                                <option value="HEAVY">HEAVY</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading" role="tab" id="heading2" data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-controls="collapse2">
+                    <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                    <div class="text-center">
+                        <b>WEATHER CONDITIONS</b>
+                        <div id="inspected-WEATHERCONDITIONS" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                    </div>
+                </div>
+                <div id="collapse2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading2">
+                    <div class="panel-body">
+                        <div id="WEATHERCONDITIONS" class="inspected">
+                            <table class="table table-striped table-bordered table-hover snowreport">
+                                <tbody>
+                                    <tr>
+                                        <td class="col-md-4">Current precipitation</td>
+                                        <td class="col-md-8">
+                                            <select style="width: 150px;" class="form-control" id="weatherconditions_currentprecipitation">
+                                                <option value="">-select one-</option>
+                                                <option value="NONE">None</option>
+                                                <option value="RAIN">Rain</option>
+                                                <option value="FLURRIES">Flurries</option>
+                                                <option value="SLEET">Sleet</option>
+                                                <option value="MODERATE SNOW">Moderate Snow</option>
+                                                <option value="HEAVY SNOW">Heavy Snow</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Current conditions</td>
+                                        <td class="col-md-8">
+                                            <select style="width: 150px;" class="form-control" id="weatherconditions_currentconditions">
+                                                <option value="">-select one-</option>
+                                                <option value="CALM">Calm</option>
+                                                <option value="SUNNY">Sunny</option>
+                                                <option value="CLEAR">Clear</option>
+                                                <option value="BREEZY">Breezy</option>
+                                                <option value="WINDY">Windy</option>
+                                                <option value="CLOUDY">Cloudy</option>
+
+                                            </select>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading" role="tab" id="heading3" data-toggle="collapse" data-parent="#accordion" href="#collapse3" aria-controls="collapse3">
+                    <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                    <div class="text-center">
+                        <b>PLOWING & CLEARING</b>
+                        <div id="inspected-PLOWINGCLEARING" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                    </div>
+                </div>
+                <div id="collapse3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading3">
+                    <div class="panel-body">
+                        <div id="PLOWINGCLEARING" class="inspected">
+                            <table class="table table-striped table-bordered table-hover snowreport">
+                                <tbody>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="radio">
+                                                <label>
+                                                    <input class="plowingandclearing_roadsandlotsplowingstatus" type="radio" name="optradio" id="plowingandclearing_roadsandlotsplowingstatus-100">Roads & Lots, Plowing - All areas per contract
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input class="plowingandclearing_roadsandlotsplowingstatus" type="radio" name="optradio" id="plowingandclearing_roadsandlotsplowingstatus-000">Roads & Lots, Plowing - Partial %
+                                                </label>
+                                                <input class="percentage" type="text" style="width: 50px;" id="plowingandclearing_roadsandlotsplowingstatus-val" maxlength="2">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="plowingandclearing_entranceexit">
+                                                    Entrance / Exit
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="plowingandclearing_handicap">Handicap
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="plowingandclearing_roadandroadways">Road & Roadways
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" value="1" id="plowingandclearing_roadandroadwaysfront">Front
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" value="1" id="plowingandclearing_roadandroadwaysrear">Rear
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" value="1" id="plowingandclearing_roadandroadwaysside">Side
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" value="1" id="plowingandclearing_roadandroadwaysother">Other
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="plowingandclearing_parkingspotsareas">Parking Spots / Areas
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="plowingandclearing_loadingdocks">Loading Docks
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="plowingandclearing_drivethru">Drive-Thru
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="plowingandclearing_ramps">Ramps
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="plowingandclearing_deliveryarea">Delivery Area
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Comments</td>
+                                        <td class="col-md-8">
+                                            <textarea class="form-control input-sm" rows="1" id="plowingandclearing_comments"></textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading" role="tab" id="heading4" data-toggle="collapse" data-parent="#accordion" href="#collapse4" aria-controls="collapse4">
+                    <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                    <div class="text-center">
+                        <b>WALKS (CLEARING)</b>
+                        <div id="inspected-WALKS-CLEARING" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                    </div>
+                </div>
+                <div id="collapse4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading4">
+                    <div class="panel-body">
+                        <div id="WALKS-CLEARING" class="inspected">
+                            <table class="table table-striped table-bordered table-hover snowreport">
+                                <tbody>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" class="walksclearing_clearsidewalksstatus" name="walkradio" id="walksclearing_clearsidewalksstatus-100">Roads & Lots, Plowing - All areas per contract
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" class="walksclearing_clearsidewalksstatus" name="walkradio" id="walksclearing_clearsidewalksstatus-000">Roads & Lots, Plowing - Partial %
+                                                </label>
+                                                <input type="text" style="width: 50px;" id="walksclearing_clearsidewalksstatus-val" maxlength="2">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksclearing_entrancedoors">Entrance Doors
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksclearing_servicedoors">Service Doors
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksclearing_ramps">Ramps
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksclearing_steps">Steps
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksclearing_gfbidblock">GF BID Block
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksclearing_privatewalks">Private Walks
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksclearing_citywalks">City Walks
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Comments</td>
+                                        <td class="col-md-8">
+                                            <textarea class="form-control input-sm" rows="1" id="walksclearing_comments"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksclearing_snowremoval">Snow Report
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksclearing_stackingonsite">Stacking on Site
+                                                </label>
+                                                <input type="text" style="width: 50px;" id="walksclearing_stackingonsitehrs" maxlength="10">
+                                                hrs.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksclearing_removal">Removal
+                                                </label>
+                                                <input type="text" style="width: 50px;" id="walksclearing_removalhrs" maxlength="10">
+                                                hrs.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Snow Field</td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <input type="text" class="form-control input-sm" id="walksclearing_snowfield">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading" role="tab" id="heading5" data-toggle="collapse" data-parent="#accordion" href="#collapse5" aria-controls="collapse5">
+                    <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                    <div class="text-center">
+                        <b>DE-ICING & ANTI-ICING</b>
+                        <div id="inspected-DE-ICING-GANTI-ICING" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                    </div>
+                </div>
+                <div id="collapse5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading5">
+                    <div class="panel-body">
+                        <div id="DE-ICING-GANTI-ICING" class="inspected">
+                            <table class="table table-striped table-bordered table-hover snowreport">
+                                <tbody>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" class="deicingandantiicing_roadsandlotsdeicingstatus" name="deicingradio" id="deicingandantiicing_roadsandlotsdeicingstatus-100">Roads & Lots, Plowing - All areas per contract
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" class="deicingandantiicing_roadsandlotsdeicingstatus" name="deicingradio" id="deicingandantiicing_roadsandlotsdeicingstatus-000">Roads & Lots, Plowing - Partial %
+                                                </label>
+                                                <input type="text" style="width: 50px;" id="deicingandantiicing_roadsandlotsdeicingstatus-val" maxlength="2">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="deicingandantiicing_entranceexit">
+                                                    Entrance / Exit
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="deicingandantiicing_handicap">Handicap
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="deicingandantiicing_roadandroadways">Road & Roadways
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" value="1" id="deicingandantiicing_roadandroadwaysfront">Front
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" value="1" id="deicingandantiicing_roadandroadwaysrear">Rear
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" value="1" id="deicingandantiicing_roadandroadwaysside">Side
+                                                </label>
+                                                <label class="checkbox-inline">
+                                                    <input type="checkbox" value="1" id="deicingandantiicing_roadandroadwaysother">Other
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="deicingandantiicing_parkingspotsareas">Parking Spots / Areas
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="deicingandantiicing_loadingdocks">Loading Docks
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="deicingandantiicing_drivethru">Drive-Thru
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="deicingandantiicing_ramps">Ramps
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="deicingandantiicing_deliveryarea">Delivery Area
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Comments</td>
+                                        <td class="col-md-8">
+                                            <textarea class="form-control input-sm" rows="1" id="deicingandantiicing_comments"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Materials Used</td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="deicingandantiicing_materialsusedsalt">Salt
+                                                </label>
+                                                <input type="text" style="width: 50px;" id="deicingandantiicing_saltbags" maxlength="10">
+                                                lbs.
+                                                <input type="text" style="width: 50px;" id="deicingandantiicing_saltlbs" maxlength="10">
+                                                tons
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="deicingandantiicing_materialsusedcalcium">Calcium
+                                                </label>
+                                                <input type="text" style="width: 50px;" id="deicingandantiicing_calciumbags" maxlength="10">
+                                                bags
+                                                <input type="text" style="width: 50px;" id="deicingandantiicing_calciumlbs" maxlength="10">
+                                                lbs.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading" role="tab" id="heading6" data-toggle="collapse" data-parent="#accordion" href="#collapse6" aria-controls="collapse6">
+                    <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                    <div class="text-center">
+                        <b>WALKS (DE-ICING)</b>
+                        <div id="inspected-WALKS-DE-ICING" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                    </div>
+                </div>
+                <div id="collapse6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading6">
+                    <div class="panel-body">
+                        <div id="WALKS-DE-ICING" class="inspected">
+                            <table class="table table-striped table-bordered table-hover snowreport">
+                                <tbody>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" class="walksdeicing_deicesidewalksstatus" name="walk-deicing-radio" id="walksdeicing_deicesidewalksstatus-100">Roads & Lots, Plowing - All areas per contract
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" class="walksdeicing_deicesidewalksstatus" name="walk-deicing-radio" id="walksdeicing_deicesidewalksstatus-000">Roads & Lots, Plowing - Partial %
+                                                </label>
+                                                <input type="text" style="width: 50px;" id="walksdeicing_deicesidewalksstatus-val" maxlength="2">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksdeicing_entrancedoors">Entrance Doors
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksdeicing_servicedoors">Service Doors
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksdeicing_ramps">Ramps
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksdeicing_steps">Steps
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksdeicing_privatewalks">Private Walks
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksdeicing_citywalks">City Walks
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Comments</td>
+                                        <td class="col-md-8">
+                                            <textarea class="form-control input-sm" rows="1" id="walksdeicing_comments"></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Materials Used</td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksdeicing_materialsusedblend">Blend
+                                                </label>
+                                                <input type="text" style="width: 50px;" id="walksdeicing_blendbags" maxlength="10">
+                                                bags
+                                                <input type="text" style="width: 50px;" id="walksdeicing_blendlbs" maxlength="10">
+                                                lbs.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4"></td>
+                                        <td class="col-md-8">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" value="1" id="walksdeicing_materialsusedcalcium">Calcium
+                                                </label>
+                                                <input type="text" style="width: 50px;" id="walksdeicing_calciumbags" maxlength="10">
+                                                bags
+                                                <input type="text" style="width: 50px;" id="walksdeicing_calciumlbs" maxlength="10">
+                                                lbs.
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">No Service Performed (Site Check Only)</td>
+                                        <td class="col-md-8">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" class="walksdeicing_noserviceperformedsitecheckonly" name="walksdeicing_noserviceperformedsitecheckonly" id="walksdeicing_noserviceperformedsitecheckonly-Change" value="1">Change
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" class="walksdeicing_noserviceperformedsitecheckonly" name="walksdeicing_noserviceperformedsitecheckonly" id="walksdeicing_noserviceperformedsitecheckonly-NoChange" value="0">No Change
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-success">
+                <div class="panel-heading" role="tab" id="heading7" data-toggle="collapse" data-parent="#accordion" href="#collapse7" aria-controls="collapse7">
+                    <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                    <div class="text-center">
+                        <b>LIQUID ANTI-ICING LOG</b>
+                        <div id="inspected-IQUIDANTI-ICING-LOG" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                    </div>
+                </div>
+                <div id="collapse7" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading7">
+                    <div class="panel-body">
+                        <div id="IQUIDANTI-ICING-LOG" class="inspected">
+                            <table class="table table-striped table-bordered table-hover snowreport">
+                                <tbody>
+                                    <tr>
+                                        <td class="col-md-4">Applicator</td>
+                                        <td class="col-md-8">
+                                            <input type="text" id="liquidantiicinglog_applicator" class="form-control input-sm">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Truck Number</td>
+                                        <td class="col-md-8">
+                                            <input type="text" id="liquidantiicinglog_trucknumber" class="form-control input-sm">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Time In</td>
+                                        <td class="col-md-8">
+                                            <div class="input-group timepicker col-md-4">
+                                                <input id="liquidantiicinglog_timein" type="text" class="form-control input-small">
+                                                <label for="liquidantiicinglog_timein" class="input-group-addon btn">
+                                                    <span class="glyphicon glyphicon-time"></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Time Out</td>
+                                        <td class="col-md-8">
+                                            <div class="input-group timepicker col-md-4">
+                                                <input id="liquidantiicinglog_timeout" type="text" class="form-control input-small">
+                                                <label for="liquidantiicinglog_timeout" class="input-group-addon btn">
+                                                    <span class="glyphicon glyphicon-time"></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Gound Temperature</td>
+                                        <td class="col-md-8">In
+                                            <input type="text" style="width: 50px;" id="liquidantiicinglog_goundtemperaturein" maxlength="10">
+                                            Out
+                                            <input type="text" style="width: 50px;" id="liquidantiicinglog_goundtemperatureout" maxlength="10">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Air Temperature 	</td>
+                                        <td class="col-md-8">In
+                                            <input type="text" style="width: 50px;" id="liquidantiicinglog_airtemperaturein" maxlength="10">
+                                            Out
+                                            <input type="text" style="width: 50px;" id="liquidantiicinglog_airtemperatureinout" maxlength="10">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Site Conditions</td>
+                                        <td class="col-md-8">
+                                            <input type="text" id="liquidantiicinglog_siteconditions" class="form-control input-sm">
+                                        </td>
+                                    </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">Surfaces</td>
+                                        <td class="col-md-8">Wet
+                                            <input type="text" style="width: 50px;" id="liquidantiicinglog_surfaceswet" maxlength="10">
+                                            Dry
+                                            <input type="text" style="width: 50px;" id="liquidantiicinglog_surfacesdry" maxlength="10">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Falling Snow</td>
+                                        <td class="col-md-8">Ice
+                                            <input type="text" style="width: 50px;" id="liquidantiicinglog_fallingsnowice" maxlength="10">
+                                            Rain
+                                            <input type="text" style="width: 50px;" id="liquidantiicinglog_fallingsnowrain" maxlength="10">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Material Type Applied</td>
+                                        <td class="col-md-8">
+                                            <input type="text" id="liquidantiicinglog_materialtypeapplied" class="form-control input-sm">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Amount in Tank (Gallons) 	</td>
+                                        <td class="col-md-8">Srart
+                                            <input type="text" style="width: 50px;" id="liquidantiicinglog_amountintankgallonsstart" maxlength="10">
+                                            Stop
+                                            <input type="text" style="width: 50px;" id="liquidantiicinglog_amountintankgallonsstop" maxlength="10">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Total Gallons Used</td>
+                                        <td class="col-md-8">
+                                            <input type="text" id="liquidantiicinglog_totalgallonsused" class="form-control input-sm">
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">Areas Treated</td>
+                                        <td class="col-md-8">
+                                            <textarea class="form-control input-sm" rows="1" id="liquidantiicinglog_areastreated"></textarea>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class="col-md-4">Tips/Nozzles Used</td>
+                                        <td class="col-md-8">
+                                            <input type="text" id="liquidantiicinglog_tipsnozzlesused" class="form-control input-sm">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Ground Speed</td>
+                                        <td class="col-md-8">
+                                            <input type="text" id="liquidantiicinglog_groundspeed" class="form-control input-sm">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Traffic Conditions</td>
+                                        <td class="col-md-8">
+                                            <div class="radio-inline">
+                                                <label>
+                                                    <input type="radio" class="liquidantiicinglog_trafficconditions" name="traficConditon" id="liquidantiicinglog_trafficconditions-Heavy" value="1">Heavy
+                                                </label>
+                                            </div>
+                                            <div class="radio-inline">
+                                                <label>
+                                                    <input type="radio" class="liquidantiicinglog_trafficconditions" name="traficConditon" id="liquidantiicinglog_trafficconditions-Moderate" value="2">Moderate
+                                                </label>
+                                            </div>
+                                            <div class="radio-inline">
+                                                <label>
+                                                    <input type="radio" class="liquidantiicinglog_trafficconditions" name="traficConditon" id="liquidantiicinglog_trafficconditions-Low" value="3">Low
+                                                </label>
+                                            </div>
+                                            <div class="radio-inline">
+                                                <label>
+                                                    <input type="radio" class="liquidantiicinglog_trafficconditions" name="traficConditon" id="liquidantiicinglog_trafficconditions-None" value="4">None
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-md-4">Notes</td>
+                                        <td class="col-md-8">
+                                            <textarea class="form-control input-sm" rows="1" id="liquidantiicinglog_notes"></textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row editPropertise" style="display: none">
+            <div class="col-md-4 admin-user-permission">
+                <div class="input-group">
+                    <span class="input-group-addon">Update Status:</span>
+                    <select class="form-control" id="approvalList" onchange="classSnowRemoval.checkStatusForDelete(this)">
+                        <option value="0">Pending</option>
+                        <option value="1">Approved</option>
+                        <option value="2">Rejected</option>
+                        <option value="Delete">Delete</option>
+                    </select>
+
+                </div>
+            </div>
+            <div class="col-md-8">
+                @*id="mailcheck" style="display:none;">
+                                    <input type="checkbox" id="servicemail">
+                                    Send E-mail *@    
+            </div>
+
+        </div>
+        <div class='wrapper text-center'>
+            <button id="reset" class="btn btn-warning" type="button" name="" onclick="classSnowRemoval.cancelBtnAction()">Cancel</button>
+            @*<input type="button" class="btn btn-success" value="Submit" id="saveInspectionInformation" />*@
+            <input type="button" class="btn btn-success" value="Review" id="" onclick="classSnowRemoval.reviewSnowRemovalReport()" />
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div id="createWorkOrder"></div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="tbl">
+                    <img id="propertyImage" src="" class="propety-image">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="propertyReviewModal">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" style="text-align: center" id="modalHeader"></h4>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-body" id="modalBody2"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Back</button>
+                <button type="button" id="saveModalInformation" onclick="classSnowRemoval.insertSnowInformation()" class="btn btn-default" disabled>Submit</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+

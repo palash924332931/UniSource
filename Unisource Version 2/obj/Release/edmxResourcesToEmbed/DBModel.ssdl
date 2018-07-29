@@ -1,0 +1,663 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Unisource_Model.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="Unisource_ModelStoreContainer">
+    <EntitySet Name="users" EntityType="Unisource_Model.Store.users" store:Type="Tables" Schema="dbo" />
+  </EntityContainer>
+  <EntityType Name="users">
+    <Key>
+      <PropertyRef Name="username" />
+    </Key>
+    <Property Name="username" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="password" Type="nvarchar" MaxLength="50" />
+    <Property Name="allowsubmitform1" Type="tinyint" />
+    <Property Name="allowsubmitform2" Type="tinyint" />
+    <Property Name="allowdailyreportuploads" Type="tinyint" />
+    <Property Name="allowreportstatuschange" Type="tinyint" />
+    <Property Name="alloweditlogins" Type="tinyint" />
+    <Property Name="alloweditprops" Type="tinyint" />
+    <Property Name="allowsoftwaredownload" Type="tinyint" />
+    <Property Name="viewreports1" Type="tinyint" />
+    <Property Name="viewreports2" Type="tinyint" />
+    <Property Name="viewreports3" Type="tinyint" />
+    <Property Name="fullname" Type="nvarchar" MaxLength="50" />
+    <Property Name="emailaddress" Type="nvarchar" MaxLength="50" />
+    <Property Name="phonenumber" Type="nvarchar" MaxLength="50" />
+    <Property Name="allowenterworkorder" Type="tinyint" />
+    <Property Name="alloweditworkorder" Type="tinyint" />
+    <Property Name="allowshowcost" Type="tinyint" />
+    <Property Name="allowviewvendors" Type="tinyint" />
+    <Property Name="allowviewpropdatasheets" Type="tinyint" />
+    <Property Name="clientcode" Type="nvarchar" MaxLength="50" />
+    <Property Name="alloweditbrixmorwo" Type="tinyint" />
+    <Property Name="allowedapprovebrixinvoices" Type="tinyint" />
+    <Property Name="allowedapprovebrixinvoices_ondemand" Type="tinyint" />
+    <Property Name="allowedapprovebrixinvoices_viewonly" Type="tinyint" />
+    <Property Name="forcestartpage" Type="nvarchar" MaxLength="50" />
+    <Property Name="onlyallowiosaudits" Type="int" />
+    <Property Name="uniadmin" Type="tinyint" />
+    <Property Name="univendor" Type="tinyint" />
+  </EntityType>
+  <Function Name="DeleteRecord" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PropertyID" Type="nvarchar" Mode="In" />
+    <Parameter Name="UniqueID" Type="nvarchar" Mode="In" />
+    <Parameter Name="Category" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="pIdailyReports" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="wPID" Type="nvarchar" Mode="In" />
+    <Parameter Name="propertyid" Type="nvarchar" Mode="In" />
+    <Parameter Name="dateperformed" Type="nvarchar" Mode="In" />
+    <Parameter Name="TimePerform" Type="nvarchar" Mode="In" />
+    <Parameter Name="dateentered" Type="nvarchar" Mode="In" />
+    <Parameter Name="timeentered" Type="nvarchar" Mode="In" />
+    <Parameter Name="guid" Type="nvarchar" Mode="In" />
+    <Parameter Name="ApprovalStatus" Type="nvarchar" Mode="In" />
+    <Parameter Name="ReportHeader" Type="nvarchar" Mode="In" />
+    <Parameter Name="ReportText" Type="nvarchar" Mode="In" />
+    <Parameter Name="hazard" Type="nvarchar" Mode="In" />
+    <Parameter Name="maintenance" Type="nvarchar" Mode="In" />
+    <Parameter Name="pic1" Type="nvarchar" Mode="In" />
+    <Parameter Name="pic2" Type="nvarchar" Mode="In" />
+    <Parameter Name="pic3" Type="nvarchar" Mode="In" />
+    <Parameter Name="pic4" Type="nvarchar" Mode="In" />
+    <Parameter Name="pic5" Type="nvarchar" Mode="In" />
+    <Parameter Name="costestimate" Type="nvarchar" Mode="In" />
+    <Parameter Name="costtotal" Type="nvarchar" Mode="In" />
+    <Parameter Name="taxrate" Type="nvarchar" Mode="In" />
+    <Parameter Name="userID" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="PIPropertyInspection" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="action" Type="nvarchar" Mode="In" />
+    <Parameter Name="propertyid" Type="nvarchar" Mode="In" />
+    <Parameter Name="dateentered" Type="nvarchar" Mode="In" />
+    <Parameter Name="dateperformed" Type="nvarchar" Mode="In" />
+    <Parameter Name="timeentered" Type="nvarchar" Mode="In" />
+    <Parameter Name="username" Type="nvarchar" Mode="In" />
+    <Parameter Name="approvalstatus" Type="nvarchar" Mode="In" />
+    <Parameter Name="batchnumber" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlandscaping_mowingofgrass" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlandscaping_edgingaroundcurbs" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlandscaping_removalofweeds" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlandscaping_trimmingofshrubs" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlandscaping_wateringifnecessary" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlandscaping_conditionofirrigationsystem" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlandscaping_conditionofplants" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlandscaping_islandtrashremoval" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlandscaping_cleanlinessoffencelines" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlandscaping_conditionofretentionpond" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlandscaping_conditionofvacantoutlots" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlandscaping_conditionofislandcurbing" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlandscaping_sightlinevisibility" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlighting_parkinglotlights" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlighting_wallpacks" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlighting_canopylights" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlighting_sidewalklights" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlighting_pylonsigns" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlighting_timeclocksettings" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlighting_stockofbulbs" Type="nvarchar" Mode="In" />
+    <Parameter Name="exteriorlighting_conditionoflightpoles" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_exteriormasonry" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_tuckpointing" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_guttersanddownspouts" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_conditionofbollards" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_sidewalks" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_graffiti" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_conditionofpayphones" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_conditionofbikeracks" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_conditionofcanopies" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_cleanlinessoffascia" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_cleanlinessofskylights" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_conditionofsupportcolumns" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_conditionofsidewalkbenches" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_conditionofreardoorslabeled" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildingexterior_conditionoftrashcans" Type="nvarchar" Mode="In" />
+    <Parameter Name="nonpublicareas_servicecorridorlighting" Type="nvarchar" Mode="In" />
+    <Parameter Name="nonpublicareas_servicecorridorfloorswalls" Type="nvarchar" Mode="In" />
+    <Parameter Name="nonpublicareas_conditionoffireextinguishers" Type="nvarchar" Mode="In" />
+    <Parameter Name="nonpublicareas_trashroomsdumpsterareas" Type="nvarchar" Mode="In" />
+    <Parameter Name="nonpublicareas_conditionofdockareas" Type="nvarchar" Mode="In" />
+    <Parameter Name="nonpublicareas_conditionofmanagementoffice" Type="nvarchar" Mode="In" />
+    <Parameter Name="nonpublicareas_cleanlinessofoffices" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_cleanliness" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_asphaltrepairs" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_illegaldumping" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_parkingbumpercondition" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_shoppingcartscollected" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_cartcorralcondition" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_striping" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_crackfilling" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_handicappedareas" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_curbs" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_sewercaps" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_conditionoftrafficsigns" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_cleanlinessofdumpsterareas" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_removalofabandonedcars" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglots_vegitationgrowthincracks" Type="nvarchar" Mode="In" />
+    <Parameter Name="vacantstores_presentationofspaceforreleasingactivity" Type="nvarchar" Mode="In" />
+    <Parameter Name="vacantstores_makesurelockswork" Type="nvarchar" Mode="In" />
+    <Parameter Name="vacantstores_checkforroofleaks" Type="nvarchar" Mode="In" />
+    <Parameter Name="vacantstores_installationofleasingsigns" Type="nvarchar" Mode="In" />
+    <Parameter Name="vacantstores_cleanlinessofstorefront" Type="nvarchar" Mode="In" />
+    <Parameter Name="vacantstores_cleanlinessofinterior" Type="nvarchar" Mode="In" />
+    <Parameter Name="vacantstores_cleaningofwindows" Type="nvarchar" Mode="In" />
+    <Parameter Name="vacantstores_otherdamagesobserved" Type="nvarchar" Mode="In" />
+    <Parameter Name="maintenanceshop_conditionoffloor" Type="nvarchar" Mode="In" />
+    <Parameter Name="maintenanceshop_cleanlinessappearanceofshop" Type="nvarchar" Mode="In" />
+    <Parameter Name="maintenanceshop_storageofflammables" Type="nvarchar" Mode="In" />
+    <Parameter Name="maintenanceshop_organizationoftoolssupplies" Type="nvarchar" Mode="In" />
+    <Parameter Name="maintenanceshop_cleanlinessoftruckandequipment" Type="nvarchar" Mode="In" />
+    <Parameter Name="maintenanceshop_labelingofkeysinkeybox" Type="nvarchar" Mode="In" />
+    <Parameter Name="maintenanceshop_conditionofhvacequipment" Type="nvarchar" Mode="In" />
+    <Parameter Name="maintenanceshop_allvacantandllkeysinlockbox" Type="nvarchar" Mode="In" />
+    <Parameter Name="mechanicelectricalrooms_riserroomcleanliness" Type="nvarchar" Mode="In" />
+    <Parameter Name="mechanicelectricalrooms_riserroompressureschecked" Type="nvarchar" Mode="In" />
+    <Parameter Name="mechanicelectricalrooms_valveschainedinopenposition" Type="nvarchar" Mode="In" />
+    <Parameter Name="mechanicelectricalrooms_mapscurrent" Type="nvarchar" Mode="In" />
+    <Parameter Name="mechanicelectricalrooms_doorslabeled" Type="nvarchar" Mode="In" />
+    <Parameter Name="mechanicelectricalrooms_hotworkpermitsign" Type="nvarchar" Mode="In" />
+    <Parameter Name="mechanicelectricalrooms_shutdownproceduresign" Type="nvarchar" Mode="In" />
+    <Parameter Name="mechanicelectricalrooms_checkforcurrentinspectiontags" Type="nvarchar" Mode="In" />
+    <Parameter Name="mechanicelectricalrooms_signinspectionlog" Type="nvarchar" Mode="In" />
+    <Parameter Name="tenantdetails_storefrontclean" Type="nvarchar" Mode="In" />
+    <Parameter Name="tenantdetails_storefrontsignscleanandlit" Type="nvarchar" Mode="In" />
+    <Parameter Name="tenantdetails_windowscleanedanddisplayed" Type="nvarchar" Mode="In" />
+    <Parameter Name="tenantdetails_windowcracksfailures" Type="nvarchar" Mode="In" />
+    <Parameter Name="interiorlandscaping_conditionofplantmaterial" Type="nvarchar" Mode="In" />
+    <Parameter Name="interiorlandscaping_conditionofplanterboxes" Type="nvarchar" Mode="In" />
+    <Parameter Name="interiorlandscaping_conditionoffloorgrates" Type="nvarchar" Mode="In" />
+    <Parameter Name="interiorlighting_skylights" Type="nvarchar" Mode="In" />
+    <Parameter Name="interiorlighting_diffusers" Type="nvarchar" Mode="In" />
+    <Parameter Name="interiorlighting_fluorescents" Type="nvarchar" Mode="In" />
+    <Parameter Name="interiorlighting_incandescent" Type="nvarchar" Mode="In" />
+    <Parameter Name="interiorlighting_spotlights" Type="nvarchar" Mode="In" />
+    <Parameter Name="interiorlighting_exitemergencylights" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildinginterior_mallentrances" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildinginterior_storefronts" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildinginterior_flooring" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildinginterior_generalcleanliness" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildinginterior_drinkingfountains" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildinginterior_trashreceptacles" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildinginterior_railings" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildinginterior_cleanlinessofrestrooms" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildinginterior_directoriescleanandup" Type="nvarchar" Mode="In" />
+    <Parameter Name="buildinginterior_basementswatertrashunauthentry" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="pIWorkOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="wonumber" Type="nvarchar" Mode="In" />
+    <Parameter Name="propertyid" Type="nvarchar" Mode="In" />
+    <Parameter Name="dateperformed" Type="nvarchar" Mode="In" />
+    <Parameter Name="timeperformed" Type="nvarchar" Mode="In" />
+    <Parameter Name="dateentered" Type="nvarchar" Mode="In" />
+    <Parameter Name="timeentered" Type="nvarchar" Mode="In" />
+    <Parameter Name="approvalstatus" Type="nvarchar" Mode="In" />
+    <Parameter Name="worktobedone" Type="nvarchar" Mode="In" />
+    <Parameter Name="request_name" Type="nvarchar" Mode="In" />
+    <Parameter Name="request_email" Type="nvarchar" Mode="In" />
+    <Parameter Name="request_phone" Type="nvarchar" Mode="In" />
+    <Parameter Name="workcompleted" Type="nvarchar" Mode="In" />
+    <Parameter Name="business_unit" Type="nvarchar" Mode="In" />
+    <Parameter Name="company_unit" Type="nvarchar" Mode="In" />
+    <Parameter Name="DNEcost" Type="nvarchar" Mode="In" />
+    <Parameter Name="UNIcost" Type="nvarchar" Mode="In" />
+    <Parameter Name="UNIcontractor_cost" Type="nvarchar" Mode="In" />
+    <Parameter Name="batchnumber" Type="nvarchar" Mode="In" />
+    <Parameter Name="username" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="pIWorkOrderForRaymour" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="wonumber" Type="nvarchar" Mode="In" />
+    <Parameter Name="propertyid" Type="nvarchar" Mode="In" />
+    <Parameter Name="dateperformed" Type="nvarchar" Mode="In" />
+    <Parameter Name="timeperformed" Type="nvarchar" Mode="In" />
+    <Parameter Name="dateentered" Type="nvarchar" Mode="In" />
+    <Parameter Name="timeentered" Type="nvarchar" Mode="In" />
+    <Parameter Name="approvalstatus" Type="nvarchar" Mode="In" />
+    <Parameter Name="worktobedone" Type="nvarchar" Mode="In" />
+    <Parameter Name="request_name" Type="nvarchar" Mode="In" />
+    <Parameter Name="request_email" Type="nvarchar" Mode="In" />
+    <Parameter Name="request_phone" Type="nvarchar" Mode="In" />
+    <Parameter Name="workcompleted" Type="nvarchar" Mode="In" />
+    <Parameter Name="business_unit" Type="nvarchar" Mode="In" />
+    <Parameter Name="company_unit" Type="nvarchar" Mode="In" />
+    <Parameter Name="DNEcost" Type="nvarchar" Mode="In" />
+    <Parameter Name="UNIcost" Type="nvarchar" Mode="In" />
+    <Parameter Name="UNIcontractor_cost" Type="nvarchar" Mode="In" />
+    <Parameter Name="batchnumber" Type="nvarchar" Mode="In" />
+    <Parameter Name="POID" Type="nvarchar" Mode="In" />
+    <Parameter Name="username" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="pIWorkOrderFromWorkProposal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="wonumber" Type="nvarchar" Mode="In" />
+    <Parameter Name="propertyid" Type="nvarchar" Mode="In" />
+    <Parameter Name="dateperformed" Type="nvarchar" Mode="In" />
+    <Parameter Name="timeperformed" Type="nvarchar" Mode="In" />
+    <Parameter Name="dateentered" Type="nvarchar" Mode="In" />
+    <Parameter Name="timeentered" Type="nvarchar" Mode="In" />
+    <Parameter Name="approvalstatus" Type="nvarchar" Mode="In" />
+    <Parameter Name="worktobedone" Type="nvarchar" Mode="In" />
+    <Parameter Name="request_name" Type="nvarchar" Mode="In" />
+    <Parameter Name="request_email" Type="nvarchar" Mode="In" />
+    <Parameter Name="request_phone" Type="nvarchar" Mode="In" />
+    <Parameter Name="workcompleted" Type="nvarchar" Mode="In" />
+    <Parameter Name="business_unit" Type="nvarchar" Mode="In" />
+    <Parameter Name="company_unit" Type="nvarchar" Mode="In" />
+    <Parameter Name="DNEcost" Type="nvarchar" Mode="In" />
+    <Parameter Name="UNIcost" Type="nvarchar" Mode="In" />
+    <Parameter Name="UNIcontractor_cost" Type="nvarchar" Mode="In" />
+    <Parameter Name="batchnumber_workrequest" Type="nvarchar" Mode="In" />
+    <Parameter Name="batchnumber" Type="nvarchar" Mode="In" />
+    <Parameter Name="POID" Type="nvarchar" Mode="In" />
+    <Parameter Name="username" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="PIXREF" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="BatchID" Type="nvarchar" Mode="In" />
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+    <Parameter Name="PropertyID" Type="nvarchar" Mode="In" />
+    <Parameter Name="RedirectPage" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prAllPropertiesUserWise" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prAllVendorList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="prCategoryWiseMasterInfoForUnisource" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PropertyCategory" Type="nvarchar" Mode="In" />
+    <Parameter Name="PropertyID" Type="nvarchar" Mode="In" />
+    <Parameter Name="FromDate" Type="nvarchar" Mode="In" />
+    <Parameter Name="ToDate" Type="nvarchar" Mode="In" />
+    <Parameter Name="ApplicationStatus" Type="nvarchar" Mode="In" />
+    <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prCategoryWiseMasterInfoV2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PropertyCategory" Type="nvarchar" Mode="In" />
+    <Parameter Name="PropertyID" Type="nvarchar" Mode="In" />
+    <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prGetAllServices" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PropertyID" Type="nvarchar" Mode="In" />
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prGetDailyReportInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="BatchNumber" Type="nvarchar" Mode="In" />
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prGetPropertyInspection" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PropertyID" Type="nvarchar" Mode="In" />
+    <Parameter Name="BatchID" Type="nvarchar" Mode="In" />
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prGetRecordID" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="CategoryName" Type="nvarchar" Mode="In" />
+    <Parameter Name="StartChar" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prGetSnowRemovalInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="propertyid" Type="nvarchar" Mode="In" />
+    <Parameter Name="batchnumber" Type="nvarchar" Mode="In" />
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prGetUserInformation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+    <Parameter Name="Type" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prGetWorkOrderInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="BatchNumber" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prIndividualPropertyInfoV2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PropertyID" Type="nvarchar" Mode="In" />
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prPropertyDataPropertyWise" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="PropertyID" Type="nvarchar" Mode="In" />
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prServiceLogInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="WOID" Type="nvarchar" Mode="In" />
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prSnowRemoval" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="Action" Type="nvarchar" Mode="In" />
+    <Parameter Name="propertyid" Type="nvarchar" Mode="In" />
+    <Parameter Name="dateperformed" Type="nvarchar" Mode="In" />
+    <Parameter Name="dateentered" Type="nvarchar" Mode="In" />
+    <Parameter Name="timeentered" Type="nvarchar" Mode="In" />
+    <Parameter Name="username" Type="nvarchar" Mode="In" />
+    <Parameter Name="approvalstatus" Type="nvarchar" Mode="In" />
+    <Parameter Name="batchnumber" Type="nvarchar" Mode="In" />
+    <Parameter Name="siteconditions_accumulationinches" Type="nvarchar" Mode="In" />
+    <Parameter Name="siteconditions_accumulationtype" Type="nvarchar" Mode="In" />
+    <Parameter Name="siteconditions_drifting" Type="nvarchar" Mode="In" />
+    <Parameter Name="siteconditions_ice" Type="nvarchar" Mode="In" />
+    <Parameter Name="siteconditions_traffic" Type="nvarchar" Mode="In" />
+    <Parameter Name="weatherconditions_currentprecipitation" Type="nvarchar" Mode="In" />
+    <Parameter Name="weatherconditions_currentconditions" Type="nvarchar" Mode="In" />
+    <Parameter Name="plowingandclearing_roadsandlotsplowingstatus" Type="nvarchar" Mode="In" />
+    <Parameter Name="plowingandclearing_entranceexit" Type="nvarchar" Mode="In" />
+    <Parameter Name="plowingandclearing_handicap" Type="nvarchar" Mode="In" />
+    <Parameter Name="plowingandclearing_roadandroadways" Type="nvarchar" Mode="In" />
+    <Parameter Name="plowingandclearing_roadandroadwaysfront" Type="nvarchar" Mode="In" />
+    <Parameter Name="plowingandclearing_roadandroadwaysrear" Type="nvarchar" Mode="In" />
+    <Parameter Name="plowingandclearing_roadandroadwaysside" Type="nvarchar" Mode="In" />
+    <Parameter Name="plowingandclearing_roadandroadwaysother" Type="nvarchar" Mode="In" />
+    <Parameter Name="plowingandclearing_parkingspotsareas" Type="nvarchar" Mode="In" />
+    <Parameter Name="plowingandclearing_loadingdocks" Type="nvarchar" Mode="In" />
+    <Parameter Name="plowingandclearing_drivethru" Type="nvarchar" Mode="In" />
+    <Parameter Name="plowingandclearing_ramps" Type="nvarchar" Mode="In" />
+    <Parameter Name="plowingandclearing_deliveryarea" Type="nvarchar" Mode="In" />
+    <Parameter Name="plowingandclearing_comments" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_clearsidewalksstatus" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_entrancedoors" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_servicedoors" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_ramps" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_steps" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_gfbidblock" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_privatewalks" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_citywalks" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_comments" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_snowremoval" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_stackingonsite" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_stackingonsitehrs" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_removal" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_removalhrs" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksclearing_snowfield" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_roadsandlotsdeicingstatus" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_entranceexit" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_handicap" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_roadandroadways" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_roadandroadwaysfront" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_roadandroadwaysrear" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_roadandroadwaysside" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_roadandroadwaysother" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_parkingspotsareas" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_loadingdocks" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_drivethru" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_ramps" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_deliveryarea" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_comments" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_materialsusedsalt" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_saltbags" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_saltlbs" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_materialsusedcalcium" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_calciumbags" Type="nvarchar" Mode="In" />
+    <Parameter Name="deicingandantiicing_calciumlbs" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_deicesidewalksstatus" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_entrancedoors" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_servicedoors" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_ramps" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_steps" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_privatewalks" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_citywalks" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_comments" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_materialsusedblend" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_blendbags" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_blendlbs" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_materialsusedcalcium" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_calciumbags" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_calciumlbs" Type="nvarchar" Mode="In" />
+    <Parameter Name="walksdeicing_noserviceperformedsitecheckonly" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_applicator" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_trucknumber" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_timein" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_timeout" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_goundtemperaturein" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_goundtemperatureout" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_airtemperaturein" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_airtemperatureinout" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_siteconditions" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_surfaceswet" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_surfacesdry" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_fallingsnowice" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_fallingsnowrain" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_materialtypeapplied" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_amountintankgallonsstart" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_amountintankgallonsstop" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_totalgallonsused" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_areastreated" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_tipsnozzlesused" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_groundspeed" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_trafficconditions" Type="nvarchar" Mode="In" />
+    <Parameter Name="liquidantiicinglog_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendorname" Type="nvarchar" Mode="In" />
+    <Parameter Name="timearrival" Type="nvarchar" Mode="In" />
+    <Parameter Name="timedeparture" Type="nvarchar" Mode="In" />
+    <Parameter Name="pic1" Type="nvarchar" Mode="In" />
+    <Parameter Name="pic2" Type="nvarchar" Mode="In" />
+    <Parameter Name="pic3" Type="nvarchar" Mode="In" />
+    <Parameter Name="pic4" Type="nvarchar" Mode="In" />
+    <Parameter Name="pic5" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prTotalItemsUserWise" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prUserLogin" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+    <Parameter Name="Password" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prUserLoginV2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+    <Parameter Name="Password" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="prUserWiseMasterInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="UserName" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="pUDailyReports" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="propertyid" Type="nvarchar" Mode="In" />
+    <Parameter Name="batchnumber" Type="nvarchar" Mode="In" />
+    <Parameter Name="reportheader" Type="nvarchar" Mode="In" />
+    <Parameter Name="reporttext" Type="nvarchar" Mode="In" />
+    <Parameter Name="hazard" Type="nvarchar" Mode="In" />
+    <Parameter Name="maintenance" Type="nvarchar" Mode="In" />
+    <Parameter Name="costestimate" Type="nvarchar" Mode="In" />
+    <Parameter Name="taxrate" Type="nvarchar" Mode="In" />
+    <Parameter Name="costtotal" Type="nvarchar" Mode="In" />
+    <Parameter Name="approvalstatus" Type="nvarchar" Mode="In" />
+    <Parameter Name="notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="pUPropertiesDataSheet" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="propertyid" Type="nvarchar" Mode="In" />
+    <Parameter Name="property_type" Type="nvarchar" Mode="In" />
+    <Parameter Name="date_property_acquired" Type="nvarchar" Mode="In" />
+    <Parameter Name="current_owner" Type="nvarchar" Mode="In" />
+    <Parameter Name="original_architect" Type="nvarchar" Mode="In" />
+    <Parameter Name="original_developer" Type="nvarchar" Mode="In" />
+    <Parameter Name="original_engineers" Type="nvarchar" Mode="In" />
+    <Parameter Name="year_built" Type="nvarchar" Mode="In" />
+    <Parameter Name="original_gla" Type="nvarchar" Mode="In" />
+    <Parameter Name="renovation_expansion" Type="nvarchar" Mode="In" />
+    <Parameter Name="current_gla" Type="nvarchar" Mode="In" />
+    <Parameter Name="acres_building" Type="nvarchar" Mode="In" />
+    <Parameter Name="acres_parkinglot" Type="nvarchar" Mode="In" />
+    <Parameter Name="acres_project_total" Type="nvarchar" Mode="In" />
+    <Parameter Name="outparcel_tenants" Type="nvarchar" Mode="In" />
+    <Parameter Name="acres_maintained" Type="nvarchar" Mode="In" />
+    <Parameter Name="percent_acres_bedding_plants" Type="nvarchar" Mode="In" />
+    <Parameter Name="number_dormant_months_year" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglot_number_of_poles" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglot_number_of_fixtures" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglot_type_of_fixture" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglot_location_of_controls" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglot_other" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglot_other_lighting" Type="nvarchar" Mode="In" />
+    <Parameter Name="parkinglot_other_lighting_controls" Type="nvarchar" Mode="In" />
+    <Parameter Name="roof" Type="nvarchar" Mode="In" />
+    <Parameter Name="parking_spaces" Type="nvarchar" Mode="In" />
+    <Parameter Name="parking_spaces_handicapped" Type="nvarchar" Mode="In" />
+    <Parameter Name="parking_ratio" Type="nvarchar" Mode="In" />
+    <Parameter Name="parking_sealcoat_overlay" Type="nvarchar" Mode="In" />
+    <Parameter Name="building_fire_sprinkler" Type="nvarchar" Mode="In" />
+    <Parameter Name="building_hvac" Type="nvarchar" Mode="In" />
+    <Parameter Name="building_construction" Type="nvarchar" Mode="In" />
+    <Parameter Name="building_key_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="lockbox_location_01" Type="nvarchar" Mode="In" />
+    <Parameter Name="lockbox_code_01" Type="nvarchar" Mode="In" />
+    <Parameter Name="lockbox_location_02" Type="nvarchar" Mode="In" />
+    <Parameter Name="lockbox_code_02" Type="nvarchar" Mode="In" />
+    <Parameter Name="lockbox_location_03" Type="nvarchar" Mode="In" />
+    <Parameter Name="lockbox_code_03" Type="nvarchar" Mode="In" />
+    <Parameter Name="marketing_fund" Type="nvarchar" Mode="In" />
+    <Parameter Name="marketing_contracted_to" Type="nvarchar" Mode="In" />
+    <Parameter Name="utility_electric_text" Type="nvarchar" Mode="In" />
+    <Parameter Name="utility_electric_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="utility_electric_phone" Type="nvarchar" Mode="In" />
+    <Parameter Name="utility_gas_text" Type="nvarchar" Mode="In" />
+    <Parameter Name="utility_gas_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="utility_gas_phone" Type="nvarchar" Mode="In" />
+    <Parameter Name="utility_water_sewer_text" Type="nvarchar" Mode="In" />
+    <Parameter Name="utility_water_sewer_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="utility_water_sewer_phone" Type="nvarchar" Mode="In" />
+    <Parameter Name="utility_telephone_text" Type="nvarchar" Mode="In" />
+    <Parameter Name="utility_telephone_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="utility_telephone_phone" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_police_text" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_police_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_police_phone" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_fire_text" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_fire_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_fire_phone" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_buildingdept_text" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_buildingdept_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_buildingdept_phone" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_publicworks_text" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_publicworks_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_publicworks_phone" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_highwaydept_text" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_highwaydept_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="municipal_highwaydept_phone" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_cardaccess_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_cardaccess_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_cardaccess_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_door_repair_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_door_repair_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_door_repair_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_eifs_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_eifs_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_eifs_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_electrical_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_electrical_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_electrical_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_elevator_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_elevator_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_elevator_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_enviro_cleanup_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_enviro_cleanup_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_enviro_cleanup_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_exterminator_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_exterminator_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_exterminator_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_facade_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_facade_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_facade_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_fire_alarm_monitor_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_fire_alarm_monitor_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_fire_alarm_monitor_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_fire_alarm_repair_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_fire_alarm_repair_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_fire_alarm_repair_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_generator_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_generator_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_generator_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_glass_boardup_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_glass_boardup_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_glass_boardup_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_graffitti_vandal_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_graffitti_vandal_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_graffitti_vandal_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_hvac_repair_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_hvac_repair_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_hvac_repair_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_handrail_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_handrail_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_handrail_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_irrigation_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_irrigation_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_irrigation_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_janitorial_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_janitorial_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_janitorial_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_landscaping_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_landscaping_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_landscaping_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_locksmith_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_locksmith_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_locksmith_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_masonry_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_masonry_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_masonry_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_oil_supply_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_oil_supply_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_oil_supply_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_plot_light_repair_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_plot_light_repair_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_plot_light_repair_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_plot_sweeping_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_plot_sweeping_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_plot_sweeping_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_painting_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_painting_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_painting_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_payphone_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_payphone_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_payphone_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_plumbing_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_plumbing_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_plumbing_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_retentionpond_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_retentionpond_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_retentionpond_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_roof_repair_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_roof_repair_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_roof_repair_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_security_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_security_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_security_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_sewer_septic_drain_clearing_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_sewer_septic_drain_clearing_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_sewer_septic_drain_clearing_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_sewer_septic_plumbing_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_sewer_septic_plumbing_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_sewer_septic_plumbing_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_sidewalk_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_sidewalk_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_sidewalk_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_signage_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_signage_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_signage_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_smoke_water_restore_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_smoke_water_restore_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_smoke_water_restore_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_snow_removal_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_snow_removal_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_snow_removal_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_towing_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_towing_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_towing_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_trashremoval_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_trashremoval_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_trashremoval_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_flooring_provider" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_flooring_contact" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_flooring_notes" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendor_comments" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="pUWorkOrder" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="wonumber" Type="nvarchar" Mode="In" />
+    <Parameter Name="propertyid" Type="nvarchar" Mode="In" />
+    <Parameter Name="approvalstatus" Type="nvarchar" Mode="In" />
+    <Parameter Name="worktobedone" Type="nvarchar" Mode="In" />
+    <Parameter Name="request_name" Type="nvarchar" Mode="In" />
+    <Parameter Name="request_email" Type="nvarchar" Mode="In" />
+    <Parameter Name="request_phone" Type="nvarchar" Mode="In" />
+    <Parameter Name="workcompleted" Type="nvarchar" Mode="In" />
+    <Parameter Name="DNEcost" Type="nvarchar" Mode="In" />
+    <Parameter Name="UNIcost" Type="nvarchar" Mode="In" />
+    <Parameter Name="UNIcontractor_cost" Type="nvarchar" Mode="In" />
+    <Parameter Name="final_approval_username" Type="nvarchar" Mode="In" />
+    <Parameter Name="date_estimatedcompletion" Type="nvarchar" Mode="In" />
+    <Parameter Name="date_completion" Type="nvarchar" Mode="In" />
+    <Parameter Name="UNI125percent" Type="nvarchar" Mode="In" />
+    <Parameter Name="UNItax" Type="nvarchar" Mode="In" />
+    <Parameter Name="ServiseLog" Type="nvarchar" Mode="In" />
+    <Parameter Name="LogDate" Type="datetime" Mode="In" />
+    <Parameter Name="closedate" Type="nvarchar" Mode="In" />
+    <Parameter Name="UserID" Type="nvarchar" Mode="In" />
+    <Parameter Name="vendorid" Type="nvarchar" Mode="In" />
+    <Parameter Name="poid" Type="nvarchar" Mode="In" />
+  </Function>
+</Schema>

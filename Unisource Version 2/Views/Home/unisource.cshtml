@@ -1,0 +1,584 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+@section Scripts{
+      <script>
+          var tdate = "", fdate = "", sts = "";
+          $(document).ready(function () {
+
+              //call ajax for datatable
+              var category = checkIsNull(fnGetParameterByName("category"), "");
+              var propertyID = checkIsNull(fnGetParameterByName("property"), "");
+              $("#propertyDataTableSearch").attr("disabled", true);
+              //drawPropertyDataTable(propertyID, category);
+              if (category == "total Work Request" || category == "Total Work Request") {
+                  $("#propertyDataTable").append('<thead>\
+                    <tr>\
+                        <th>Work Proposal #</th>\
+                        <th>Date Submitted</th>\
+                        <th>Property Name</th>\
+                        <th>Hazard/Maint.</th>\
+                        <th>Status</th>\
+                    </tr>\
+                </thead>');
+                  $('#propertyDataTable').dataTable({
+                      "processing": true, // control the processing indicator.
+                      "serverSide": true, // recommended to use serverSide when data is more than 10000 rows for performance reasons
+                      "info": true,   // control table information display field
+                      "stateSave": false,  //restore table state on page reload,
+                      "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],                  // use the first inner array as the page length values and the second inner array as the displayed options
+                      "bLengthChange": false,
+                      "ajax": {
+                          "url": "@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))/Home/PropertyInformationAjaxCall?PropertyId=" + propertyID + "&Category=" + category + "&SearchInfo=" + checkIsNull($('#propertyDataTableSearch').val(), "") + "&OnlySearchExc=false",
+                        "type": "GET"
+                    },
+                    "columns": [
+                        { "data": "RefLink" },
+                        { "data": "SubmittedDate" },
+                        { "data": "PropertyName" },
+                        { "data": "HazardMaintenance" },
+                        { "data": "ApprovalStatus" }
+                    ],
+                    "order": [[1, "desc"]],
+                    "drawCallback": function (settings) {
+                        $("#propertyDataTableSearch").attr("disabled", false);
+                    }
+                });
+            } else if (category == "total Work Order" || category == "Total Work Order") {
+                $("#propertyDataTable").append('<thead>\
+                    <tr>\
+                        <th>Work Order #</th>\
+                        <th>Date Submitted</th>\
+                        <th>Property Name</th>\
+                        <th>Status</th>\
+                    </tr>\
+                </thead>');
+
+
+                $('#propertyDataTable').dataTable({
+                    "processing": true, // control the processing indicator.
+                    "serverSide": true, // recommended to use serverSide when data is more than 10000 rows for performance reasons
+                    "info": true,   // control table information display field
+                    "stateSave": false,  //restore table state on page reload,
+                    "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],                  // use the first inner array as the page length values and the second inner array as the displayed options
+                    "bLengthChange": false,
+                    "ajax": {
+                        "url": "@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))/Home/PropertyInformationAjaxCall?PropertyId=" + propertyID + "&Category=" + category + "&SearchInfo=" + checkIsNull($('#propertyDataTableSearch').val(), "") + "&OnlySearchExc=false",
+                        "type": "GET"
+                    },
+                    "columns": [
+                        { "data": "RefLink" },
+                        { "data": "SubmittedDate" },
+                        { "data": "PropertyName" },
+                        { "data": "ApprovalStatus" }
+                    ],
+                    "order": [[1, "desc"]],
+                    "drawCallback": function (settings) {
+                        $("#propertyDataTableSearch").attr("disabled", false);
+                    }
+                });
+            } else if (category == "total Property Inspections" || category == "Total Property Inspections") {
+                $("#propertyDataTable").append('<thead>\
+                    <tr>\
+                        <th>Property Inspection #</th>\
+                        <th>Date Submitted</th>\
+                        <th>Perform Date</th>\
+                        <th>Property Name</th>\
+                        <th>Status</th>\
+                    </tr>\
+                </thead>');
+
+
+                $('#propertyDataTable').dataTable({
+                    "processing": true, // control the processing indicator.
+                    "serverSide": true, // recommended to use serverSide when data is more than 10000 rows for performance reasons
+                    "info": true,   // control table information display field
+                    "stateSave": false,  //restore table state on page reload,
+                    "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],                  // use the first inner array as the page length values and the second inner array as the displayed options
+                    "bLengthChange": false,
+                    "ajax": {
+                        "url": "@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))/Home/PropertyInformationAjaxCall?PropertyId=" + propertyID + "&Category=" + category + "&SearchInfo=" + checkIsNull($('#propertyDataTableSearch').val(), "") + "&OnlySearchExc=false",
+                        "type": "GET"
+                    },
+                    "columns": [
+                        { "data": "RefLink" },
+                        { "data": "SubmittedDate" },
+                        { "data": "PerformedDate" },
+                        { "data": "PropertyName" },
+                        { "data": "ApprovalStatus" }
+                    ],
+                    "order": [[1, "desc"]],
+                    "drawCallback": function (settings) {
+                        $("#propertyDataTableSearch").attr("disabled", false);
+                    }
+                });
+            } else {
+                $("#propertyDataTable").append('<thead>\
+                    <tr>\
+                        <th>Snow Report #</th>\
+                        <th>Date Submitted</th>\
+                        <th>Perform Date</th>\
+                        <th>Property Name</th>\
+                        <th>Status</th>\
+                    </tr>\
+                </thead>');
+
+
+                $('#propertyDataTable').dataTable({
+                    "processing": true, // control the processing indicator.
+                    "serverSide": true, // recommended to use serverSide when data is more than 10000 rows for performance reasons
+                    "info": true,   // control table information display field
+                    "stateSave": false,  //restore table state on page reload,
+                    "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],                  // use the first inner array as the page length values and the second inner array as the displayed options
+                    "bLengthChange": false,
+                    "ajax": {
+                        "url": "@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))/Home/PropertyInformationAjaxCall?PropertyId=" + propertyID + "&Category=" + category + "&SearchInfo=" + checkIsNull($('#propertyDataTableSearch').val(), "") + "&OnlySearchExc=false",
+                        "type": "GET"
+                    },
+                    "columns": [
+                        { "data": "RefLink" },
+                        { "data": "SubmittedDate" },
+                        { "data": "PerformedDate" },
+                        { "data": "PropertyName" },
+                        { "data": "ApprovalStatus" }
+                    ],
+                    "order": [[1, "desc"]],
+                    "drawCallback": function (settings) {
+                        $("#propertyDataTableSearch").attr("disabled", false);
+                    }
+                });
+            }
+
+
+            //end of call datatable
+
+            var serachTitle = fnGetParameterByName("category");
+            if (serachTitle == "total Snow Removal") {
+                $("#propertyDataTableSearch").attr("placeholder", "Search Snow Removal");
+                //outline: thin dashed
+            } else if (serachTitle == "total Work Order") {
+                $("#propertyDataTableSearch").attr("placeholder", "Search Work Order");
+            } else if (serachTitle == "total Work Request") {
+                $("#propertyDataTableSearch").attr("placeholder", "Search Work Proposal");
+            } else if (serachTitle == "total Property Inspections") {
+                $("#propertyDataTableSearch").attr("placeholder", "Search Property Inspection");
+            }
+
+
+            // click action on data table using in property
+            $('#propertyDataTable tbody').on('click', 'tr', function () {
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                }
+                else {
+                    $('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            });
+
+            // to get total items
+            $.ajax({
+                url: "@Url.Action("GetTotalNumberOfCatetory", "Home")",
+                data: "",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (i, record) {
+                        // alert("success" + record.TotalWOrkOrder + " 2" + record.TotalWorkRequest);
+                        $("#totalWorkRequest").text(numberWithCommas(record.TotalWorkRequest));
+                        $("#totalPropertyInspections").text(numberWithCommas(record.TotalPropertyInspection));
+                        $("#totalSnowRemoval").text(numberWithCommas(record.TotalSnowReport));
+                        $("#totalWorkOrder").text(numberWithCommas(record.TotalWOrkOrder));
+                    });
+
+                    //loadData(data);
+                },
+                error: function () {
+                    $.fn.dataTable.ext.errMode = 'throw';
+                }
+            });
+
+            //to redirect total items from image
+            $(".totalItem").click(function () {
+                var category = $(this).attr("name");
+                var propertyID = $("#" + $(this).attr('id') + " .count-total").attr("name");
+                //drawPropertyDataTable(propertyID, "Total "+category);
+                if (propertyID == 'All') {
+                    var url = '@Url.Action("Unisource", "Home", new { category = "__category__" })';
+                    url = url.replace('__category__', "total " + category + "&property=all Property");
+                } else {
+                    var url = '@Url.Action("Unisource", "Home", new { category = "__category___property_" })';
+                    url = url.replace('__category__', category);
+                    url = url.replace('_property_', "&property=" + propertyID);
+                }
+                window.location.href = url;
+
+            });
+
+
+            //to  search custom
+            $('#propertyDataTableSearch').keyup(function () {
+                fnDrawDataTable(this, "true");
+            });
+
+            //to clear
+            $("#clearbtn").click(function () {
+                $("#propertyDataTableSearch").val('');
+                fnDrawDataTable(this, "");
+
+            });
+
+
+        });
+
+        //to show total item
+
+
+        function setCurrentPropertiesInfo(propertyID, numOfWorkRequest, numOfPropertyInspection, numOfSnowRemoval, numOfWorkOrder) {
+            $("#totalWorkRequest").text(numberWithCommas(numOfWorkRequest));
+            $('#totalWorkRequest').attr('name', propertyID);
+            $("#totalPropertyInspections").text(numberWithCommas(numOfPropertyInspection));
+            $('#totalPropertyInspections').attr('name', propertyID);
+            $("#totalSnowRemoval").text(numberWithCommas(numOfSnowRemoval));
+            $('#totalSnowRemoval').attr('name', propertyID);
+            $("#totalWorkOrder").text(numberWithCommas(numOfWorkOrder));
+            $('#totalWorkOrder').attr('name', propertyID);
+        }
+
+        //custom filter
+
+
+
+
+        $("#PopS").popover({
+            html: true,
+            title: 'Filter By: <a href="#" class="close" data-dismiss="alert">' + tdate + '×</a>'
+        }).on('shown.bs.popover', function () {
+            var serachTitle = fnGetParameterByName("category");
+            if (serachTitle.toLowerCase().indexOf("request") != -1) {
+                var newOption = "<option value='" + "0" + "'>Pending</option><option value='" + "1" + "'>Posted to PM</option><option value='" + "2" + "'>Rejected</option><option value='" + "4" + "'>Create Work Order</option><option value='" + "3" + "'>Defer to Later Date</option><option value='" + "5" + "'>Assign to Non-Unisource Vendor</option>";
+                $("#status").append(newOption);
+            } else if (serachTitle.toLowerCase().indexOf("order") != -1) {
+                var newOption = "<option value='" + "8" + "'>Open</option><option value='" + "9" + "'>Closed</option><option value='" + "0" + "'>Delete</option>";
+                $("#status").append(newOption);
+            } else if (serachTitle.toLowerCase().indexOf("inspections") != -1) {
+                var newOption = "<option value='" + "0" + "'>Pending</option><option value='" + "1" + "'>Approved</option><option value='" + "2" + "'>Rejected</option>";
+                $("#status").append(newOption);
+            } else if (serachTitle.toLowerCase().indexOf("snow") != -1) {
+                var newOption = "<option value='" + "0" + "'>Pending</option><option value='" + "1" + "'>Approved</option><option value='" + "2" + "'>Rejected</option>";
+                $("#status").append(newOption);
+            }
+            //end
+            $("#fromDate").datepicker();
+            //to call calender
+            //$('.date-time').datepicker({ dateFormat: 'yy-mm-dd' });
+
+            $('.date-time').click(function () {
+                $("#fromDate").datepicker();
+                $("#toDate").datepicker();
+                $('#ui-datepicker-div').css("z-index", "5000");
+            });
+
+            $("#btncustomfilter").attr("disabled", true);
+            //to  check search button enable /disable
+            $(".check-search").change(function () {
+                checkSearchButtonEnableDisable(this);
+            });
+
+            //to close popover
+            $(".close").click(function () {
+                $(this).parents(".popover").popover('hide');
+            });
+            //to set preivous datetime
+            $('#toDate').val(tdate);
+            $('#fromDate').val(fdate);
+            if (sts != "") {
+                $('#status [value=' + sts + ']').prop('selected', true);
+            }
+
+
+            $(".custom-search").unbind();
+            $(".custom-search").bind("click", function () {
+                fnDrawDataTable(this, "");
+                //to save date in global variable;
+                tdate = $('#toDate').val();
+                fdate = $('#fromDate').val();
+                sts = checkIsNull($('#status :selected').val(), "");
+            });
+
+            //to check previous
+            checkSearchButtonEnableDisable('attr');
+
+        });
+
+        function checkSearchButtonEnableDisable(attrb) {
+            var fromDate = checkIsNull($('#fromDate').val(), "");
+            var toDate = checkIsNull($('#toDate').val(), "");
+            var status = checkIsNull($('#status').val(), "");
+
+            if (fromDate != "" && toDate != "") {
+                $("#btncustomfilter").attr("disabled", false);
+            }
+
+
+            if (fromDate == "" && status == "") {
+                $("#btncustomfilter").attr("disabled", true);
+                //alertify.alert("Enter the 'From Date' first");
+                $('#toDate').val("");
+            }
+            if (new Date(fromDate) > new Date(toDate)) {
+                $('#toDate').val("");
+                $("#btncustomfilter").attr("disabled", true);
+                alertify.alert("'To' date must be greater than 'From' date.");
+                return false;
+            }
+            if (status != "") {
+                $("#btncustomfilter").attr("disabled", false);
+            }
+        }
+
+        function fnDrawDataTable(attr, searchExecutionStatus) {
+            //alert(":" + $(attr).attr("name"));
+            if ($(attr).attr("name") == "CustomClear") {
+                $("#propertyDataTableSearch").val("");
+                $('#fromDate').val("");
+                $('#toDate').val("");
+                $('#status').val("");
+                var fromDate = "";
+                var toDate = "";
+                var approvalStatusText = "%";
+                var executeStatus = true;
+                $("#PopS").popover('hide');
+                $("#PopS").attr("src", "../Content/imgs/filter.png")
+                tdate = "";
+                fdate = "";
+                sts = "";
+
+            } else {
+                var fromDate = checkIsNull($('#fromDate').val(), "");
+                fromDate = checkIsNull(fnConvertDate(fromDate, "mm/dd/yyyy", "yyyy-mm-dd"), "");
+                var toDate = checkIsNull($('#toDate').val(), "");
+                toDate = checkIsNull(fnConvertDate(toDate, "mm/dd/yyyy", "yyyy-mm-dd"), "");
+                var approvalStatusText = checkIsNull($('#status').val(), "%");
+
+                var executeStatus = true;
+                $("#PopS").popover('hide');
+                if (searchExecutionStatus != "true") {
+                    $("#PopS").attr("src", "../Content/imgs/filtered.png")
+                }
+            }
+
+            var category = checkIsNull(fnGetParameterByName("category"), "");
+            var propertyID = checkIsNull(fnGetParameterByName("property"), "");
+            if (category == "total Work Request" || category == "Total Work Request") {
+                $("#propertyDataTable tbody").remove();
+                $('#propertyDataTable').dataTable({
+                    "bDestroy": true,
+                    "processing": true, // control the processing indicator.
+                    "serverSide": true, // recommended to use serverSide when data is more than 10000 rows for performance reasons
+                    "info": true,   // control table information display field
+                    "stateSave": false,  //restore table state on page reload,
+                    "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],                  // use the first inner array as the page length values and the second inner array as the displayed options
+                    "bLengthChange": false,
+                    "ajax": {
+                        "url": "@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))/Home/PropertyInformationAjaxCall?PropertyId=" + propertyID + "&Category=" + category + "&FromDate=" + fromDate + "&ToDate=" + toDate + "&ApplicationStatus=" + approvalStatusText + "&ExecuteStatus=" + executeStatus + "&SearchInfo=" + checkIsNull($('#propertyDataTableSearch').val(), "") + "&OnlySearchExc=" + searchExecutionStatus + "",
+                        "type": "GET"
+                    },
+                    "columns": [
+                        { "data": "RefLink" },
+                        { "data": "SubmittedDate", },
+                        { "data": "PropertyName" },
+                        { "data": "HazardMaintenance" },
+                        { "data": "ApprovalStatus" }
+                    ],
+                    "order": [[1, "desc"]]
+                });
+
+                executeStatus = false;
+            } else if (category == "total Work Order" || category == "Total Work Order") {
+                $("#propertyDataTable tbody").remove();
+                $('#propertyDataTable').dataTable({
+                    "bDestroy": true,
+                    "processing": true, // control the processing indicator.
+                    "serverSide": true, // recommended to use serverSide when data is more than 10000 rows for performance reasons
+                    "info": true,   // control table information display field
+                    "stateSave": false,  //restore table state on page reload,
+                    "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],                  // use the first inner array as the page length values and the second inner array as the displayed options
+                    "bLengthChange": false,
+                    "ajax": {
+                        "url": "@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))/Home/PropertyInformationAjaxCall?PropertyId=" + propertyID + "&Category=" + category + "&FromDate=" + fromDate + "&ToDate=" + toDate + "&ApplicationStatus=" + approvalStatusText + "&ExecuteStatus=" + executeStatus + "&SearchInfo=" + checkIsNull($('#propertyDataTableSearch').val(), "") + "&OnlySearchExc=" + searchExecutionStatus + "",
+                        "type": "GET"
+                    },
+                    "columns": [
+                        { "data": "RefLink" },
+                        { "data": "SubmittedDate" },
+                        { "data": "PropertyName" },
+                        { "data": "ApprovalStatus" }
+                    ],
+                    "order": [[1, "desc"]]
+                });
+            } else {
+                $("#propertyDataTable tbody").remove();
+                $('#propertyDataTable').dataTable({
+                    "bDestroy": true,
+                    "processing": true, // control the processing indicator.
+                    "serverSide": true, // recommended to use serverSide when data is more than 10000 rows for performance reasons
+                    "info": true,   // control table information display field
+                    "stateSave": false,  //restore table state on page reload,
+                    "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "All"]],                  // use the first inner array as the page length values and the second inner array as the displayed options
+                    "bLengthChange": false,
+                    "ajax": {
+                        "url": "@string.Format("{0}://{1}{2}", Request.Url.Scheme, Request.Url.Authority, Url.Content("~"))/Home/PropertyInformationAjaxCall?PropertyId=" + propertyID + "&Category=" + category + "&FromDate=" + fromDate + "&ToDate=" + toDate + "&ApplicationStatus=" + approvalStatusText + "&ExecuteStatus=" + executeStatus + "&SearchInfo=" + checkIsNull($('#propertyDataTableSearch').val(), "") + "&OnlySearchExc=" + searchExecutionStatus + "",
+                        "type": "GET"
+                    },
+                    "columns": [
+                        { "data": "RefLink" },
+                        { "data": "SubmittedDate" },
+                        { "data": "PerformedDate" },
+                        { "data": "PropertyName" },
+                        { "data": "ApprovalStatus" }
+                    ],
+                    "order": [[1, "desc"]]
+                });
+            }
+    }
+
+    </script>
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">My Unisource</h1>
+    </div>
+</div>
+
+<div class="row">
+<div class="col-md-3 col-xs-6">
+    <div class="panel panel-primary totalItem" id="workRequest" name="Work Request">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="uni-icon icon-work medium"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <div class="huge count-total" id="totalWorkRequest" name="All"></div>
+
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div>Work Proposal</div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div class="col-md-3 col-xs-6">
+    <div class="panel panel-red totalItem" id="workOrder" name="Work Order">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="uni-icon icon-inspec medium"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <div class="huge count-total" id="totalWorkOrder" name="All"></div>
+
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div>Work Order</div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div class="col-md-3 col-xs-6">
+    <div class="panel panel-green totalItem" id="propertyInspections" name="Property Inspections">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <span class="uni-icon icon-request medium"></span>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <div class="huge count-total" id="totalPropertyInspections" name="All"></div>
+
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div>Property Inspections</div>
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+</div>
+<div class="col-md-3 col-xs-6">
+    <div class="panel panel-yellow totalItem" id="snowRemoval" name="Snow Removal">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <i class="uni-icon icon-snow1 medium"></i>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <div class="huge count-total" id="totalSnowRemoval" name="All"></div>
+
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div>Snow Report</div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+</div>
+<table class="col-md-12 min-space">
+    <tr>
+        <td style="width: 84%">
+            <input type="text" id="propertyDataTableSearch" class="form-control" placeholder="Search Work Proposal">
+        </td>
+        <td style="width: 1%"></td>
+        <td style="width: 3%"><img src="~/Content/imgs/filter.png" style="height:30px; width:35px;" data-toggle="popover" data-trigger="click" data-placement="bottom" data-container="body" data-html="true" id="PopS" data-content='<div id="popover-content">
+            <div>
+                <div class="form-group">
+                    <label>From:</label>
+                    <div class="input-group date date-time">
+                        <input type="text" class="date-picker form-control check-search" id="fromDate" />
+                        <label for="fromDate" class="input-group-addon btn">
+                            <span class="fa fa-calendar"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>To:</label>
+                    <div class="input-group date date-time">
+                        <input type="text" class="date-picker form-control check-search" id="toDate" />
+                        <label for="toDate" class="input-group-addon btn">
+                            <span class="fa fa-calendar"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Status:</label>
+                    <select class="form-control check-search" id="status">  <option></option></select>
+                </div>
+                <div class="form-group">
+                    <button id="btncustomfilter" class="btn btn-primary btn-block custom-search" name="CustomeFilter">Search</button>
+                </div>
+            </div>
+        </div>'></img></td>
+        <td style="width: 1%"></td>
+        <td style="width: 5%">
+            <a class="btn btn-default custom-src-cntrl" href="#">Search</a>
+        </td>
+        <td style="width: 1%"></td>
+        <td style="width: 5%">
+            <a id="clearbtn" class="btn btn-default custom-src-cntrl" name="CustomClear" href="#">Clear</a>
+        </td>
+    </tr>
+</table>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12 col-lg-12">        
+            <table class="table table-striped table-bordered table-hover" id="propertyDataTable"></table>       
+    </div>
+</div>

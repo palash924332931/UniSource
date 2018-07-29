@@ -1,0 +1,1049 @@
+﻿@{
+    ViewBag.Title = "Blank";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts {
+    <script>
+
+        tempDeletedImageLink = "";
+
+        $(document).ready(function () {
+
+            fnProgress(true);
+            //to check category
+            var category = checkIsNull(fnGetParameterByName("category"), "");
+            var batchID = checkIsNull(fnGetParameterByName("specificID"), "");
+            var propertyID = checkIsNull(fnGetParameterByName("propertyID"), "");
+
+            //persmission for create work request button
+
+
+
+            if ("@Session["alloweditworkorder"].ToString()" != "Yes") {
+                if ((category == "new" || category == "SoureceWorkProposal") && "@Session["allowenterworkorder"].ToString()" == "Yes") {
+                }
+                else {
+                    $(".allow-edit-work-order").css("display", "none");
+                }
+            }
+
+
+            if ("@Session["uniadmin"].ToString()" != "Yes") {
+                $(".admin-user-permission").css("display", "none");
+            }
+
+            //end of permission
+
+            if (category == "edit") {
+                $(".editPropertise").css("display", "block");
+                $(".newproPerties").css("display", "none");
+                $("#adv-search").css("display", "none");
+                $("#submitWorkOrder").html("Update");
+                $("#wpheader").html("Work Order Details");
+
+                $.ajax({
+                    url: "@Url.Action("GetAllInfoCategoryWise", "DataEntry")",
+                    data: { BatchNumber: batchID, ItemCategory: "Work Order" },
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        $.each(data, function (i, record) {
+                            //alert("success" + record.request_name + " 2" + record.wonumber);
+                            $("#propertyID").html(record["propertyid"]);
+                            $("#propertyName").html(record.PropertyName);
+                            $("#address").html(record.Address);
+                            $("#propertyImage").attr("src", "../PropertyPictures/" + record.propertyid + ".jpg");
+                            $("#requestedBy").val(checkIsNull(record.request_name, ""));
+                            //to show side menu
+                            classUniSource.fnSiteSubMenuShow(record.propertyid, record.PropertyName, "liWorkOrder");
+                            $("#exceedCost").val(checkIsNull(record.DNEcost, 0));
+                            $("#workOrderComments").val(record.worktobedone);
+                            $("#unisourcedCost").val(checkIsNull(record.UNIcost, 0));
+                            $("#createdDate").val(record.dateentered);
+                            $("#closedDate").val(record.dateperformed);
+                            $("#markupCost").val(checkIsNull(record.UNI125percent, 0));
+                            $("#customerCost").val(checkIsNull(record.UNIcontractor_cost, 0));
+                            $("#taxCost").val(Number(checkIsNull(record.UNItax, 0)).toFixed(2));
+                            $("#estimatedCompletionDate").val(fnConvertDate(checkIsNull(record.date_estimatedcompletion, ''), "yyyy-mm-dd", "mm-dd-yyyy"));
+                            $("#completionDate").val(fnConvertDate(checkIsNull(record.date_completion, ''), "yyyy-mm-dd", "mm-dd-yyyy"));
+                            $("#woid").val(checkIsNull(record.wonumber, ""));
+                            $("#uniCost").val(checkIsNull(record.UNIcost, 0));
+                            $("#approvalList").val(checkIsNull(record.approvalstatus, "8"));
+                            $("#tbvendor").val(checkIsNull(record.vendorname, ""));
+                            $("#vendorid").val(checkIsNull(record.vendorid, ""));
+                            var workProposalBatchNo = checkIsNull(record.dailyreport_batchnumber, "");
+                            var WPREFID = checkIsNull(record.WPREFID, "")
+                            if (WPREFID != "") {
+                                $("#workrequestDisplay").css("display", "table");
+                                $("#wpid").html('<a href="/DataEntry/WorkRequest?category=edit&propertyID=' + propertyID + '&specificID=' + workProposalBatchNo + '" >' + WPREFID + '</a>');
+                            }
+
+                            $("#workOrderComments").attr("readonly", "true");
+                            //check update status
+                            if (record.approvalstatus == 9) {
+                                $(".btn-file").css("display", "none");
+                                $("#closeworkorder").css("display", "table");
+                                $("#laststatus").html("Closed");
+                                $("#laststatus").removeClass("btn-info").addClass("btn-danger");
+                                $('#tbvendor').prop('disabled', true);
+
+                                if ("@Session["uniadmin"].ToString()" != "Yes") {
+                                    $(".allow-edit-work-order").css("display", "none");
+                                }
+                            } else {
+                                $("#imageUploadSection").css("display", "block");
+                            }
+
+                            fnProgress(false);
+                        });
+                    },
+                    error: function () {
+                        alertify.alert("Failed! Please try again.");
+                        fnProgress(false);
+                    }
+                });
+
+                //to pull service log
+                var serviceTable = "";
+                $.ajax({
+                    url: "@Url.Action("GetAllInfoServiceLog", "DataEntry")",
+                    data: { BatchNumber: batchID, ItemCategory: "Work Order" },
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        $.each(data, function (i, record) {
+                            //alert("success"  + record.WOID);
+                            // $("#exceedCost").val(checkIsNull(record.DNEcost, 0));
+                            //
+                            //<tr>
+                            $("#serviceLog").addClass("table table-striped table-bordered dataTable");
+                            $("#serviceLog tbody").append('<tr>\
+                         <td style="width:60%; text-align:left;"><b>' + record.Serviselog + '</b></td><td style="text-align:right;"><i class="glyphicon glyphicon-user"></i> ' + (record.UserName != null ? record.UserName : 'N/A') + ' <i class="glyphicon glyphicon-time"></i> ' + (record.LogDate != null ? record.LogDate : 'N/A') + '\
+                         </td>\
+                     </tr>');
+                        });
+                    },
+                    error: function () {
+                        alertify.alert("Failed! Please try again.");
+                    }
+                });
+
+                //Get Vendor
+                getAllVendorList();
+
+            } else if (category == "SoureceWorkProposal") {
+                var WPComments = checkIsNull(fnGetParameterByName("WPComments"), "");
+                $("#workOrderComments").val(WPComments);
+                //get all items of property
+                getCurrentUserInformation();
+                getAllPropertiesList();
+            } else if (category == 'new') {
+                $("#imageUploadSection").css("display", "block");
+                //to delete tem folder
+                //get all items of property
+                getCurrentUserInformation();
+                $.ajax({
+                    type: "POST", //HTTP POST Method
+                    url: '@Url.Action("ActivityOnFile", "DataEntry")',
+                    data: {
+                        Action: "Delete",
+                        filePath: "~/Content/Temp/WorkOrder",
+                        optional: "TemFolderDelete"
+                    },
+                    datatype: "json",
+                    success: function (result) {
+
+                    },
+                    error: function (result) {
+                        alertify.alert("fail");
+                    }
+
+                });
+                getAllPropertiesList();
+            }
+
+
+
+            //custom click dropdown
+            $("#propertySearch").click(function () {
+                $('#tbCountries').focus();
+            });
+
+            //custom click dropdown for service
+            $("#serviceearch").click(function () {
+                $('#objectServiceList').focus();
+            });
+
+            //custom click dropdown for vendor
+            $("#vendorSearch").click(function () {
+                $('#tbvendor').focus();
+            });
+
+            //no image
+            $('#propertyImage').error(function () {
+                $("#propertyImage").attr("src", "../Content/imgs/noimages.png");
+            });
+
+
+
+
+            var seletedPropetyID = "";
+            //for file upload
+            $('#fu-my-auto-upload').on('change', function (e) {
+                fnProgress(true);
+                var files = e.target.files;
+                var myID = 3; //uncomment this to make sure the ajax URL works
+                if (files.length > 0) {
+                    if (window.FormData !== undefined) {
+                        var data = new FormData();
+                        for (var x = 0; x < files.length; x++) {
+                            data.append("file" + x, files[x]);
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: '/DataEntry/UploadImage?folderType=WorkOrder',
+                            contentType: false,
+                            processData: false,
+                            data: data,
+                            success: function (data) {
+                                var dataArry = data.split("|");
+                                console.log(dataArry[0]);
+                                if (dataArry[0] == "True" || dataArry[0] == true) {
+                                    $("#errorImageUpload").html("");
+                                    $('#imageUploadedTable tr').append('<td class="tdImageUpload" id="' + dataArry[2] + '" name="' + dataArry[3] + '" onClick="removeImageformTamp(this)" title="Click to view."><img src="' + dataArry[3] + '" class="uploadedImage img-thumbnail"/></td>');
+                                    fnProgress(false);
+                                }
+                                else {
+                                    $("#errorImageUpload").html("<span class='alert-danger'>" + dataArry[1] + "</span>");
+                                    fnProgress(false);
+                                }
+                            },
+                            error: function (xhr, status, p3, p4) {
+                                fnProgress(false);
+                                var err = "Error " + " " + status + " " + p3 + " " + p4;
+                                if (xhr.responseText && xhr.responseText[0] == "{")
+                                    err = JSON.parse(xhr.responseText).Message;
+                                console.log(err);
+                            }
+                        });
+                    } else {
+                        alertify.alert("This browser doesn't support HTML5 file uploads!");
+                    }
+                }
+            });
+
+            //to submit information in BD
+            $("#submitWorkOrder").click(function () {
+                var propertyID = checkIsNull($("#propertyID").html(), "");
+                var batchID = checkIsNull(fnGetParameterByName("specificID"), "");
+                var category = checkIsNull(fnGetParameterByName("category"), "");
+                var requestedBy = $("#requestedBy").val();
+                var emailAddress = $("#emailAddress").val();
+                var phoneNumber = $("#phoneNumber").val();
+                // var propertiesName = checkIsNull($("#tbCountries").val(), "");
+                var propertiesName = checkIsNull($("#propertyName").html(), "");
+                if (propertyID == "") {
+                    fnProgress(true);
+                    alertify.alert("Please select property from dropdown.");
+                    fnProgress(false);
+                    return false;
+                }
+                var serviceName = checkIsNull($("#objectServiceList").val(), "-");
+                var workOrderComments = checkIsNull($("#workOrderComments").val(), "");
+                var exceedCost = Number(fnRemoveCommas(checkIsNull($("#exceedCost").val(), 0)));
+
+
+                if (category == "new") {
+                    //if (serviceName != "-") {
+                    //    var worktobedone = workOrderComments + " ( " + serviceName.split('-')[1] + " ) Object:" + serviceName.split('-')[0];
+                    //} else {
+                    //    fnProgress(true);
+                    //    alertify.alert("Please select service on work order.");
+                    //    $("#objectServiceList").focus();
+                    //    fnProgress(false);
+                    //    return false;
+                    //}
+                    var worktobedone = workOrderComments;
+                    //var POID = checkIsNull($("#POID").val(), "");
+                    //if (POID=="") {
+                    //    fnProgress(true);
+                    //        $("#POID").focus();
+                    //        alertify.alert("Please input PO #.");
+                    //        $("#POID").focus();
+                    //        fnProgress(false);
+                    //        return false;
+                    //}
+
+                    alertify.confirm("Do you want to save your information?", function (e) {
+                        if (e) {
+                            alertify.success("You've clicked Save");
+                            fnProgress(true);
+                            var approvalstatus = exceedCost > 15000 ? 5 : 8;
+                            var workcompleted = "";
+                            var business_unit = "";
+                            var company_unit = "";
+                            var uNIcost = 0;
+                            var uNIcontractor_cost = 0;
+                            $.ajax({
+                                type: "POST", //HTTP POST Method
+                                url: '@Url.Action("WorkOrder", "DataEntry")',
+                                data: {
+                                    propertyid: propertyID, approvalstatus: approvalstatus, worktobedone: worktobedone, request_name: requestedBy, request_email: emailAddress, request_phone: phoneNumber,
+                                    workcompleted: workcompleted, business_unit: business_unit, company_unit: company_unit, uNIcost: uNIcost, uNIcost: uNIcost, uNIcontractor_cost: uNIcontractor_cost, wonumber: '', taxCost: 0, dNEcost: exceedCost, TempDeletedImage: tempDeletedImageLink,POID:POID, Action: "R-New"
+                                },
+                                datatype: "json",
+                                success: function (data) {
+                                    fnProgress(true);
+                                    window.location = data;
+                                    fnProgress(false);
+                                },
+                                error: function (result) {
+                                    alertify.alert("fail");
+                                }
+
+                            });
+                        } else {
+                            alertify.error("You've clicked Cancel");
+                            fnProgress(false);
+                            return false;
+                        }
+                    });
+
+                } else if (category == "SoureceWorkProposal") {
+
+                    var POID = checkIsNull($("#POID").val(), "");
+                    if (POID == "") {
+                        fnProgress(true);
+                        $("#POID").focus();
+                        alertify.alert("Please input PO #.");
+                        $("#POID").focus();
+                        fnProgress(false);
+                        return false;
+                    }
+                   var worktobedone = workOrderComments;
+                   
+                    var workRequestBatchID = checkIsNull(fnGetParameterByName("batchID"), " ");
+                    alertify.confirm("Do you want to save your information?", function (e) {
+                        if (e) {
+                            fnProgress(true);
+                            alertify.success("You've clicked Save");
+                            var approvalstatus = exceedCost > 15000 ? 5 : 8;
+                            var workcompleted = "";
+                            var business_unit = serviceName.split('-')[1];
+                            var company_unit = serviceName.split('-')[0];
+                            var uNIcost = 0;
+                            var uNIcontractor_cost = 0;
+                            $.ajax({
+                                type: "POST", //HTTP POST Method
+                                url: '@Url.Action("WorkOrder", "DataEntry")',
+                                data: {
+                                    propertyid: propertyID, approvalstatus: approvalstatus, worktobedone: worktobedone, request_name: requestedBy, request_email: emailAddress, request_phone: phoneNumber,
+                                    dailyreport_batchnumber: workRequestBatchID, workcompleted: workcompleted, business_unit: business_unit, company_unit: company_unit, uNIcost: uNIcost, uNIcost: uNIcost, uNIcontractor_cost: uNIcontractor_cost, wonumber: '', taxCost: 0, dNEcost: exceedCost,POID:POID, Action: "SoureceWorkProposal"
+                                },
+                                datatype: "json",
+                                success: function (data) {
+                                    window.location = data;
+                                    fnProgress(false);
+                                },
+                                error: function (result) {
+                                    alertify.alert("fail");
+                                }
+
+                            });
+                        } else {
+                            fnProgress(false);
+                            alertify.error("You've clicked Cancel");
+                            fnProgress(false);
+                            return false;
+                        }
+                    });
+                } else if (category == "edit") {
+                    alertify.confirm("Do you want to update your information?", function (e) {
+                        if (e) {
+                            alertify.success("You've clicked OK");
+                            var worktobedone = checkIsNull($("#workOrderComments").val(), "");
+                            var approvalstatus = $("#approvalList").val();
+                            var closeDate = new Date().toJSON().slice(0, 10);
+                            var estimatedCompletionDate = fnConvertDate(checkIsNull($("#estimatedCompletionDate").val(), ""), "mm-dd-yyyy", "yyyy-mm-dd");
+                            var completionDate = fnConvertDate(checkIsNull($("#completionDate").val(), ""), "mm-dd-yyyy", "yyyy-mm-dd");
+                            var markupCost = fnRemoveCommas($("#markupCost").val());
+                            var customerCost = fnRemoveCommas($("#customerCost").val());
+                            var taxCost = fnRemoveCommas($("#taxCost").val());
+                            var unisourcedCost = fnRemoveCommas($("#unisourcedCost").val());
+                            var serviseLog = checkIsNull($("#servisestext").val(), "");
+
+                            var workcompleted = $("#servicemail").is(":checked");
+                            var vendorid = checkIsNull($("#vendorid").val(), "");
+
+                            $.ajax({
+                                type: "POST", //HTTP POST Method
+                                url: '@Url.Action("WorkOrder", "DataEntry")',
+                                data: {
+                                    wonumber: batchID, propertyid: propertyID, approvalstatus: approvalstatus, worktobedone: worktobedone, request_name: requestedBy, request_email: emailAddress, request_phone: phoneNumber, workcompleted: workcompleted,
+                                    UNIcost: unisourcedCost, completionDate: completionDate, estimatedCompletionDate: estimatedCompletionDate, taxCost: taxCost,
+                                    UNIcontractor_cost: customerCost, markupCost: markupCost, dNEcost: exceedCost, TempDeletedImage: tempDeletedImageLink, ServiseLog: serviseLog, ClosedDate: closeDate, VendorId:vendorid, Action: "Update"
+                                },
+                                datatype: "json",
+                                success: function (data) {
+                                    window.location = data;
+                                    fnProgress(false);
+                                },
+                                error: function (result) {
+                                    fnProgress(false);
+                                    alertify.alert("fail");
+                                }
+
+                            });
+                        } else {
+                            alertify.error("You've clicked Cancel");
+                            fnProgress(false);
+                            return false;
+                        }
+                    });
+                }
+
+
+            });
+
+            //to delete record
+            $("#approvalList").change(function () {
+                if ($(this).val() == "5") {
+                    if (propertyID == "" || batchID == "") {
+                        return false;
+                    }
+                    alertify.confirm("Do you want to delete your information?", function (e) {
+                        if (e) {
+                            alertify.error("Deleting your info.");
+                            $.ajax({
+                                type: "POST", //HTTP POST Method
+                                url: '@Url.Action("DeleteRecord", "DataEntry")',
+                                data: {
+                                    PropertyID: propertyID,
+                                    UniqueID: batchID,
+                                    Category: "Work Order"
+                                },
+                                datatype: "json",
+                                success: function (data) {
+                                    if (data == "Deleted") {
+                                        window.location = "/Details/ProductDetails?category=Work Order&property=" + propertyID;
+                                    }
+                                    fnProgress(false);
+                                },
+                                error: function (result) {
+                                    fnProgress(false);
+                                    alertify.alert("fail");
+                                }
+
+                            });
+                        } else {
+                            alertify.error("You've clicked Cancel");
+                            fnProgress(false);
+                            return false;
+                        }
+                    });
+                }
+            });
+            //activity on reset btn click
+            $('#reset').click(function () {
+                var PID = checkIsNull(fnGetParameterByName("propertyID"), "");
+
+                alertify.confirm(" Back to Work Order list?", function (e) {
+                    if (e) {
+                        alertify.success("Back to Work Order List");;
+                        window.location = "/Details/ProductDetails?category=Work Order&property=" + PID;
+
+                    } else {
+                        return false;
+                    }
+                });
+
+            });
+
+            //to calculaton on unicost field
+            $("#uniCost").keyup(function () {
+                var unicostVal = Number(fnRemoveCommas($(this).val())).toFixed(2);
+
+                var mrkup = Number((unicostVal * 11.2 / 100).toFixed(2));
+
+                var taxVal = ((Number(unicostVal) + Number(mrkup)) * Number($("#taxCost").val()) / 100);
+
+                $("#unisourcedCost").val(unicostVal);
+                $("#markupCost").val(numberWithCommas((unicostVal * 11.2 / 100).toFixed(2)));
+
+                $("#customerCost").val(numberWithCommas(Number(Number(unicostVal) + Number(unicostVal * .112) + Number(taxVal)).toFixed(2)));
+            });
+
+            //check condition for Unisource Cost
+            $("#uniCost").blur(function () {
+                if (Number($("#unisourcedCost").val()) > Number($("#exceedCost").val())) {
+                    $("#unisourcedCost").css("color", "red");
+                }
+                else {
+                    $("#unisourcedCost").css("color", "#555");
+                }
+            });
+
+            //to remove image
+            $("#btnDelete").click(function () {
+                var imgInfo = $(this).attr("name");
+                var imageURL = imgInfo.split("|")[0];
+                var tdID = imgInfo.split("|")[1];
+
+                alertify.confirm("Do you want to remove this image?", function (e) {
+                    if (e) {
+                        alertify.success("You've clicked Remove");
+                        var filePath = imageURL.replace("..", "~");
+
+                        tempDeletedImageLink = tempDeletedImageLink + filePath + "|";
+
+
+                        $("td#" + tdID).remove();
+                        $("#divImage").css("display", "none");
+
+
+                    } else {
+                        alertify.error("You've clicked Cancel");
+                        fnProgress(false);
+                        return false;
+                    }
+                });
+            });
+        });
+
+        function getAllServicesInfo(seletedPropetyID) {
+            //to get all services on change property
+            var serviceList = []
+            $.ajax({
+                type: "POST", //HTTP POST Method
+                url: '@Url.Action("GetAllServices", "DataEntry")',
+                data: { //Passing data
+                    propertyid: seletedPropetyID,
+                    Action: "GetAll"
+                },
+                datatype: "json",
+                success: function (data) {
+                    $.each(data, function (i, record) {
+                        serviceList.push(record.service);
+                    });
+
+                    //to append data
+
+                    $('#objectServiceList').autocomplete({
+                        source: serviceList,
+                        minLength: 0,
+                        scroll: true,
+                        change: function () {
+                        }
+                    }).focus(function () {
+                        $(this).autocomplete("search", "");
+                    });
+
+                    $("#divLoading").css("display", "none");//to show waiting signal
+                },
+                error: function (result) {
+                    alertify.alert("fail");
+                    //$("#txtLoginMgs").html('<div class="alert alert-danger fade in"><a href="#" class="close" data-dismiss="alert">&times;</a><b>' + result + '</b></div>');
+                }
+
+            });
+        }
+        function getAllPropertiesList() {
+            var propertyDataSet = [];
+            var serchList = [];
+            $.ajax({
+                url: "@Url.Action("GetAllPropertyList", "DataEntry")",
+                data: "",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (i, record) {
+                        serchList.push(record.displayname);
+                        propertyDataSet.push({ DisplayName: record.displayname, PropertyID: record.propertyid, Address: record.address1, ClientCode: record.clientcode });
+                    });
+                    //to show property information after loading dom
+                    var propertyID = checkIsNull(fnGetParameterByName("propertyID"), "");
+                    if (propertyID != "") {
+                        for (var i = 0; i < propertyDataSet.length; i++) {
+                            //to show information check condition
+                            if (propertyID == propertyDataSet[i]["PropertyID"]) {
+                                $("#propertyID").html(propertyDataSet[i]["PropertyID"]);
+                                $("#address").html(propertyDataSet[i]["Address"]);
+                                $("#propertyName").html(propertyDataSet[i]["DisplayName"]);
+                                $("#propertyImage").attr("src", "../PropertyPictures/" + propertyDataSet[i]["PropertyID"] + ".jpg");
+                                //to build left site menu
+                                classUniSource.fnSiteSubMenuShow(propertyID, propertyDataSet[i]["DisplayName"], "liWorkOrder");
+                               // getAllServicesInfo(propertyID);
+                                break;
+                            }
+                        }
+                    } else {
+                        return false;
+                    }
+
+                    fnProgress(false);//to show waiting signal
+                    //to bind search properties
+                    $('#tbCountries').autocomplete({
+                        source: serchList,
+                        minLength: 0,
+                        scroll: true,
+                        change: function () {
+                            $("#divLoading").css("display", "block");//to show waiting signal
+                            var proertyName = $(this).val();
+                            for (var i = 0; i < propertyDataSet.length; i++) {
+                                //to show information check condition
+                                if (proertyName == propertyDataSet[i]["DisplayName"]) {
+                                    seletedPropetyID = propertyDataSet[i]["PropertyID"];
+                                    if (propertyDataSet[i]["ClientCode"] != "Raymour & Flanigan") {
+                                        window.location = "/DataEntry/WorkOrder?category=new&propertyID=" + propertyDataSet[i]["PropertyID"];
+                                        return false;
+                                    }
+                                    $("#propertyID").html(propertyDataSet[i]["PropertyID"]);
+                                    $("#address").html(propertyDataSet[i]["Address"]);
+                                    $("#propertyName").html(propertyDataSet[i]["DisplayName"]);
+                                    $("#esttax").val(propertyDataSet[i]["TaxRate"]);// for text rate
+                                    $("#propertyImage").attr("src", "../PropertyPictures/" + propertyDataSet[i]["PropertyID"] + ".jpg");
+                                    fnProgress(false);
+                                    break;
+                                }
+                            }
+                            //getAllServicesInfo(seletedPropetyID);
+
+                        }
+                    }).focus(function () {
+                        $(this).autocomplete("search", "");
+                    });
+                },
+                error: function () {
+                    fnProgress(false);
+                    //alert("Failed! Please try again.");
+                }
+            });
+        }
+
+        //Get Vendor List
+        function getAllVendorList() {
+            var vendorDataSet = [];
+            var serchList = [];
+
+            $.ajax({
+                url: "@Url.Action("GetAllVendorList", "DataEntry")",
+                data: "",
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (i, record) {
+                        serchList.push(record.name);
+                        vendorDataSet.push({ DisplayName: record.name, vendorID: record.vendorid });
+                    });
+
+                    $('#tbvendor').autocomplete({
+                        source: serchList,
+                        minLength: 0,
+                        scroll: true,
+                        change: function () {
+                            var vendorName = $(this).val();
+                            for (var i = 0; i < vendorDataSet.length; i++) {
+                                //to show information check condition
+                                if (vendorName == vendorDataSet[i]["DisplayName"]) {
+                                    $("#vendorid").val(vendorDataSet[i]["vendorID"]);
+                                    break;
+                                }
+                                else {
+                                    $("#vendorid").val("");
+                                }
+                            }
+                        }
+                    }).focus(function () {
+                        $(this).autocomplete("search", "");
+                    });
+                },
+                error: function () {
+                    fnProgress(false);
+                }
+            });
+        }
+
+        //ImageRemove from Temp
+        function removeImageformTamp(attrb) {
+            var imageURL = $(attrb).attr("name").replace('.s2', '.s1');
+            var tdID = $(attrb).attr("id");
+            $("#divImage").css("display", "block");
+            //to set source image
+            $("#btnDelete").attr("name", imageURL + "|" + tdID);
+            $("#imgFull").attr("src", imageURL);
+            //bind delete function
+
+            $("#leftShift").unbind();
+            $("#leftShift").bind("click", function () {
+                var preID = $(attrb).closest('td').prev().attr('id');
+                if (checkIsNull(preID, "") != "") {
+                    removeImageformTamp($(attrb).closest('td').prev());
+                }
+            });
+
+
+            $("#rightShift").unbind();
+            $("#rightShift").bind("click", function () {
+                var nextID = $(attrb).closest('td').next().attr('id');
+                if (checkIsNull(nextID, "") != "") {
+                    removeImageformTamp($(attrb).closest('td').next());
+                }
+            });
+
+            $("#btnClose").bind("click", function () {
+                $("#divImage").css("display", "none");
+            });
+
+        }
+
+        function getCurrentUserInformation() {
+            $.ajax({
+                type: "POST", //HTTP POST Method
+                url: '@Url.Action("GetUserInformation", "DataEntry")',
+                data: {
+                    Action: "User"
+                },
+                datatype: "json",
+                success: function (data) {
+                    $.each(data, function (i, record) {
+                        // alert("UserID: " + record.username);
+                        $("#requestedBy").val(record.fullname);
+                        $("#emailAddress").val(record.emailaddress);
+                        $("#phoneNumber").val(record.phonenumber);
+                    });
+                },
+                error: function (result) {
+                    alertify.alert("fail");
+                }
+
+            });
+        }
+    </script>
+}
+
+
+<div class="container-fluid">
+    <h2 class="page-header" id="wpheader">Create Raymour Work Order</h2>
+    <div class="row">
+        <div class="col-md-9">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @*<a id="printPI" style="float:right" href="#"><i class="uni-icon icon-print normal" onclick="classInspectionReport.PrintPI()"></i></a>*@
+                    <div class="input-group" id="adv-search" style="padding-bottom: 10px;">
+                        <input type="text" id="tbCountries" class="form-control" placeholder="Select a Property" />
+                        <span class="btn input-group-addon" id="propertySearch"><span class="caret" aria-hidden="true"></span></span>
+                    </div>
+                    <button type="button" class="btn btn-info editPropertise" id="laststatus" style="display: none; float: right;">Open</button>
+                    <table width="100%">
+                        <tr>
+                            <td width="18%">
+                                <label for="usr">Property ID:</label>
+                            </td>
+                            <td>
+                                <label id="propertyID"></label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="usr">Property Name:</label>
+                            </td>
+                            <td>
+                                <label id="propertyName"></label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="usr">Address:</label>
+                            </td>
+                            <td>
+                                <label id="address"></label>
+                            </td>
+                        </tr>
+                    </table>
+                    <br />
+                    <div class="editPropertise" style="display: none">
+                        <form class="row form-inline">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        Work Order #
+                                    </span>
+                                    <input type="text" class="form-control" id="woid" readonly="true">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group" id="workrequestDisplay" style="display: none">
+                                    <span class="input-group-addon">
+                                        Work Proposal #
+                                    </span>
+                                    <div id="wpid" class="form-control"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <span class="input-group-addon">
+                                        Date Submitted:
+                                    </span>
+                                    <input type="text" class="form-control" id="createdDate" readonly="true">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-group" id="closeworkorder" style="display: none;">
+                                    <span class="input-group-addon">
+                                        Closed Date :
+                                    </span>
+                                    <input type="text" class="form-control" id="closedDate" readonly="true">
+                                </div>
+                            </div>
+                        </form>
+
+                        <br />
+                        <div class="form-group">
+                            <label class="control-label">Submitted By:</label>
+                            <input type="text" id="requestedBy" class="form-control" readonly="true" />
+                            <input type="text" id="emailAddress" class="form-control" style="display: none;" />
+                        </div>
+                    </div>
+
+                    @*<div class="form-group newproPerties">
+                        <label>Services on Work Order:</label>
+                        <div class="input-group" id="obj-search">
+                            <input type="text" id="objectServiceList" class="form-control" placeholder="Select an Object Account" />
+                            <span class="btn input-group-addon" id="serviceearch"><span class="caret" aria-hidden="true"></span></span>
+                        </div>
+                    </div>*@
+                        <div class="col-md-4 row">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    PO #
+                                </span>
+                                <input type="text" class="form-control" id="POID" maxlength="10">
+                            </div>
+                        </div><br/><br/>
+                        <div class="form-group">
+                            <label>Comments:</label>
+                            <textarea class="form-control input-sm" id="workOrderComments" rows="2" placeholder="Enter details of Work Order"></textarea>
+                        </div>
+                        <div class="panel panel-info editPropertise" style="display: none">
+                            <div class="panel-heading">
+                                Services Log
+                            </div>
+
+                            <table id="serviceLog">
+                                <tbody></tbody>
+                            </table>
+                            <div class="col-md-12 padding-zero">
+                                <div class="input-group">
+                                    <textarea class="form-control" id="servisestext" style="resize: vertical; height: 30;" placeholder="Enter Service Log Comment..."></textarea>
+                                    <span class="input-group-addon">
+                                        <input type="checkbox" id="servicemail" checked="checked">
+                                        Send E-mail
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <div class="form-group">
+                                    <label class="control-label custom-label">Do not exceed cost ($)</label>
+                                    <input type="text" id="exceedCost" class="form-control number number-float">
+                                </div>
+                            </div>
+                            <div class="editPropertise" style="display: none">
+                                <div class="col-sm-3">
+                                    <div class="form-group">
+                                        <label class="control-label custom-label">Unisource Cost</label>
+                                        <input type="text" id="unisourcedCost" class="form-control number number-float" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <label class="control-label custom-label">Markup(11.2%)</label>
+                                        <input type="text" id="markupCost" class="form-control number" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <label class="control-label custom-label">Customer cost</label>
+                                        <input type="text" id="customerCost" class="form-control number" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-sm-2">
+                                    <div class="form-group">
+                                        <label class="control-label custom-label">Tax (%)</label>
+                                        <input type="text" id="taxCost" class="form-control percetage" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-warning showhide" id="imageUploadSection" style="display: none; overflow-x: auto;">
+                            <label>Images</label>
+                            <div id="errorImageUpload" class="danger"></div>
+
+                            <div class="input-group">
+                                <table id="imageUploadedTable" class="table-bordered">
+                                    <tr>
+                                        @{
+                                            string propertyID = Request.QueryString["propertyID"];
+                                            string guiID = Request.QueryString["specificID"];
+                                            string batchID = Request.QueryString["batchID"];
+                                            string rootPath, rootPathForHTML;
+                                            var counter = 0;
+                                            //to create work order from work proposal
+                                            if (batchID != null)
+                                            {
+                                                rootPath = "~/DailyReports/" + propertyID + "/" + batchID + "/";
+                                                rootPathForHTML = "../DailyReports/" + propertyID + "/" + batchID + "/";
+
+                                            }
+                                            else
+                                            {
+                                                rootPath = "~/Pictures/WorkOrder/" + guiID + "/";
+                                                rootPathForHTML = "../Pictures/WorkOrder/" + guiID + "/";
+                                            }
+
+                                            if (propertyID != null)
+                                            {
+                                                DirectoryInfo directoryInfoOverlay = new DirectoryInfo(Server.MapPath(rootPath));
+                                                if (directoryInfoOverlay.Exists)
+                                                {
+
+                                                    string internalExtension = string.Concat("*.", "*");
+                                                    FileInfo[] fileInfo = directoryInfoOverlay.GetFiles().Where(x => x.Name.Contains("s2")).ToArray();
+                                                    foreach (FileInfo fileInfoTemp in fileInfo)
+                                                    {
+                                                        counter = counter + 1;
+                                                        string fileID = DateTime.Now.ToString("yyyyMMddhhmmssffffff") + counter;
+                                                        <td class="tdImageUpload" id="@fileID" name="@rootPathForHTML@fileInfoTemp.Name" onClick="removeImageformTamp(this)" title="Click to view.">
+                                                            <img src='@rootPathForHTML@fileInfoTemp.Name' class="uploadedImage img-thumbnail">
+                                                        </td>
+                                                    }
+                                                    <script>
+                                                        $("#imageUploadSection").css("display", "block");
+                                                    </script>
+                                                }
+                                            }
+                                        }
+                                    </tr>
+                                </table>
+
+                                <div class="input-group-addon" style="width: 0px; padding: 0px !important;">
+                                    <span class="btn btn-success btn-file">
+                                        <input type="file" value="" name="MyFile" class="closeproPerties" id="fu-my-auto-upload">
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="editPropertise" style="display: none">
+                            <div class="row">
+                                <div class="col-md-3 form-group has-success">
+                                    <label class="control-label">Est. Completion date</label>
+                                    <div class='input-group datetime' id='dateestimate'>
+                                        <input type="text" id="estimatedCompletionDate" data-format="yyyy/MM/dd" class="date-picker form-control">
+                                        <label for="estimatedCompletionDate" class="input-group-addon btn">
+                                            <span class="fa fa-calendar"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 form-group has-success">
+                                    <label class="control-label">Completion date</label>
+                                    <div class='input-group datetime' id='datecomplete'>
+                                        <input type='text' id="completionDate" class="date-picker form-control" />
+                                        <label for="completionDate" class="input-group-addon btn">
+                                            <span class="fa fa-calendar"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 has-success form-group admin-user-permission">
+                                    <label class="control-label">Assign Vendor</label>
+                                    <div class="input-group" id="vndr-search">
+                                        <input type="text" id="tbvendor" class="form-control" placeholder="Select a Vendor" />
+                                        <span class="btn input-group-addon" id="vendorSearch"><span class="caret" aria-hidden="true"></span></span>
+                                        <input type="text" id="vendorid" class="form-control" style="display: none;" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <br />
+                        <div class="row editPropertise" style="display: none">
+                            <div class="col-md-5  allow-edit-work-order">
+                                <div class="input-group admin-user-permission">
+                                    <span class="input-group-addon">Update Status:</span>
+                                    <select class="form-control" id="approvalList">
+                                        <option value="8">Open</option>
+                                        <option value="9">Closed</option>
+                                        <option value="5">Delete</option>
+                                    </select>
+
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row editPropertise" style="display: none">
+                            <div class="col-md-5 allow-edit-work-order">
+                                <div class="form-group input-group admin-user-permission">
+                                    <span class="input-group-addon">Unisource cost ($):</span>
+                                    <input type="text" id="uniCost" class="form-control number number-float">
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                            </div>
+                        </div>
+
+
+
+
+                        <div class='wrapper text-center'>
+                            <button id="reset" class="btn btn-warning" type="button">Cancel</button>
+                            <button class="btn btn-success allow-edit-work-order" type="button" id="submitWorkOrder">Submit</button>
+                        </div>
+
+                    </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="panel panel-success">
+                <div class="panel-body">
+                    <div class="tbl">
+                        <img id="propertyImage" src="" class="propety-image">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divImage">
+    <table style="height: 100%; width: 100%">
+        <tr>
+            <td valign="middle" align="center">
+                <div class="input-group">
+                    <span class="input-group-btn" style="width: 0% !important;">
+                        <button class="btn btn-info" type="button" id="leftShift"><i class="fa fa-chevron-left fa-3x"></i></button>
+                    </span>
+                    <img id="imgFull" alt="" src="" style="" />
+                    <span class="input-group-btn" style="width: 0% !important;">
+                        <button class="btn btn-info" type="button" id="rightShift"><i class="fa fa-chevron-right fa-3x"></i></button>
+                    </span>
+                </div>
+
+                <a style="color: red;" href="#" id="btnDelete" title="click here to remove this image">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </a>
+                &nbsp;
+                <a style="color: yellow;" href="#" id="btnClose" title="click here to cancel">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+

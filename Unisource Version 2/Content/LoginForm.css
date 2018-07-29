@@ -1,0 +1,69 @@
+/* START BASIC CSS */
+html {height:100%;margin:0; padding:0;}
+body {margin:0; padding:0;height:100%;font-family:'Open Sans';font-size:14px;color:#393939;/*background: url(../Content/img/bg.jpg) no-repeat center center fixed;*/
+-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;}
+h1, h2, h3, h4, h5, h6 { font-family:'Colaborate';}
+.tbl { display:table; content:''; clear:both; width:100%; }
+.fontawesome-icon-list { padding:0px 20px 20px 20px; }
+.fontawesome-icon-list > div { height:30px; }
+.fontawesome-icon-list > div > i  { margin-right:10px; }
+blockquote {border-color: rgba(0, 0, 0, 0.1) !important;}
+/* END BASIC CSS */
+
+
+/* START LOGIN */
+.contain > .login { width:100%; height:100%; display:table-cell; vertical-align:middle; text-align:center; }
+.contain > .login > .login-box { width:400px;  margin:auto; text-align:left !important; }
+.contain > .login > .login-box > .log-logo { background:rgba(30, 30, 30, 0.45); padding:15px 0px; text-align:center !important; }
+.contain > .login > .login-box label { font-weight:normal; color:#666; }
+.contain > .login > .login-box .form-control { margin-bottom:30px; }
+.contain > .login > .login-box  .log-contain { padding:25px; height:auto; background:rgba(255, 255, 255, 0.80); }
+.contain > .login > .login-box  .log-footer { background:rgba(255, 255, 255, 0.70); padding:15px !important; text-align:right !important; }
+.contain > .login > .login-box  .forgot { float:left;position:relative; top:10px; }
+.contain > .login > .btn-primary.btn-login { display:block; margin:auto; width:40px; height:40px; line-height:10px;  position:relative; right:-220px; top:-320px; font-size:24px; }
+.contain > .login > .btn-info.btn-login {  display:block;  margin:auto; width:40px; height:40px; line-height:10px; position:relative; right:-220px; top:-310px; font-size:24px; }
+.contain > .login > .btn-info.btn-login .fa {  position:relative; left:-4px; top:2px; }
+.contain > .login > .btn-primary.btn-login .fa {  position:relative; right:-2px; top:2px; }
+/* END LOGIN */
+
+
+/* START LAYOUT */
+.contain {  width:100%; height:100%; display:table; content: ''; clear:both; margin:0; padding:0; }
+.contain > .left { display:table-cell; width:250px; height:100%; vertical-align:top; padding:15px 0 0 10px; }
+.contain > .right { display:table-cell; height:100%; vertical-align:top; }
+.contain > .right > .col-md-12 { height:70px; display:block; }
+.contain > .right .nav { height:70px; padding:0; margin:0; float:right;  }
+.contain > .right .logo { height:70px; text-align:left; line-height:60px; float:left; }
+.contain > .right .logoxs { height:70px; text-align:left; line-height:60px; float:left; width:24px; display:none; }
+.contain > .left > .sidebar { margin-top:70px; width:100%;  color:#09090B; font-weight:bold; }
+.contain > .right > .content { margin:0px; padding-bottom:20px; }
+.contain .left.hidden-xs { display:table-cell !important; }
+
+#response { display:none; }
+#response  .rep { background: rgba(255, 255, 255, 0.80); color:#777777; height:44px; line-height:40px; padding:5px 10px;margin:0px; font-size:13px; border-radius:0px; }
+#response .rep .input-group .icon { position:relative; left:7px; top:-1px; width:0px; }
+#response .rep .input-group input { padding-left:25px !important; width:150px; margin-top:15px !important; margin-bottom:0px !important; }
+#response .rep .btn-group { position:relative; top:-14px; }
+#response .rep .btn-group .dropdown-menu { position:absolute; top:33px; }
+.linked-head { color: #448fba !important; width:100%; height:36px !important; line-height:36px !important; margin:0; padding: 0px 10px !important; border-top:1px solid rgba(0, 0, 0, 0.075) !important; border-bottom:1px solid rgba(0, 0, 0, 0.075) !important; }
+.linked-head .fa, .linked-head .icon  { margin-right: 8px; }
+.hov .top a { border-bottom:1px solid rgba(0, 0, 0, 0.075) !important; }
+
+@media (max-width: 460px) {
+  .hidden-xs,tr.hidden-xs,th.hidden-xs,td.hidden-xs { display: none !important;}
+
+  .contain > .right .logo { display:none !important;}
+  .contain > .right .logoxs {display:block !important; padding-left:10px; }
+  #response { display:block; }
+  #bread { display: none; }
+}
+@media (max-width: 460px) {
+  .hidden-xs,tr.hidden-xs,th.hidden-xs,td.hidden-xs { display: none !important;}
+  .contain .left.hidden-xs { display:none !important; }
+  .contain > .right > .content { padding-right:10px; padding-left:10px;}
+  .contain > .right .logo { padding-left:10px;}
+}
+.login-box{
+   border-radius: 2px;
+    background: #bababa;
+}

@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewBag.Title = "Loginpage";
+}
+<style type="text/css">
+    .contain .left.hidden-xs {
+    display: none !important;
+}
+</style>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#btnLogin").click(function () {
+                var UserID = $("#txtUserID").val();
+                var Password = $("#txtPassword").val();
+                if (UserID == "" || Password == "") {
+                    $("#txtLoginMgs").html('<div class="alert alert-success fade in"><a href="#" class="close" data-dismiss="alert">&times;</a><b>Plese input UserID and Password</b></div>');
+                    return false;
+                }
+                $.ajax({
+                       type: "POST", //HTTP POST Method
+                       url: '@Url.Action("Index", "Login")',
+                       data: { //Passing data
+                           UserID: UserID, //Reading text box values using Jquery
+                           Password: Password
+                       },
+                       datatype:"json",
+                       success:function(result){
+                           $("#txtLoginMgs").html('<div class="alert alert-success fade in"><a href="#" class="close" data-dismiss="alert">&times;</a><b>'+result+'</b></div>');
+                       },
+                       error:function(){
+                           $("#txtLoginMgs").html('<div class="alert alert-danger fade in"><a href="#" class="close" data-dismiss="alert">&times;</a><b>' + result + '</b></div>');
+                       }
+
+                   });
+            });
+        });
+    </script>
+}
+
+
+
+
+
+
+<div class="contain">
+    <!-- BEGIN LOGIN -->
+    <div class="login">
+        <div class="login-box">
+            <!-- LOGIN LOGO -->
+            <div class="log-logo">
+                <img src="../content/img/logo.png">
+            </div>
+            <!-- LOGIN FORM -->
+            <div class="log-contain">
+                <div id="txtLoginMgs"></div>
+                <form role="form">
+                    <div class="form-group">
+                        <label for="email">Username</label>
+                        <input type="text" id="txtUserID" class="form-control col-sm-12" placeholder="User ID" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label for="user">Password</label>
+                        <input type="password" id="txtPassword" class="form-control col-sm-12" placeholder="Password" required>
+                    </div>
+                    <div class="form-group">
+                        <input tabindex="13" type="checkbox" class="icheck-blue" id="fc1" checked>
+                        <label class="checkbox-label" for="fc1">Remember Me</label>
+                    </div>
+                </form>
+            </div>
+            <!-- LOGIN BUTTONS -->
+            <div class="log-footer">
+                <div class="forgot"><a href="#">Forgot Password?</a></div>
+                <a href="#" class="btn btn-default">Cancel</a>&nbsp;&nbsp;
+                <a  id="btnLogin" class="btn btn-info">Login</a>
+            </div>
+        </div>
+    </div>
+
+</div>

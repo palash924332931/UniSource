@@ -1,0 +1,313 @@
+﻿@{
+    ViewBag.Title = "SnowReport";
+}
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#propertyImage').error(function () {
+                $("#propertyImage").attr("src", "../Content/imgs/noimages.png");
+            });
+            classSnowReport.loadInformationFromDB();
+
+
+            if ("@Session["allowreportstatuschange"].ToString()" != "Yes") {
+                $("#submitInformation").css("display", "none");
+            }
+
+        });
+
+        classSnowReport = {
+            propertyID: checkIsNull(fnGetParameterByName("propertyID"), ""),
+            batchID: checkIsNull(fnGetParameterByName("specificID"), ""),
+            category: checkIsNull(fnGetParameterByName("category"), ""),
+            fieldName: "siteconditions_accumulationinches|siteconditions_accumulationtype|siteconditions_drifting|siteconditions_ice|siteconditions_traffic|~|weatherconditions_currentprecipitation|weatherconditions_currentconditions|~|plowingandclearing_roadsandlotsplowingstatus|plowingandclearing_entranceexit|plowingandclearing_handicap|plowingandclearing_roadandroadways|plowingandclearing_roadandroadwaysfront|plowingandclearing_roadandroadwaysrear|plowingandclearing_roadandroadwaysside|plowingandclearing_roadandroadwaysother|plowingandclearing_parkingspotsareas|plowingandclearing_loadingdocks|plowingandclearing_drivethru|plowingandclearing_ramps|plowingandclearing_deliveryarea|plowingandclearing_comments|~|walksclearing_clearsidewalksstatus|walksclearing_entrancedoors|walksclearing_servicedoors|walksclearing_ramps|walksclearing_steps|walksclearing_gfbidblock|walksclearing_privatewalks|walksclearing_citywalks|walksclearing_comments|walksclearing_snowremoval|walksclearing_stackingonsite^walksclearing_stackingonsitehrs|walksclearing_removal^walksclearing_removalhrs|walksclearing_snowfield|~|deicingandantiicing_roadsandlotsdeicingstatus|deicingandantiicing_entranceexit|deicingandantiicing_handicap|deicingandantiicing_roadandroadways|deicingandantiicing_roadandroadwaysfront|deicingandantiicing_roadandroadwaysrear|deicingandantiicing_roadandroadwaysside|deicingandantiicing_roadandroadwaysother|deicingandantiicing_parkingspotsareas|deicingandantiicing_loadingdocks|deicingandantiicing_drivethru|deicingandantiicing_ramps|deicingandantiicing_deliveryarea|deicingandantiicing_comments|deicingandantiicing_materialsusedsalt^deicingandantiicing_saltbags^deicingandantiicing_saltlbs|deicingandantiicing_materialsusedcalcium^deicingandantiicing_calciumbags^deicingandantiicing_calciumlbs|~|walksdeicing_deicesidewalksstatus|walksdeicing_entrancedoors|walksdeicing_servicedoors|walksdeicing_ramps|walksdeicing_steps|walksdeicing_privatewalks|walksdeicing_citywalks|walksdeicing_comments|walksdeicing_materialsusedblend^walksdeicing_blendbags^walksdeicing_blendlbs|walksdeicing_materialsusedcalcium^walksdeicing_calciumbags^walksdeicing_calciumlbs|walksdeicing_noserviceperformedsitecheckonly|~|liquidantiicinglog_applicator|liquidantiicinglog_trucknumber|liquidantiicinglog_timein|liquidantiicinglog_timeout|liquidantiicinglog_goundtemperaturein^liquidantiicinglog_goundtemperatureout|liquidantiicinglog_airtemperaturein^liquidantiicinglog_airtemperatureinout|liquidantiicinglog_siteconditions|liquidantiicinglog_surfaceswet^liquidantiicinglog_surfacesdry|liquidantiicinglog_fallingsnowice^liquidantiicinglog_fallingsnowrain|liquidantiicinglog_materialtypeapplied|liquidantiicinglog_amountintankgallonsstart^liquidantiicinglog_amountintankgallonsstop|liquidantiicinglog_totalgallonsused|liquidantiicinglog_areastreated|liquidantiicinglog_tipsnozzlesused|liquidantiicinglog_groundspeed|liquidantiicinglog_trafficconditions|liquidantiicinglog_notes|~",
+            fieldType: "text|dropdown|radio|radio|dropdown|~|dropdown|dropdown|~|percentage-text|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|text|~|percentage-text|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|text|checkbox|checkbox^text|checkbox^text|text|~|percentage-text|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|text|checkbox^text^text|checkbox^text^text|~|percentage-text|checkbox|checkbox|checkbox|checkbox|checkbox|checkbox|text|checkbox^text^text|checkbox^text^text|radio|~|text|text|text|text|text^text|text^text|text|text^text|text^text|text|text^text|text|text|text|text|radio|text|~",
+            loadInformationFromDB: function () {
+                var fieldNameArry = this.fieldName.split('|');
+                var fieldTypeArry = this.fieldType.split('|');
+                var propertyID = this.propertyID;
+                var batchID = this.batchID
+                var category = this.category;
+
+
+                var columnNameArray = this.fieldName.split('|');
+                var ColumnTypeArray = this.fieldType.split('|');
+                var titleOfTable = "Accumulation (inches)|Accumulation (type)|Drifting|Ice|Traffic|SITE CONDITIONS|Current precipitation|Current conditions|WEATHER CONDITIONS|	Roads & Lots, Plowing|	Entrance / Exit|Handicap|Road & Roadways|Front|	Rear|Side|	Other|	Parking Spots / Areas|	Loading Docks|	Drive-Thru|	Ramps|	Delivery Area|	Comments|	PLOWING & CLEARING|	Roads & Lots, Plowing|	Entrance Doors|	Service Doors|	Ramps|	Steps|	GF BID Block^|	Private Walks|	City Walks|	Comments|	Snow Removal|	Stacking on Site^hrs.|	Removal^hrs.|	Snow Field|	WALKS (CLEARING) |	Roads & Lots, Plowing|	Entrance / Exit|	Handicap|	Road & Roadways|	Front|	Rear|	Side|	Other|	Parking Spots / Areas|	Loading Docks|	Drive-Thru|	Ramps|	Delivery Area|	Comments|	Materials Used - Salt^lbs.^tons|	Materials Used - Calcium^bags^lbs.|	DE-ICING & ANTI-ICING|	Roads & Lots, Plowing|	Entrance Doors|	Service Doors|	Ramps|	Steps|	Private Walks|	City Walks|	Comments|Materials Used - Blend^bags^lbs|Materials Used - Calcium^bags^lbs.|No Service Performed (Site Check Only)|WALKS (DE-ICING)|Applicator|Truck Number|Time In|Time Out|Gound Temperature^In^Out|Air Temperature^In^Out|Site Conditions|Surfaces^Wet^Dry|Falling Snow^Ice^Rain|Material Type Applied|Amount in Tank (Gallons)^Start^Stop|Total Gallons Used|Areas Treated|Tips/Nozzles Used|Ground Speed|Traffic Conditions|Notes|LIQUID ANTI-ICING LOG";
+                var titleOfTableArray = titleOfTable.split("|");
+
+                fnProgress(true);
+                if (category == "edit") {
+                    $(".editPropertise").css("display", "block");
+                    $(".newProperties").css("display", "none");
+                } else {
+
+                }
+
+                $.ajax({
+                    url: "@Url.Action("SnowRemopval", "DataEntry")",
+                    data: { PropertyID: propertyID, BatchID: batchID, ItemCategory: "Inspection", Action: "GetInfo" },
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        $.each(data, function (i, record) {
+                            var statusOfInspected = false;
+                            //var approvalStatus = record["approvalstatus"];
+                            //alert(record["vendorname"]);
+                            $("#vendorname").html(record["vendorname"]);
+                            $("#arrivalTime").html(record["timearrival"]);
+                            $("#departureTime").html(record["timedeparture"]);
+                            $("#dateperformed").html(record["dateperformed"]);
+
+                            $("#propertyID").html(record["propertyid"]);
+                            $("#propertyName").html(record["propertyName"]);
+                            $("#propertyImage").attr("src", "../PropertyPictures/" + record.propertyid + ".jpg");
+                            //$("#approvalList").val(record["approvalstatus"]);
+
+                            //to show side menu
+                            classUniSource.fnSiteSubMenuShow(record.propertyid, record.propertyName, "liSnowRemoval");
+
+
+                            //var ColumnTypeArray = ColumnType.split("|");
+
+                            var reviewTable = "";
+                            var statusCheck = false;
+                            var reviewTableObject = "";
+                            for (var i = 0; i < columnNameArray.length; i++) {
+                                if (columnNameArray[i] == "~" && statusCheck == true) {
+                                    reviewTableObject = "<table  class='table table-bordered'><tr style='background-color:#dff0d8;text-align:center'><td colspan='2'>" + titleOfTableArray[i] + "</td></tr>" + reviewTableObject + "</table><br/>";
+                                    reviewTable = reviewTable + reviewTableObject;
+                                    reviewTableObject = "";
+                                    statusCheck = false;
+                                } else {
+                                    var colmnValue = "";
+                                    var titleVal = "";
+                                    if ($.trim(ColumnTypeArray[i]) == "text") {
+                                        colmnValue = record["" + $.trim(columnNameArray[i]) + ""];
+                                        titleVal = titleOfTableArray[i];
+                                    } else if ($.trim(ColumnTypeArray[i]) == "dropdown") {
+                                        colmnValue = record["" + $.trim(columnNameArray[i]) + ""];
+                                        titleVal = titleOfTableArray[i];
+                                    } else if ($.trim(ColumnTypeArray[i]) == "checkbox") {
+                                        colmnValue = checkIsNull(record["" + $.trim(columnNameArray[i]) + ""], 0);
+                                        if (colmnValue == 0) {
+                                            colmnValue = "";
+                                        }
+                                        titleVal = titleOfTableArray[i];
+                                        if (colmnValue) {
+                                            colmnValue = "<input type='checkbox' checked disabled>";
+                                        } else {
+                                            colmnValue = "";
+                                        }
+                                    } else if ($.trim(ColumnTypeArray[i]) == "radio") {
+                                        titleVal = titleOfTableArray[i];
+                                        //$("." + $.trim(columnNameArray[i])).each(function () {
+                                        //    if ($(this).prop("checked")) {
+                                        if ($.trim(columnNameArray[i]) == "siteconditions_drifting" || $.trim(columnNameArray[i]) == "siteconditions_ice") {
+                                            colmnValue = record["" + $.trim(columnNameArray[i]) + ""];
+                                            if (colmnValue == "1") {
+                                                colmnValue = "Yes";
+                                            } else if (colmnValue == "2") {
+                                                colmnValue = "No";
+                                            }
+                                        } else if ($.trim(columnNameArray[i]) == "walksdeicing_noserviceperformedsitecheckonly") {
+                                            colmnValue = record["" + $.trim(columnNameArray[i]) + ""];
+                                            if (colmnValue == "1") {
+                                                colmnValue = "Change";
+                                            } else if (colmnValue == "0") {
+                                                colmnValue = "No Change";
+                                            }
+                                        } else if ($.trim(columnNameArray[i]) == "liquidantiicinglog_trafficconditions") {
+                                            colmnValue = record["" + $.trim(columnNameArray[i]) + ""];
+                                            if (colmnValue == "1") {
+                                                colmnValue = "Heavy";
+                                            } else if (colmnValue == "2") {
+                                                colmnValue = " Moderate ";
+                                            } else if (colmnValue == "3") {
+                                                colmnValue = "  Low  ";
+                                            } else if (colmnValue == "4") {
+                                                colmnValue = " None ";
+                                            }
+                                        }
+
+                                        //
+                                        //    }
+                                        //});
+                                    } else if ($.trim(ColumnTypeArray[i]) == "percentage-text") {
+                                        titleVal = titleOfTableArray[i];
+                                        colmnValue = checkIsNull(record["" + $.trim(columnNameArray[i]) + ""], '0');
+                                        if (colmnValue == '100') {
+                                            colmnValue = " All areas per contract";
+                                        } else if (colmnValue != '0') {
+                                            colmnValue = colmnValue + " %";
+                                        } else {
+                                            colmnValue = "";
+                                        }
+                                    } else if ($.trim(ColumnTypeArray[i]).indexOf("^") != -1) {
+                                        var multipleColumnTypeArray = $.trim(ColumnTypeArray[i]).split("^");
+                                        var multiplecolumnNameArrayArray = $.trim(columnNameArray[i]).split("^");
+                                        var multipleTitleOfTableArray = $.trim(titleOfTableArray[i]).split("^");
+                                        var innerloopCondition = false;
+                                        if ($.trim(ColumnTypeArray[i]).indexOf("checkbox") == -1) {
+                                            titleVal = multipleTitleOfTableArray[0];
+                                            innerloopCondition = true;
+
+                                            for (var m = 0; m < multiplecolumnNameArrayArray.length; m++) {
+                                                if (multipleColumnTypeArray[m] == "checkbox") {
+                                                    var checkedStatus = checkIsNull(record["" + $.trim(multiplecolumnNameArrayArray[m]) + ""], "");
+                                                    titleVal = multipleTitleOfTableArray[m];
+                                                    innerloopCondition = true;
+                                                } else if (multipleColumnTypeArray[m] == "text" && innerloopCondition == true) {
+                                                    if (checkIsNull(record["" + $.trim(multiplecolumnNameArrayArray[m]) + ""], "") != "") {
+                                                        colmnValue = colmnValue + " " + multipleTitleOfTableArray[m + 1] + " " + checkIsNull(record["" + $.trim(multiplecolumnNameArrayArray[m]) + ""], ""); + " ";
+                                                    }
+                                                }
+                                            }
+
+                                        } else {
+
+                                            for (var m = 0; m < multiplecolumnNameArrayArray.length; m++) {
+                                                if (multipleColumnTypeArray[m] == "checkbox") {
+                                                    var checkedStatus = checkIsNull(record["" + $.trim(multiplecolumnNameArrayArray[m]) + ""], "")
+                                                    titleVal = multipleTitleOfTableArray[m];
+                                                    if (checkedStatus == true) {
+                                                        innerloopCondition = true;
+                                                    }
+
+                                                } else if (multipleColumnTypeArray[m] == "text" && innerloopCondition == true) {
+                                                    if (checkIsNull(record["" + $.trim(multiplecolumnNameArrayArray[m]) + ""], "") != "") {
+                                                        colmnValue = colmnValue + checkIsNull(record["" + $.trim(multiplecolumnNameArrayArray[m]) + ""], "") + " " + multipleTitleOfTableArray[m] + " ";
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    //to check data already in dom
+                                    if (checkIsNull(colmnValue, "") != "") {
+                                        statusCheck = true;
+                                        reviewTableObject = reviewTableObject + "<tr>\
+                                                                    <td style='width:35%'>" + titleVal + "</td><td>" + colmnValue + "</td></tr>";
+                                        //alert("val:" + reviewTableObject);
+                                    }
+                                }
+
+                            }
+                            if (record["approvalstatus"] == '0') {
+                                var statusInforOfPI = "<b>Update Status: </b> Pending ";
+                            } else if (record["approvalstatus"] == '1') {
+                                var statusInforOfPI = "<b>Update Status: </b> Approved ";
+                                $("#submitInformation").css("display", "none");
+                            } else if (record["approvalstatus"] == '2') {
+                                var statusInforOfPI = "<b>Update Status: </b> Rejected ";
+                                $("#submitInformation").css("display", "none");
+                            }
+
+                            $("#contentBody").html(reviewTable + statusInforOfPI + '<br/><br/>');
+
+                            fnProgress(false);
+                        });
+
+                    },
+                    error: function () {
+                        alertify.alert("Failed! Please try again.");
+                        fnProgress(false);
+                        return false;
+                    }
+                });
+
+            },
+            updateBtnAction: function () {
+                var propertyID = this.propertyID;
+                var batchID = this.batchID;
+                var category = "edit";
+                if (propertyID == "" || batchID == "") {
+                    alertify.alert("System Fail to Action");
+                    return false;
+                }
+                alertify.confirm("Do you want to update information?", function (e) {
+                    if (e) {
+                        alertify.success("Back to Inspection List");
+                        window.location = "/DataEntry/SnowRemoval?category=edit&propertyID=" + propertyID + "&specificID=" + batchID + "";
+                    }
+                    else {
+                        alertify.error("You've clicked Cancel");
+                        return false;
+                    }
+                });
+            },
+            cancelBtnAction: function () {
+                var propertyID = this.propertyID;
+                var batchID = this.batchID;
+                if (propertyID == "") {
+                    alertify.alert("System Fail to Action");
+                    return false;
+                }
+                alertify.confirm("Do you want to Back to Snow Report?", function (e) {
+                    if (e) {
+                        alertify.success("Back to Inspection List");
+                        window.location = "/Details/ProductDetails?category=Snow Removal&property=" + propertyID + "";
+                    }
+                    else {
+                        alertify.error("You've clicked Cancel");
+                        return false;
+                    }
+                });
+
+
+            }
+
+        };
+    </script>
+}
+<div class="col-lg-12" style="padding-left: 0px; padding-right: 0px;">
+    <h2 class="page-header" id="wpheader">View Snow Report</h2>
+</div>
+<div class="row">
+    <div class="col-md-9">
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <table align="center">
+                    <tr>
+                        <td>
+                            <label for="usr">Snow Report For: &nbsp;</label><label id="propertyID"></label>
+                            -
+                            <label id="propertyName"></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="usr">Vendor Name: &nbsp;</label><label id="vendorname"></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="usr">Date Performed: &nbsp;</label><label id="dateperformed"></label>
+                            &nbsp;&nbsp;
+                            <label for="usr">Arrival Time: </label>
+                            &nbsp;<label id="arrivalTime"></label>
+                            &nbsp;&nbsp;&nbsp; 
+                            <label for="usr">Departure Time: &nbsp;</label><label id="departureTime"></label>
+                        </td>
+                    </tr>
+                </table>
+                <br />
+                <div id="contentBody"></div>
+            </div>
+            <div class='wrapper text-center'>
+                <button id="reset" class="btn btn-warning" type="button" onclick="classSnowReport.cancelBtnAction()">Cancel</button>
+                <button class="btn btn-success" type="button" id="submitInformation" onclick="classSnowReport.updateBtnAction()">&nbsp; Edit &nbsp;</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div id="createWorkOrder"></div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="tbl">
+                    <img id="propertyImage" src="" class="propety-image">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

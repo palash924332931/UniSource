@@ -1,0 +1,867 @@
+﻿@model IEnumerable<UniSourceV2.pIworkRequestInfo_Result>
+@{
+    ViewBag.Title = "Work Proposal";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts {
+    <script type="text/javascript">
+        var jqXHRData;
+        tempDeletedImageLink = "";
+        $(document).ready(function () {
+            //to check category edit or new
+            var category = checkIsNull(fnGetParameterByName("category"), "");
+            var batchID = checkIsNull(fnGetParameterByName("specificID"), "");
+
+            //persmission for create work request button
+            if ("@Session["allowreportstatuschange"].ToString()" != "Yes") {
+                if (category == "new" && "@Session["allowdailyreportuploads"].ToString()" == "Yes") {
+                }
+                else {
+                    $(".allow-report-status-change").css("display", "none");
+                }
+            }
+
+           @* if (category == "new" && "@Session["allowdailyreportuploads"].ToString()" == "Yes") {
+                $(".allow-report-status-change").css("display", "table");
+            }*@
+
+            if ("@Session["allowenterworkorder"].ToString()" != "Yes") {
+                $(".admin-user-permission").css("display", "none");
+            }
+            else {
+                $(".allow-report-status-change").css("display", "inline");
+            }
+
+            //end of permission
+
+            if (category == "edit") {
+                $(".editPropertise").css("display", "block");
+                $(".newproPerties").css("display", "none");
+                $("#adv-search").css("display", "none");
+                $("#submitInformation").html("Update");
+                $("#wpheader").html("Work Proposal Details");
+
+                //to pull details from daily reports
+                if (batchID != "") {
+                    $.ajax({
+                        url: "@Url.Action("GetAllDailyReportInfo", "DataEntry")",
+                        data: { BatchNumber: batchID },
+                        type: "POST",
+                        dataType: "json",
+                        success: function (data) {
+                            $.each(data, function (i, record) {
+                                $("#propertyID").html(record["propertyid"]);
+                                $("#propertyName").html(record.PropertyName);
+                                $("#address").html(record.Address);
+                                $("#propertyImage").attr("src", "../PropertyPictures/" + record.propertyid + ".jpg");
+                                //to show side menu
+                                classUniSource.fnSiteSubMenuShow(record.propertyid, record.PropertyName, "liWorkRequest");
+                                //alert("success" + record.propertyid + " 2" + record.reporttext);
+                                $("#workProposal").val(checkIsNull(record.WPID, ""));
+                                $("#createdDate").val($.datepicker.formatDate('yy-mm-dd', new Date(record.dateentered)));
+                                $("#reportTitle").val(checkIsNull(record.reportheader, ""));
+                                $("#reportComments").val(checkIsNull(record.reporttext, ""));
+                                $("#estimatedCost").val(checkIsNull(record.costestimate, 0));
+                                $("#totalestcost").val(checkIsNull(record.costtotal, 0));
+                                $("#additionalnotes").val(checkIsNull(record.Notes, ""));
+                                $("#maintenanceRequired").prop("checked", record.maintenance);
+                                $("#hazardousCondition").prop("checked", record.hazard);
+                                // $("#approvalList").val(record.approvalstatus);
+                                var taxValue = checkIsNull(record.taxrate, 0);
+                                $("#esttax").val(taxValue);
+                                if (taxValue > 0) {
+                                    $("#esttax").attr("readonly", true);
+                                } else {
+                                    $("#esttax").attr("readonly", false);
+                                }
+
+
+                                //to show work order ID
+                                //$("#workOrderID").html("<a href='/DataEntry/WorkOrder?category=edit&propertyID=" + record.propertyid + "&specificID=" + record.WorkOrderID + "'>" + record.WorkOrderID + "</a>");
+                                //$("#workOrderIDDisplay").css("display", "table");
+                                ////workOrderIDDisplay|workOrderID
+
+                                var workOrderCreationStatus = checkIsNull(record.WorkOrderStatus, 0);
+
+                                if (record.approvalstatus == 3 || workOrderCreationStatus > 0) {
+                                    $("#progressBar").html('<div class="progress-bar progress-bar-primary" role="progressbar" style="width: 33%">WP Created</div>\
+                                            <div class="progress-bar progress-bar-success" role="progressbar" style="width: 33%"> Posted to PM </div>\
+                                             <div class="progress-bar progress-bar-info" role="progressbar" style="width: 34%"> Work Order Created </div>');
+                                    //to set approval dropdown list
+                                    $("#approvalList").append('<option value="2">Reject Pending WP</option>\
+                                                    <option value="3">Work Order Created</option>\
+                                                    <option value="4">Defer to Later Date</option>\
+                                                    <option value="5">Assign to Non-Unisource Vendor</option>');
+                                    $(".imageUploadSection").css("display", "none");
+                                    //$("#imageUploadSection").css("display", "none");
+                                    //to show work order ID
+                                    if (record.WorkOrderID != null) {
+                                        $("#workOrderID").html("<a href='/DataEntry/WorkOrder?category=edit&propertyID=" + record.propertyid + "&specificID=" + record.WorkOrderID + "'>" + record.WorkOrderID + "</a>");
+                                        $("#workOrderIDDisplay").css("display", "table");
+                                    }
+
+
+                                } else if (record.approvalstatus == 0) {
+                                    $("#progressBar").html('<div class="progress-bar progress-bar-primary" role="progressbar" style="width: 33%">WP Created</div>\
+                                            <div class="progress-bar progress-bar-warning" role="progressbar" style="width: 33%"> Pending Approval </div>');
+
+                                    //to set approval dropdown list
+
+                                    //for admin user persission
+                                    if ("@Session["uniadmin"].ToString()" == "Yes") {
+                                        $("#approvalList").append(' <option value="1">Accept Pending WP</option>\
+                                                    <option value="2">Reject Pending WP</option>');
+                                    }
+
+
+                                    $(".imageUploadSection").css("display", "block");
+                                    $("#imageUploadSection").css("display", "block");
+                                } else if (record.approvalstatus == 1) {
+                                    $("#progressBar").html('<div class="progress-bar progress-bar-primary" role="progressbar" style="width: 33%">WP Created</div>\
+                                            <div class="progress-bar progress-bar-success" role="progressbar" style="width: 33%"> Posted to PM </div>');
+
+                                    //to show create link
+                                    // $("#createWorkOrder").html('<a  class="btn btn-danger btn-lg" href="/DataEntry/WorkOrder?category=SoureceWorkProposal&propertyID=' + record.propertyid + '&batchID=' + record.batchnumber + '">Create Work Order</a><br/><br/>');
+
+                                    //to set approval dropdown list with user permission
+                                    if ("@Session["uniadmin"].ToString()" == "Yes") {
+                                        $("#approvalList").append(' <option value="1"> </option>\
+                                                    <option value="2">Reject Pending WP</option>\
+                                                    <option value="3">Create Work Order</option>\
+                                                    <option value="4">Defer to Later Date</option>\
+                                                    <option value="5">Assign to Non-Unisource Vendor</option>');
+                                    } else {
+                                        $("#approvalList").append(' <option value="1"> </option>\
+                                                    <option value="3">Create Work Order</option>\
+                                                    <option value="4">Defer to Later Date</option>\
+                                                    <option value="5">Assign to Non-Unisource Vendor</option>');
+                                    }
+                                    $(".imageUploadSection").css("display", "none");
+                                    //$("#imageUploadSection").css("display", "none");
+                                } else if (record.approvalstatus == 2) {
+                                    $("#progressBar").html('<div class="progress-bar progress-bar-primary" role="progressbar" style="width: 33%">WP Created</div>\
+                                            <div class="progress-bar progress-bar-danger" role="progressbar" style="width: 33%"> Rejected </div>');
+
+                                    //approval list with user permission
+                                    if ("@Session["uniadmin"].ToString()" == "Yes") {
+                                        $("#approvalList").append(' <option value="1">Accept Pending WP</option>\
+                                                    <option value="2">Rejected</option>');
+                                    } else {
+                                        $("#approvalList").append('<option value="2">Rejected</option>');
+                                    }
+
+
+                                    $(".imageUploadSection").css("display", "none");
+                                    $("#imageUploadSection").css("display", "none");
+
+                                } else if (record.approvalstatus == 4) {
+                                    $("#progressBar").html('<div class="progress-bar progress-bar-primary" role="progressbar" style="width: 33%">WP Created</div>\
+                                            <div class="progress-bar progress-bar-success" role="progressbar" style="width: 33%"> Posted to PM </div>\
+                                             <div class="progress-bar progress-bar-info" role="progressbar" style="width: 34%"> Defer to Later Date </div>');
+                                    //to set approval dropdown list
+                                    $("#approvalList").append(' <option value="2">Reject Pending WP</option>\
+                                                    <option value="3">Create Work Order</option>\
+                                                    <option value="4">Defer to Later Date</option>\
+                                                    <option value="5">Assign to Non-Unisource Vendor</option>');
+
+                                    //to show additional notes
+                                    $(".class-additional-info").css("display", "block");
+                                    $(".imageUploadSection").css("display", "block");
+                                    $("#imageUploadSection").css("display", "block");
+                                } else if (record.approvalstatus == 5) {
+                                    $("#progressBar").html('<div class="progress-bar progress-bar-primary" role="progressbar" style="width: 33%">WP Created</div>\
+                                            <div class="progress-bar progress-bar-success" role="progressbar" style="width: 33%"> Posted to PM </div>\
+                                             <div class="progress-bar progress-bar-info" role="progressbar" style="width: 34%"> Assign to Non-Unisource Vendor</div>');
+
+                                    //approval list with user permission
+                                    if ("@Session["uniadmin"].ToString()" == "Yes") {
+                                        $("#approvalList").append(' <option value="2">Reject Pending WP</option>\
+                                                    <option value="3">Create Work Order</option>\
+                                                    <option value="4">Defer to Later Date</option>\
+                                                    <option value="5">Assign to Non-Unisource Vendor</option>');
+                                    } else {
+                                        $("#approvalList").append('<option value="3">Create Work Order</option>\
+                                                    <option value="4">Defer to Later Date</option>\
+                                                    <option value="5">Assign to Non-Unisource Vendor</option>');
+                                    }
+                                    //to show additional notes
+                                    $(".class-additional-info").css("display", "block");
+                                    $(".imageUploadSection").css("display", "block");
+                                    $("#imageUploadSection").css("display", "block");
+                                }
+
+
+                                $("#approvalList").val(record.approvalstatus);
+                            });
+                        },
+                        error: function () {
+                            alertify.alert("Failed! Please try again.");
+                        }
+                    });
+}
+
+} else if (category == 'new') {
+    $("#imageUploadSection").css("display", "block");
+    //to delete tem folder
+    $.ajax({
+        type: "POST", //HTTP POST Method
+        url: '@Url.Action("ActivityOnFile", "DataEntry")',
+        data: {
+            Action: "Delete",
+            filePath: "~/Content/Temp",
+            optional: "TemFolderDelete"
+        },
+        datatype: "json",
+        success: function (result) {
+
+        },
+        error: function (result) {
+            alertify.alert("fail");
+        }
+
+    });
+
+    //}
+
+
+    //get all items of property
+    var propertyDataSet = [];
+    var serchList = [];
+    $.ajax({
+        url: "@Url.Action("GetAllPropertyList", "DataEntry")",
+        data: "",
+        type: "GET",
+        dataType: "json",
+        success: function (data) {
+            $.each(data, function (i, record) {
+                serchList.push(record.displayname);
+                propertyDataSet.push({ DisplayName: record.displayname, PropertyID: record.propertyid, Address: record.address1, TaxRate: record.tax_rate });
+                //propertyDataSet.push({ DisplayName: record.displayname, PropertyID: record.propertyid, Address: record.address1 });
+            });
+
+            //to show property information after loading dom
+            var propertyID = checkIsNull(fnGetParameterByName("propertyID"), "");
+            if (propertyID != "") {
+                for (var i = 0; i < propertyDataSet.length; i++) {
+                    //to show information check condition
+                    if (propertyID == propertyDataSet[i]["PropertyID"]) {
+                        $("#propertyID").html(propertyDataSet[i]["PropertyID"]);
+                        $("#address").html(propertyDataSet[i]["Address"]);
+                        $("#propertyName").html(propertyDataSet[i]["DisplayName"]);
+                        //to build left site menu
+                        classUniSource.fnSiteSubMenuShow(propertyID, propertyDataSet[i]["DisplayName"], "liWorkRequest");
+                        $("#propertyImage").attr("src", "../PropertyPictures/" + propertyDataSet[i]["PropertyID"] + ".jpg");
+                        if (category != "edit") {
+                            $("#esttax").val(propertyDataSet[i]["TaxRate"]);// for text rate
+                        }
+                        break;
+                    }
+                }
+            } else {
+                return false;
+            }
+
+            $('#propertyImage').error(function () {
+                $("#propertyImage").attr("src", "../Content/imgs/noimages.png");
+            });
+
+            //to bind search properties
+            $('#tbCountries').autocomplete({
+                source: serchList,
+                minLength: 0,
+                scroll: true,
+                change: function () {
+                    var proertyName = $(this).val();
+                    for (var i = 0; i < propertyDataSet.length; i++) {
+                        //to show information check condition
+                        if (proertyName == propertyDataSet[i]["DisplayName"]) {
+                            $("#propertyID").html(propertyDataSet[i]["PropertyID"]);
+                            $("#address").html(propertyDataSet[i]["Address"]);
+                            $("#propertyName").html(propertyDataSet[i]["DisplayName"]);
+                            $("#esttax").val(propertyDataSet[i]["TaxRate"]);// for text rate
+                            $("#propertyImage").attr("src", "../PropertyPictures/" + propertyDataSet[i]["PropertyID"] + ".jpg");
+                            break;
+                        }
+                    }
+
+                }
+            }).focus(function () {
+                $(this).autocomplete("search", "");
+            });
+        },
+        error: function () {
+            //alert("Failed! Please try again.");
+        }
+    });
+}
+
+            $("#submitInformation").click(function () {
+                //to submit information
+                var propertyID = checkIsNull($("#propertyID").html(), "");
+                var batchID = checkIsNull(fnGetParameterByName("specificID"), "");
+                var category = checkIsNull(fnGetParameterByName("category"), "");
+                if (propertyID == "") {
+                    alertify.alert("Please select property from dropdown.");
+                    return false;
+                }
+
+                var reportHeader = checkIsNull($("#reportTitle").val(), "Work Proposal");
+                var reportComments = checkIsNull($("#reportComments").val(), " ");
+                var estimatedCost = fnRemoveCommas(checkIsNull($("#estimatedCost").val(), 0));
+                var maintenanceRequired = $("#maintenanceRequired").prop("checked") == true ? 1 : 0;
+                var hazardousCondition = $("#hazardousCondition").prop("checked") == true ? 1 : 0;
+                var totalEstCost = fnRemoveCommas(checkIsNull($("#totalestcost").val(), 0));
+                var estTax = fnRemoveCommas(checkIsNull($("#esttax").val(), 0));
+                var notes = checkIsNull($("#additionalnotes").val(), "");
+                var approvalstatus = Number(checkIsNull($("#approvalList").val(), 0));
+                // return false;
+                $(".required").each(function () {
+                    if (checkIsNull($(this).val(), "") == "") {
+                        $(this).focus();
+                        alertify.alert("Please enter the required filed value.");
+
+                        return flase;
+
+                    }
+                });
+
+                if (category == "new") {
+                    var approvalstatus = 0;
+                    var costTotal = totalEstCost;
+                    //if (!confirm("Do you want to save your information?")) {
+                    //    return false;
+                    //}
+
+                    alertify.confirm("Do you want to save your information?", function (e) {
+                        if (e) {
+                            alertify.success("You've clicked Save");
+                            $.ajax({
+                                type: "POST", //HTTP POST Method
+                                url: '@Url.Action("WorkRequest", "DataEntry")',
+                                data: { //Passing data
+                                    propertyid: propertyID,
+                                    reportheader: reportHeader,
+                                    reporttext: reportComments,
+                                    costestimate: estimatedCost,
+                                    costtotal: costTotal,
+                                    taxrate: estTax,
+                                    hazard: maintenanceRequired,
+                                    maintenance: hazardousCondition,
+                                    approvalstatus: approvalstatus,
+                                    notes: "",
+                                    TempDeletedImage: tempDeletedImageLink,
+                                    Action: "New"
+                                },
+                                datatype: "json",
+                                success: function (result) {
+                                    window.location = result;
+                                },
+                                error: function (result) {
+                                    alertify.alert("fail");
+                                    //$("#txtLoginMgs").html('<div class="alert alert-danger fade in"><a href="#" class="close" data-dismiss="alert">&times;</a><b>' + result + '</b></div>');
+                                }
+
+                            });
+                        } else {
+                            alertify.error("You've clicked Cancel");
+                            fnProgress(false);
+                            return false;
+                        }
+                    });
+
+
+                } else if (category == "edit") {
+
+
+                    var sendMail = $("#servicemail").prop("checked") == true ? "true" : "false";
+                    alertify.confirm("Do you want to save your information?", function (e) {
+                        if (e) {
+                            alertify.success("Successfully Updated");
+                            $.ajax({
+                                type: "POST", //HTTP POST Method
+                                url: '@Url.Action("WorkRequest", "DataEntry")',
+                                data: { //Passing data
+                                    propertyid: propertyID,
+                                    reportheader: reportHeader,
+                                    reporttext: reportComments,
+                                    costestimate: estimatedCost,
+                                    costtotal: totalEstCost,
+                                    hazard: maintenanceRequired,
+                                    maintenance: hazardousCondition,
+                                    approvalstatus: approvalstatus,
+                                    notes: notes,
+                                    taxrate: estTax,
+                                    batchnumber: batchID,
+                                    TempDeletedImage: tempDeletedImageLink,
+                                    SendMail: sendMail,
+                                    Action: "Update"
+                                },
+                                datatype: "json",
+                                success: function (result) {
+                                    // window.location = result;
+                                    //alertify.alert("Your information updated successfully.");
+                                    location.href = location.href;
+
+                                },
+                                error: function (result) {
+                                    alertify.alert("fail");
+                                    return false;
+                                    //$("#txtLoginMgs").html('<div class="alert alert-danger fade in"><a href="#" class="close" data-dismiss="alert">&times;</a><b>' + result + '</b></div>');
+                                }
+
+                            });
+
+                        } else {
+                            alertify.error("You've clicked Reset");
+                            fnProgress(false);
+                            return false;
+                        }
+                    });
+
+                }
+
+            });
+
+
+
+            $('#fu-my-auto-upload').on('change', function (e) {
+                fnProgress(true);
+                var files = e.target.files;
+                if (files.length > 0) {
+                    if (window.FormData !== undefined) {
+                        var data = new FormData();
+                        for (var x = 0; x < files.length; x++) {
+                            data.append("file" + x, files[x]);
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: '/DataEntry/UploadImage?folderType=WorkRequest',
+                            contentType: false,
+                            processData: false,
+                            data: data,
+                            success: function (data) {
+                                var dataArry = data.split("|");
+                                console.log(dataArry[0]);
+                                if (dataArry[0] == "True" || dataArry[0] == true) {
+                                    $("#errorImageUpload").html("");
+                                    $('#imageUploadedTable tr').append('<td class="tdImageUpload" id="' + dataArry[2] + '" name="' + dataArry[3] + '" onClick="removeImageformTamp(this)" title="Click to view."><img src="' + dataArry[3] + '" class="uploadedImage img-thumbnail"/></td>');
+                                    fnProgress(false);
+                                }
+                                else {
+                                    $("#errorImageUpload").html("<span class='alert-danger'>" + dataArry[1] + "</span>");
+                                    fnProgress(false);
+                                }
+                            },
+                            error: function (xhr, status, p3, p4) {
+                                fnProgress(false);
+                                var err = "Error " + " " + status + " " + p3 + " " + p4;
+                                if (xhr.responseText && xhr.responseText[0] == "{")
+                                    err = JSON.parse(xhr.responseText).Message;
+                                console.log(err);
+                            }
+                        });
+                    } else {
+                        alertify.alert("This browser doesn't support HTML5 file uploads!");
+                    }
+                }
+            });
+
+
+            //to calculate total cost
+            $(".totalCalcualtion").change(function () {
+                var estCost = fnRemoveCommas(checkIsNull($("#estimatedCost").val(), 0));
+                $("#totalestcost").val(numberWithCommas(Number(Number(estCost) + Number(Number(fnRemoveCommas(checkIsNull($("#esttax").val(), 0))) / 100) * Number(estCost)).toFixed(2)));
+                $("#estimatedCost").val(numberWithCommas(Number(estCost).toFixed(2)));
+            });
+
+            //activity on reset btn click
+            $('#reset').click(function () {
+                var PID = checkIsNull(fnGetParameterByName("propertyID"), "");
+                alertify.confirm(" Back to Work Proposal list?", function (e) {
+                    if (e) {
+                        alertify.success("Back to Propsal List");;
+                        window.location = "/Details/ProductDetails?category=Work%20Request&property=" + PID;
+
+                    } else {
+                        return false;
+                    }
+                });
+
+                //window.location = "/DataEntry/WorkRequest?category=new&propertyID=" + PID;
+
+            });
+
+            //custom click dropdown
+            $("#propertySearch").click(function () {
+                $('#tbCountries').focus();
+            });
+
+            //to remove image
+            $("#btnDelete").click(function () {
+                var imgInfo = $(this).attr("name");
+                var imageURL = imgInfo.split("|")[0];
+                var tdID = imgInfo.split("|")[1];
+
+
+                alertify.confirm("Do you want to remove this image?", function (e) {
+                    if (e) {
+                        alertify.success("You've clicked remove");
+                        var filePath = imageURL.replace("..", "~");
+
+                        tempDeletedImageLink = tempDeletedImageLink + filePath + "|";
+
+                        $("td#" + tdID).remove();
+                        $("#divImage").css("display", "none");
+
+
+                    } else {
+                        alertify.error("You've clicked Cancel");
+                        fnProgress(false);
+                        return false;
+                    }
+                });
+            });
+
+            $("#approvalList").change(function () {
+                if ($(this).val() == "4" || $(this).val() == "5") {
+                    $(".class-additional-info").css("display", "block");
+                } else if ($(this).val() == "3") {
+                    var statusVal = $(this).find('option:selected').text();
+                    if (statusVal == "Work Order Created") {
+                        alertify.alert("Work order already created with this work proposal.");
+                        return false;
+                    }
+                    alertify.confirm("Do you want to create Work Order?", function (e) {
+                        if (e) {
+                            alertify.success("You've clicked Create");
+                            var propertyID = checkIsNull(fnGetParameterByName("propertyID"), "");
+                            var batchID = checkIsNull(fnGetParameterByName("specificID"), "");
+                            var WPComments = checkIsNull($("#reportComments").val(), "");
+                           //{Session["WPComments"] =""+WPComments+""};
+                                if (propertyID != "" && batchID != "") {
+                                    window.location = '/DataEntry/WorkOrder?category=SoureceWorkProposal&propertyID=' + propertyID + '&batchID=' + batchID + '&WPComments=' + WPComments + '';
+                                } else {
+                                    alertify.alert("Fail to create work order.");
+                                }
+                        } else {
+                            //alertify.error("You've clicked Cancel");
+                            location.href = location.href;
+                            return false;
+                        }
+                    });
+                    $(".class-additional-info").css("display", "none");
+
+                } else {
+                    $(".class-additional-info").css("display", "none");
+                }
+            });
+
+        });
+
+    function removeImageformTamp(attrb) {
+        var imageURL = $(attrb).attr("name").replace('.s2', '.s1');
+        var tdID = $(attrb).attr("id");
+        $("#divImage").css("display", "block");
+        //to set source image
+        $("#btnDelete").attr("name", imageURL + "|" + tdID);
+        $("#imgFull").attr("src", imageURL);
+        //bind shift function
+        $("#leftShift").unbind();
+        $("#leftShift").bind("click", function () {
+            var preID = $(attrb).closest('td').prev().attr('id');
+            if (checkIsNull(preID, "") != "") {
+                removeImageformTamp($(attrb).closest('td').prev());
+            }
+        });
+
+
+        $("#rightShift").unbind();
+        $("#rightShift").bind("click", function () {
+            var nextID = $(attrb).closest('td').next().attr('id');
+            if (checkIsNull(nextID, "") != "") {
+                removeImageformTamp($(attrb).closest('td').next());
+            }
+        });
+
+        //to bind close button
+        $("#btnClose").bind("click", function () {
+            $("#divImage").css("display", "none");
+        });
+
+    }
+
+
+    $("#approvalList").change("click", function () {
+        var approvalstatus = Number(checkIsNull($("#approvalList").val(), 0));
+        if (approvalstatus == 1) {
+            $("#mailcheck").css("display", "block");
+            $("#servicemail").prop("checked", true);
+        }
+        else {
+            $("#mailcheck").css("display", "none");
+            $("#servicemail").prop("checked", false);
+        }
+
+    });
+    </script>
+}
+
+<style>
+    input[type="checkbox"], input[type="radio"] {
+        transform: scale(1.3);
+    }
+</style>
+
+<div class="col-lg-12 srcbtn">
+    <h2 class="page-header" id="wpheader">Create New Work Proposal</h2>
+</div>
+<div class="row">
+    <div class="col-md-9">
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="input-group" id="adv-search">
+                    <input type="text" id="tbCountries" class="form-control" placeholder="Select a Property" />
+                    <span class="btn input-group-addon" id="propertySearch"><span class="caret" aria-hidden="true"></span></span>
+                </div>
+                <br />
+                <table width="100%">
+                    <tr>
+                        <td width="18%">
+                            <label for="usr">Property ID:</label>
+                        </td>
+                        <td>
+                            <label id="propertyID"></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="usr">Property Name:</label>
+                        </td>
+                        <td>
+                            <label id="propertyName"></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="usr">Address:</label>
+                        </td>
+                        <td>
+                            <label id="address"></label>
+                        </td>
+                    </tr>
+                </table>
+
+                <div style="display: none;" class="text-center editPropertise">
+                    <div class="show-grid">
+                        <div class="progress" id="progressBar">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-addon">WP #
+                                </span>
+                                <input type="text" id="workProposal" class="form-control" readonly="true">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group" id="workOrderIDDisplay" style="display: none">
+                                <span class="input-group-addon">WO #
+                                </span>
+                                <div id="workOrderID" class="form-control"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-addon">Date Created
+                                </span>
+                                <input type="text" id="createdDate" class="form-control" readonly="true">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+
+                <div class="form-group">
+                    <label>Report Title</label>
+                    <input class="form-control required" id="reportTitle" placeholder="Enter a title (required)" type="text">
+                </div>
+                <div class="form-group">
+                    <label>Comments</label>
+                    <textarea class="form-control input-sm required" rows="2" id="reportComments" placeholder="Enter a few comments about the Work Proposal"></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="input-group col-xs-12">
+                            <table class="customtd">
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" id="maintenanceRequired">
+                                    </td>
+                                    <td>Maintenance required</td>
+                                    <td><span class="uni-icon icon-mant small"></span></td>
+                                </tr>
+                            </table>
+
+                        </div>
+                        <div class="input-group col-xs-12">
+                            <table class="customtd">
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" id="hazardousCondition">
+                                    </td>
+                                    <td>Hazardous conditions exist</td>
+                                    <td><span class="uni-icon icon-haz small"></span></td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-5">
+                        <div class="input-group col-xs-12">
+                            <span class="input-group-addon">Est. Cost ($):</span>
+                            <input type="text" id="estimatedCost" class="form-control totalCalcualtion number" placeholder="Estimated cost">
+                        </div>
+                        <div class="editPropertise" style="display: none">
+                            <div class="input-group col-xs-12">
+                                <span class="input-group-addon">Est. Tax (%):</span>
+                                <input type="text" id="esttax" class="form-control totalCalcualtion percetage">
+                            </div>
+                            <div class="input-group col-xs-12">
+                                <span class="input-group-addon">Total Est. Cost ($):</span>
+                                <input type="text" id="totalestcost" class="form-control number" readonly="true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div class="panel panel-warning" id="imageUploadSection" style="display: none; overflow-x: auto;">
+                    <label>Images</label>
+                    <div id="errorImageUpload" class="danger"></div>
+
+                    <div class="input-group">
+                        <table id="imageUploadedTable" class="table-bordered">
+                            <tbody>
+                                <tr>
+                                    @{
+                                        string propertyID = Request.QueryString["propertyID"];
+                                        string guiID = Request.QueryString["specificID"];
+                                        var counter = 0;
+                                        if (propertyID != null && guiID != null)
+                                        {
+                                            var rootPath = "~/DailyReports/" + propertyID + "/" + guiID + "/";
+                                            var rootPathForHTML = "../DailyReports/" + propertyID + "/" + guiID + "/";
+                                            DirectoryInfo directoryInfoOverlay = new DirectoryInfo(Server.MapPath(rootPath));
+                                            if (directoryInfoOverlay.Exists)
+                                            {
+
+
+                                                string internalExtension = string.Concat("*.", "*");
+                                                //FileInfo[] fileInfo = directoryInfoOverlay.GetFiles(internalExtension, SearchOption.AllDirectories);
+                                                FileInfo[] fileInfo = directoryInfoOverlay.GetFiles().Where(x => x.Name.Contains("s2")).ToArray();
+
+                                                foreach (FileInfo fileInfoTemp in fileInfo)
+                                                {
+                                                    counter = counter + 1;
+                                                    string fileID = DateTime.Now.ToString("yyyyMMddhhmmssffffff") + counter;
+                                        <td class="tdImageUpload" name="@rootPathForHTML@fileInfoTemp.Name" id="@fileID" onClick="removeImageformTamp(this)">
+                                            <img src='@rootPathForHTML@fileInfoTemp.Name' class="uploadedImage img-thumbnail">
+                                        </td>
+
+
+                                                }
+                                        <script>
+                                            $("#imageUploadSection").css("display", "block");
+                                        </script>
+                                            }
+                                        }
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="input-group-addon" style="width: 0px; padding: 0px !important;">
+                            <span class="btn btn-success btn-file imageUploadSection">
+                                <input type="file" value="" name="MyFile" class="closeproPerties" id="fu-my-auto-upload">
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="editPropertise" style="display: none">
+                    <div class="row col-md-6 admin-user-permission">
+                        <div class="input-group">
+                            <span class="input-group-addon">Update Status:</span>
+                            <select class="form-control" id="approvalList"></select>
+                        </div>
+                    </div>
+                    <div class="col-md-6" id="mailcheck" style="display: none;">
+                        <input type="checkbox" id="servicemail">
+                        Send E-mail                               
+                    </div>
+                </div>
+
+
+                <div class="class-additional-info" style="display: none">
+                    <div class="row col-md-12">
+                        <label>Additional Notes:</label>
+                        <textarea class="form-control input-sm" rows="2" id="additionalnotes"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class='wrapper text-center'>
+                <button id="reset" class="btn btn-warning" type="button">Cancel</button>
+                <button class="btn btn-success allow-report-status-change" type="button" id="submitInformation">Submit</button>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-3">
+        <div id="createWorkOrder"></div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="tbl">
+                    <img id="propertyImage" src="" class="propety-image">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="divImage">
+    <table style="height: 100%; width: 100%">
+        <tr>
+            <td valign="middle" align="center">
+
+                <div class="input-group">
+                    <span class="input-group-btn" style="width: 0% !important;">
+                        <button class="btn btn-info" type="button" id="leftShift"><i class="fa fa-chevron-left fa-3x"></i></button>
+                    </span>
+                    <img id="imgFull" alt="" src="" style="" />
+                    <span class="input-group-btn" style="width: 0% !important;">
+                        <button class="btn btn-info" type="button" id="rightShift"><i class="fa fa-chevron-right fa-3x"></i></button>
+                    </span>
+                </div>
+
+                <a style="color: red;" href="#" id="btnDelete" title="click here to remove this image">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </a>
+                &nbsp;
+                <a style="color: yellow;" href="#" id="btnClose" title="click here to cancel">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a></td>
+        </tr>
+    </table>
+</div>
+
+
+
+
+
+
+

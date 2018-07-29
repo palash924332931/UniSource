@@ -1,0 +1,1081 @@
+﻿@{
+    ViewBag.Title = "Panels";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJEVoE5Ix-7HPh0OJWDLV0LgnaFAVslmE&amp;sensor=true"></script>
+<link href="~/Content/bootstrap-multiselect.css" rel="stylesheet" />
+<script type="text/javascript">
+    $(document).ready(function () {
+        // to set property image during error
+        $('#propertyImage').error(function () {
+            $("#propertyImage").attr("src", "../Content/imgs/noimages.png");
+        });
+        //user role section
+        if ("@Session["uniadmin"]" != null) {
+            if ("@Session["uniadmin"].ToString()" != "Yes") {
+                $(".UniAdminPermission").css("display", "none");
+            }
+        } else {
+            window.location = "/Login/HomeLogin?area=admin";
+        }
+        //end of user role section
+
+        var propertyID = fnGetParameterByName("propertyID");
+        //to pull data and bind data
+        // to get total items
+        var checkcDataPresentPropertyData = 0, checkcDataPresentPacking = 0, checkcDataPresentRoof = 0, checkcDataPresentPackingLot = 0, checkcDataPresentBuilding = 0, checkcDataPresentLockboxCom = 0, checkcDataPresentVendorAndContractor = 0, checkcDataPresentMunicipalService = 0, checkcDataPresentUlitityService = 0, checkcDataPresentVendorComments = 0, checkcDataPresentMarketing = 0;
+        var propertyDataTableHeader = ("Property Type|Date Property Acquired|Current Owner|Original Architect|Original Developer|Original Engineers|Year Built|Original GLA|Renovation/Expansion|Current GLA|Building (Acres or SqFt)|Parking Lot (Acres or SqFt)|Project Total (Acres or SqFt)|Outparcel Tenants |Maintained (Acres or SqFt)|Percent of Acres in Bedding Plants|Number Dormant Months per Year||Number of Poles|Number of Fixtures|Type of Fixtures|Locations of Controls|Other|Canopy/Other Exterior Lighting|Locations of Other Controls||Roof Comments (Temporary Field||Parking Spaces|Handicapped Accessible|Stenciling|Sealcoat/Overlay Parking)||Fire Protection/Sprinkler|HVAC|Construction|Key Notes||Lockbox Location|Code|Lockbox Location|Code|Lockbox Location|Code||Marketing Fund|Contracted To||comment||ELECTRIC|GAS|WATERSEWER|TELEPHONE||POLICE|FIRE|BUILDING DEPARTMENT|PUBLIC WORKS|HIGHWAY DEPARTMENT||Tree Maintenance|Door Repair/Maint|Asphalt Repair|Electrical Repair|General Maintenance Repairs|Environmental Cleanup|Exterminating|Facade Repair|Fire Alarm Monitor|Fire Alarm Repair|Power Washing|Glass/Board Up|Graffitti/Vandal Cleanup|H.V.A.C. Repair|Handrail Repair|Irrigation System Repair|Janitorial/Cleaning|Landscaping|Locksmith|Masonry Repair|Oil Supplier|Parking Lot Light Repair|Parking Lot Sweeping|Painting / Striping|Catch Basin|Plumbing|Retention Pond Maintenance|Roof Repair|Security|Sewer/Septic Drain Clearing|Sewer/Septic Pumping|Sidewalk Repair|Signage Maintenance|Smoke/Water Restoration|Snow Removal|Towing|Trash Removal|Flooring").split("|");
+        var propertyDataColumn = ("property_type|date_property_acquired|current_owner|original_architect|original_developer|original_engineers|year_built|original_gla|renovation_expansion|current_gla|acres_building|acres_parkinglot|acres_project_total|outparcel_tenants|acres_maintained|percent_acres_bedding_plants|number_dormant_months_year||parkinglot_number_of_poles|parkinglot_number_of_fixtures|parkinglot_type_of_fixture|parkinglot_location_of_controls|parkinglot_other|parkinglot_other_lighting|parkinglot_other_lighting_controls||roof||parking_spaces|parking_spaces_handicapped|parking_ratio|parking_sealcoat_overlay||building_fire_sprinkler|building_hvac|building_construction|building_key_notes||lockbox_location_01|lockbox_code_01|lockbox_location_02|lockbox_code_02|lockbox_location_03|lockbox_code_03||marketing_fund|marketing_contracted_to||vendor_comments||utility_electric_provider~utility_electric_phone|utility_gas_provider~utility_gas_phone|utility_water_sewer_provider~utility_water_sewer_phone|utility_telephone_provider~utility_telephone_phone||municipal_police_provider~municipal_police_phone|municipal_fire_provider~municipal_fire_phone|municipal_buildingdept_provider~municipal_buildingdept_phone|municipal_publicworks_provider~municipal_publicworks_phone|municipal_highwaydept_provider~municipal_highwaydept_phone||vendor_cardaccess_provider~vendor_cardaccess_contact~vendor_cardaccess_notes|vendor_door_repair_provider~vendor_door_repair_contact~vendor_door_repair_notes|vendor_eifs_provider~vendor_eifs_contact~vendor_eifs_notes|vendor_electrical_provider~vendor_electrical_contact~vendor_electrical_notes|vendor_elevator_provider~vendor_elevator_contact~vendor_elevator_notes|vendor_enviro_cleanup_provider~vendor_enviro_cleanup_contact~vendor_enviro_cleanup_notes|vendor_exterminator_provider~vendor_exterminator_contact~vendor_exterminator_notes|vendor_facade_provider~vendor_facade_contact~vendor_facade_notes|vendor_fire_alarm_monitor_provider~vendor_fire_alarm_monitor_contact~vendor_fire_alarm_monitor_notes|vendor_fire_alarm_repair_provider~vendor_fire_alarm_repair_contact~vendor_fire_alarm_repair_notes|vendor_generator_provider~vendor_generator_contact~vendor_generator_notes|vendor_glass_boardup_provider~vendor_glass_boardup_contact~vendor_glass_boardup_notes|vendor_graffitti_vandal_provider~vendor_graffitti_vandal_contact~vendor_graffitti_vandal_notes|vendor_hvac_repair_provider~vendor_hvac_repair_contact~vendor_hvac_repair_notes|vendor_handrail_provider~vendor_handrail_contact~vendor_handrail_notes|vendor_irrigation_provider~vendor_irrigation_contact~vendor_irrigation_notes|vendor_janitorial_provider~vendor_janitorial_contact~vendor_janitorial_notes|vendor_landscaping_provider~vendor_landscaping_contact~vendor_landscaping_notes|vendor_locksmith_provider~vendor_locksmith_contact~vendor_locksmith_notes|vendor_masonry_provider~vendor_masonry_contact~vendor_masonry_notes|vendor_oil_supply_provider~vendor_oil_supply_contact~vendor_oil_supply_notes|vendor_plot_light_repair_provider~vendor_plot_light_repair_contact~vendor_plot_light_repair_notes|vendor_plot_sweeping_provider~vendor_plot_sweeping_contact~vendor_plot_sweeping_notes|vendor_painting_provider~vendor_painting_contact~vendor_painting_notes|vendor_payphone_provider~vendor_payphone_contact~vendor_payphone_notes|vendor_plumbing_provider~vendor_plumbing_contact~vendor_plumbing_notes|vendor_retentionpond_provider~vendor_retentionpond_contact~vendor_retentionpond_notes|vendor_roof_repair_provider~vendor_roof_repair_contact~vendor_roof_repair_notes|vendor_security_provider~vendor_security_contact~vendor_security_notes|vendor_sewer_septic_drain_clearing_provider~vendor_sewer_septic_drain_clearing_contact~vendor_sewer_septic_drain_clearing_notes|vendor_sewer_septic_plumbing_provider~vendor_sewer_septic_plumbing_contact~vendor_sewer_septic_plumbing_notes|vendor_sidewalk_provider~vendor_sidewalk_contact~vendor_sidewalk_notes|vendor_signage_provider~vendor_signage_contact~vendor_signage_notes|vendor_smoke_water_restore_provider~vendor_smoke_water_restore_contact~vendor_smoke_water_restore_notes|vendor_snow_removal_provider~vendor_snow_removal_contact~vendor_snow_removal_notes|vendor_towing_provider~vendor_towing_contact~vendor_towing_notes|vendor_trashremoval_provider~vendor_trashremoval_contact~vendor_trashremoval_notes|vendor_flooring_provider~vendor_flooring_contact~vendor_flooring_notes").split("|");
+
+        var propertyDataTable = '<div class="panel-heading paneltitle text-center"><b>Property Data</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+        var parkingLotLightingTable = '<div class="panel-heading paneltitle text-center"><b>Parking Lot Lighting</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+        var roofTable = '<div class="panel-heading paneltitle text-center"><b>Roof</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+        var parkingLotTable = '<div class="panel-heading paneltitle text-center"><b>Parking Lot</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+        var buildingTable = '<div class="panel-heading paneltitle text-center"><b>Building</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+        var lockboxCombosTable = '<div class="panel-heading paneltitle text-center"><b>Lockbox Combos </b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+        var MarketingTable = '<div class="panel-heading paneltitle text-center"><b>Marketing </b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+        var vendorCommentsTable = '<div class="panel-heading paneltitle text-center"><b>Vendor Comments </b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+
+        var utilityServiceCompaniesTable = '<div class="panel-heading paneltitle text-center"><b>Utility Service Companies</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <thead><tr>  <td> Service</td>  <td> Provider</td>  <td> Phone Number</td></tr></thead><tbody>';
+
+        var municipalServicesTable = '<div class="panel-heading paneltitle text-center"><b>Municipal Services</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <thead><tr>  <td> Service</td>  <td> Provider</td>  <td> Phone Number</td></tr></thead><tbody>';
+
+        var vendorsandContractorsTable = '<div class="panel-heading paneltitle text-center"><b>Vendors and Contractors</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <thead><tr>  <td> Service</td>  <td> Provider</td>  <td> Contact</td> <td>Contact Information</td></tr></thead><tbody>';
+
+        $.ajax({
+            url: "@Url.Action("GetPropertyDetailsFromPropertySheet", "Details")",
+            data: { PropertyID: propertyID },
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                $.each(data, function (i, record) {
+                    var checkcDataPresent = 0, countRecord = 0;
+                    for (var i = 0; i < propertyDataTableHeader.length; i++) {
+                        // alert("propertyDataColumn[i]" + propertyDataColumn[i]);
+                        countRecord = countRecord + 1;
+                        if (checkIsNull($.trim(record["" + propertyDataColumn[i] + ""]), " ") != " " && countRecord < 17) {
+                            //this bolck for Property Data
+                            checkcDataPresentPropertyData = checkcDataPresentPropertyData + 1;
+                            propertyDataTable = propertyDataTable + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                            <td class='col-md-7'> " + classUniSource.escapeHTML(record["" + propertyDataColumn[i] + ""]) + "</td>\
+                                         </tr>";
+                        } else if (checkIsNull(record["" + propertyDataColumn[i] + ""], " ") != " " && countRecord > 17 && countRecord < 26) {
+                            //this bolck for packing lot
+                            checkcDataPresentPacking = checkcDataPresentPacking + 1;
+                            parkingLotLightingTable = parkingLotLightingTable + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                            <td class='col-md-7'> " + classUniSource.escapeHTML(record["" + propertyDataColumn[i] + ""]) + "</td>\
+                                         </tr>";
+                        } else if ((checkIsNull(record["" + propertyDataColumn[i] + ""], " ") != " ") && (countRecord > 26 && countRecord < 28)) {
+                            //this bolck for Roof
+                            checkcDataPresentRoof = checkcDataPresentRoof + 1;
+                            roofTable = roofTable + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                            <td class='col-md-7'> " + record["" + propertyDataColumn[i] + ""] + "</td>\
+                                         </tr>";
+                        } else if ((checkIsNull(record["" + propertyDataColumn[i] + ""], " ") != " ") && (countRecord > 28 && countRecord < 33)) {
+                            //this bolck for Packing Lot
+                            checkcDataPresentPackingLot = checkcDataPresentPackingLot + 1;
+                            parkingLotTable = parkingLotTable + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                            <td class='col-md-7'> " + record["" + propertyDataColumn[i] + ""] + "</td>\
+                                         </tr>";
+                        }
+                        else if ((checkIsNull(record["" + propertyDataColumn[i] + ""], " ") != " ") && (countRecord > 33 && countRecord < 38)) {
+                            //this bolck for Building
+                            checkcDataPresentBuilding = checkcDataPresentBuilding + 1;
+                            buildingTable = buildingTable + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                            <td class='col-md-7'> " + record["" + propertyDataColumn[i] + ""] + "</td>\
+                                         </tr>";
+                        }
+                        else if ((checkIsNull(record["" + propertyDataColumn[i] + ""], " ") != " ") && (countRecord > 38 && countRecord < 45)) {
+                            //this bolck for Building
+                            checkcDataPresentLockboxCom = checkcDataPresentLockboxCom + 1;
+                            lockboxCombosTable = lockboxCombosTable + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                            <td class='col-md-7'> " + record["" + propertyDataColumn[i] + ""] + "</td>\
+                                         </tr>";
+                        }
+                        else if ((checkIsNull(record["" + propertyDataColumn[i] + ""], " ") != " ") && (countRecord > 45 && countRecord < 48)) {
+                            //this bolck for Marketing
+                            checkcDataPresentMarketing = checkcDataPresentMarketing + 1;
+                            MarketingTable = MarketingTable + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                            <td class='col-md-7'> " + record["" + propertyDataColumn[i] + ""] + "</td>\
+                                         </tr>";
+                        }
+                        else if ((checkIsNull(record["" + propertyDataColumn[i] + ""], " ") != " ") && (countRecord >= 49 && countRecord <= 49)) {
+                            //this bolck for Vendor Comments
+                            checkcDataPresentVendorComments = checkcDataPresentVendorComments + 1;
+                            vendorCommentsTable = vendorCommentsTable + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                            <td class='col-md-7'> " + classUniSource.escapeHTML(record["" + propertyDataColumn[i] + ""]) + "</td>\
+                                         </tr>";
+                        } else if ((countRecord >= 51 && countRecord <= 54)) {
+                            //this bolck for twice tr
+                            if (propertyDataTableHeader[i] != "") {
+                                var propertyDataColumnArry = propertyDataColumn[i].split("~");
+                                if ((checkIsNull(record["" + propertyDataColumnArry[0] + ""], " ") != " ") || (checkIsNull(record["" + propertyDataColumnArry[1] + ""], " ") != " ")) {
+                                    checkcDataPresentUlitityService = checkcDataPresentUlitityService + 1;
+                                    utilityServiceCompaniesTable = utilityServiceCompaniesTable + "<tr>\
+                                                <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                                    <td class='col-md-7'> " + record["" + propertyDataColumnArry[0] + ""] + "</td>\
+                                                    <td class='col-md-7'> " + record["" + propertyDataColumnArry[1] + ""] + "</td>\
+                                                 </tr>";
+                                }
+                            }
+                        }
+                        else if ((countRecord >= 55 && countRecord <= 60)) {
+                            //this bolck for twice tr
+                            if (propertyDataTableHeader[i] != "") {
+                                var propertyDataColumnArry = propertyDataColumn[i].split("~");
+                                if ((checkIsNull(record["" + propertyDataColumnArry[0] + ""], " ") != " ") || (checkIsNull(record["" + propertyDataColumnArry[1] + ""], " ") != " ")) {
+                                    checkcDataPresentMunicipalService = checkcDataPresentMunicipalService + 1;
+                                    municipalServicesTable = municipalServicesTable + "<tr>\
+                                                <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                                    <td class='col-md-7'> " + record["" + propertyDataColumnArry[0] + ""] + "</td>\
+                                                    <td class='col-md-7'> " + record["" + propertyDataColumnArry[1] + ""] + "</td>\
+                                                 </tr>";
+                                }
+                            }
+                        }
+                        else if ((countRecord >= 61 && countRecord <= 100)) {
+                            //this bolck for twice tr
+                            //alert("Coutnt:" + countRecord + "Val:" + propertyDataTableHeader[i] + "P column:" + propertyDataColumn[i]);
+                            if (propertyDataTableHeader[i] != "") {
+                                var propertyDataColumnArry = propertyDataColumn[i].split("~");
+                                if ((checkIsNull($.trim(record["" + propertyDataColumnArry[0] + ""]), " ") != " ") || (checkIsNull($.trim(record["" + propertyDataColumnArry[1] + ""]), " ") != " ") || (checkIsNull($.trim(record["" + propertyDataColumnArry[2] + ""]), " ") != " ")) {
+                                    checkcDataPresentVendorAndContractor = checkcDataPresentVendorAndContractor + 1;
+                                    vendorsandContractorsTable = vendorsandContractorsTable + "<tr>\
+                                                <th class='col-md-3'>" + propertyDataTableHeader[i] + " </th>\
+                                                    <td class='col-md-3'> " + record["" + propertyDataColumnArry[0] + ""] + "</td>\
+                                                    <td class='col-md-3'> " + record["" + propertyDataColumnArry[1] + ""] + "</td>\
+                                                    <td class='col-md-3'> " + classUniSource.escapeHTML(record["" + propertyDataColumnArry[2] + ""]) + "</td>\
+                                                 </tr>";
+                                }
+                            }
+                        }
+
+                    }
+                    propertyDataTable = propertyDataTable + '<tbody></table>';
+                    parkingLotLightingTable = parkingLotLightingTable + '<tbody></table>';
+                    roofTable = roofTable + '<tbody></table>';
+                    parkingLotTable = parkingLotTable + '<tbody></table>';
+                    buildingTable = buildingTable + '<tbody></table>';
+                    lockboxCombosTable = lockboxCombosTable + '<tbody></table>';
+                    MarketingTable = MarketingTable + '<tbody></table>';
+                    vendorCommentsTable = vendorCommentsTable + '<tbody></table>';
+                    utilityServiceCompaniesTable = utilityServiceCompaniesTable + '<tbody></table>';
+                    municipalServicesTable = municipalServicesTable + '<tbody></table>';
+                    vendorsandContractorsTable = vendorsandContractorsTable + '<tbody></table>';
+
+                });
+                //to check if data is present in table
+                if (checkcDataPresentPropertyData > 0) {
+                    $("#example-single").append("<option value='tblPropertyData' selected>Property Data</option>");
+                    $("#tblPropertyData").html(propertyDataTable);
+                    $("#tblPropertyData").css("display", "block");
+                }
+                if (checkcDataPresentPacking > 0) {
+                    $("#tblParkingLotLighting").html(parkingLotLightingTable);
+                    $("#tblParkingLotLighting").css("display", "block");
+                    $("#example-single").append("<option value='tblParkingLotLighting' selected>Parking Lot Lighting</option>")
+                }
+                if (checkcDataPresentRoof > 0) {
+                    $("#tblRoof").html(roofTable);
+                    $("#tblRoof").css("display", "block");
+                    $("#example-single").append("<option value='tblRoof' selected>Roof</option>")
+                }
+                if (checkcDataPresentPackingLot > 0) {
+                    $("#tblParkingLot").html(parkingLotTable);
+                    $("#tblParkingLot").css("display", "block");
+                    $("#example-single").append("<option value='tblParkingLot' selected>Parking Lot</option>")
+                }
+                if (checkcDataPresentBuilding > 0) {
+                    $("#tblBuilding").html(buildingTable);
+                    $("#tblBuilding").css("display", "block");
+                    $("#example-single").append("<option value='tblBuilding' selected>Building</option>")
+                }
+                if (checkcDataPresentLockboxCom > 0) {
+                    $("#tblLockboxCombos").html(lockboxCombosTable);
+                    $("#tblLockboxCombos").css("display", "block");
+                    $("#example-single").append("<option value='tblLockboxCombos' selected>Lockbox Combos</option>")
+                }
+                if (checkcDataPresentMarketing > 0) {
+                    $("#tblMarketing").html(MarketingTable);
+                    $("#tblMarketing").css("display", "block");
+                    $("#example-single").append("<option value='tblMarketing' selected>Marketing</option>")
+                }
+                if (checkcDataPresentVendorAndContractor > 0) {
+                    $("#tblVendorsandContractors").html(vendorsandContractorsTable);
+                }
+                if (checkcDataPresentUlitityService > 0) {
+                    $("#tblUtilityServiceCompanies").html(utilityServiceCompaniesTable);
+                    $("#tblUtilityServiceCompanies").css("display", "block");
+                    $("#example-single").append("<option value='tblUtilityServiceCompanies' selected>Utility Service Companies</option>")
+                }
+                if (checkcDataPresentMunicipalService > 0) {
+                    $("#tblMunicipalServices").html(municipalServicesTable);
+                    $("#tblMunicipalServices").css("display", "block");
+                    $("#example-single").append("<option value='tblMunicipalServices' selected>Municipal Services</option>")
+                }
+
+                if (checkcDataPresentVendorComments > 0) {
+                    $("#tblVendorComments").html(vendorCommentsTable);
+                }
+                //append using permission
+                if ("@HttpContext.Current.Session["Allowviewvendors"]" == "Yes") {
+                    $("#example-single").append("<option value='tblVendorsandContractors' selected>Vendors and Contractors</option>")
+                    $("#tblVendorsandContractors").css("display", "block");
+                    $("#example-single").append("<option value='tblVendorComments' selected>Vendors Comments</option>")
+                    $("#tblVendorComments").css("display", "block");
+                }
+                //to bind multi selector
+                $('#example-single').multiselect({
+                    onChange: function (option, checked, select) {
+                        if (checked == true) {
+                            $("#" + $(option).val()).css("display", "Block");
+                        } else {
+                            $("#" + $(option).val()).css("display", "none");
+                        }
+
+                    }
+                });
+            },
+            error: function () {
+                $.fn.dataTable.ext.errMode = 'throw';
+            }
+        });
+
+        $("#editPropertyDataSheet").click(function () {
+            var detailsDivInfor = '<div class="panel panel-default">\
+                    <div id="tblPropertyDataEdit" style="display: block"></div>\
+                    <div id="tblParkingLotLightingEdit" style="display: block"></div>\
+                    <div id="tblRoofEdit" style="display: block"></div>\
+                    <div id="tblParkingLotEdit" style="display: block"></div>\
+                    <div id="tblBuildingEdit" style="display: block"></div>\
+                    <div id="tblLockboxCombosEdit" style="display: block"></div>\
+                    <div id="tblMarketingEdit" style="display: block"></div>\
+                    <div id="tblUtilityServiceCompaniesEdit" style="display: block"></div>\
+                    <div id="tblMunicipalServicesEdit" style="display: block"></div>\
+                    <div id="tblVendorsandContractorsEdit" style="display: none"></div>\
+                    <div id="tblVendorCommentsEdit" style="display: none"></div>\
+                </div>';
+            //var detailsDivInfor = '<div class="panel panel-default">\
+            //        <div id="tblPropertyDataEdit" style="display: none"></div>\
+            //        <div id="tblParkingLotLightingEdit" style="display: none"></div>\
+            //        <div id="tblRoofEdit" style="display: none"></div>\
+            //        <div id="tblParkingLotEdit" style="display: none"></div>\
+            //        <div id="tblBuildingEdit" style="display: none"></div>\
+            //        <div id="tblLockboxCombosEdit" style="display: none"></div>\
+            //        <div id="tblMarketingEdit" style="display: none"></div>\
+            //        <div id="tblUtilityServiceCompaniesEdit" style="display: none"></div>\
+            //        <div id="tblMunicipalServicesEdit" style="display: none"></div>\
+            //        <div id="tblVendorsandContractorsEdit" style="display: none"></div>\
+            //        <div id="tblVendorCommentsEdit" style="display: none"></div>\
+            //    </div>';
+            $("#customModalBodyDetails").html(detailsDivInfor);
+
+            $("#example-single-2").append("<option selected value='tblPropertyDataEdit'>Property Data</option>");
+            $("#example-single-2").append("<option selected value='tblParkingLotLightingEdit'>Parking Lot Lighting</option>");
+            $("#example-single-2").append("<option selected value='tblRoofEdit'>Roof</option>");
+            $("#example-single-2").append("<option selected value='tblParkingLotEdit'>Parking Lot</option>");
+            $("#example-single-2").append("<option selected value='tblBuildingEdit'>Building</option>");
+            $("#example-single-2").append("<option selected value='tblLockboxCombosEdit'>Lockbox Combos</option>");
+            $("#example-single-2").append("<option selected value='tblMarketingEdit'>Marketing</option>");
+            $("#example-single-2").append("<option selected value='tblUtilityServiceCompaniesEdit'>Utility Service Companies</option>");
+            $("#example-single-2").append("<option selected value='tblMunicipalServicesEdit'>Municipal Services</option>");
+            if ("@HttpContext.Current.Session["Allowviewvendors"]" == "Yes") {
+                $("#tblVendorsandContractorsEdit").css("display", "block");
+                $("#tblVendorCommentsEdit").css("display", "block");
+                $("#example-single-2").append("<option selected value='tblVendorsandContractorsEdit'>Vendors and Contractors</option>")
+                $("#example-single-2").append("<option selected value='tblVendorCommentsEdit'>Vendors Comments</option>")
+            }
+
+            /******************************************************************/
+            var checkcDataPresentPropertyData = 0, checkcDataPresentPacking = 0, checkcDataPresentRoof = 0, checkcDataPresentPackingLot = 0, checkcDataPresentBuilding = 0, checkcDataPresentLockboxCom = 0, checkcDataPresentVendorAndContractor = 0, checkcDataPresentMunicipalService = 0, checkcDataPresentUlitityService = 0, checkcDataPresentVendorComments = 0, checkcDataPresentMarketing = 0;
+            var propertyDataTableHeaderEdit = ("Property Type|Date Property Acquired|Current Owner|Original Architect|Original Developer|Original Engineers|Year Built|Original GLA|Renovation/Expansion|Current GLA|Building (Acres or SqFt)|Parking Lot (Acres or SqFt)|Project Total (Acres or SqFt)|Outparcel Tenants |Maintained (Acres or SqFt)|Percent of Acres in Bedding Plants|Number Dormant Months per Year||Number of Poles|Number of Fixtures|Type of Fixtures|Locations of Controls|Other|Canopy/Other Exterior Lighting|Locations of Other Controls||Roof Comments (Temporary Field||Parking Spaces|Handicapped Accessible|Stenciling|Sealcoat/Overlay Parking)||Fire Protection/Sprinkler|HVAC|Construction|Key Notes||Lockbox Location|Code|Lockbox Location|Code|Lockbox Location|Code||Marketing Fund|Contracted To||comment||ELECTRIC|GAS|WATERSEWER|TELEPHONE||POLICE|FIRE|BUILDING DEPARTMENT|PUBLIC WORKS|HIGHWAY DEPARTMENT||Tree Maintenance|Door Repair/Maint|Asphalt Repair|Electrical Repair|General Maintenance Repairs|Environmental Cleanup|Exterminating|Facade Repair|Fire Alarm Monitor|Fire Alarm Repair|Power Washing|Glass/Board Up|Graffitti/Vandal Cleanup|H.V.A.C. Repair|Handrail Repair|Irrigation System Repair|Janitorial/Cleaning|Landscaping|Locksmith|Masonry Repair|Oil Supplier|Parking Lot Light Repair|Parking Lot Sweeping|Painting / Striping|Catch Basin|Plumbing|Retention Pond Maintenance|Roof Repair|Security|Sewer/Septic Drain Clearing|Sewer/Septic Pumping|Sidewalk Repair|Signage Maintenance|Smoke/Water Restoration|Snow Removal|Towing|Trash Removal|Flooring").split("|");
+            var propertyDataColumnEdit = ("property_type|date_property_acquired|current_owner|original_architect|original_developer|original_engineers|year_built|original_gla|renovation_expansion|current_gla|acres_building|acres_parkinglot|acres_project_total|outparcel_tenants|acres_maintained|percent_acres_bedding_plants|number_dormant_months_year||parkinglot_number_of_poles|parkinglot_number_of_fixtures|parkinglot_type_of_fixture|parkinglot_location_of_controls|parkinglot_other|parkinglot_other_lighting|parkinglot_other_lighting_controls||roof||parking_spaces|parking_spaces_handicapped|parking_ratio|parking_sealcoat_overlay||building_fire_sprinkler|building_hvac|building_construction|building_key_notes||lockbox_location_01|lockbox_code_01|lockbox_location_02|lockbox_code_02|lockbox_location_03|lockbox_code_03||marketing_fund|marketing_contracted_to||vendor_comments||utility_electric_provider~utility_electric_phone|utility_gas_provider~utility_gas_phone|utility_water_sewer_provider~utility_water_sewer_phone|utility_telephone_provider~utility_telephone_phone||municipal_police_provider~municipal_police_phone|municipal_fire_provider~municipal_fire_phone|municipal_buildingdept_provider~municipal_buildingdept_phone|municipal_publicworks_provider~municipal_publicworks_phone|municipal_highwaydept_provider~municipal_highwaydept_phone||vendor_cardaccess_provider~vendor_cardaccess_contact~vendor_cardaccess_notes|vendor_door_repair_provider~vendor_door_repair_contact~vendor_door_repair_notes|vendor_eifs_provider~vendor_eifs_contact~vendor_eifs_notes|vendor_electrical_provider~vendor_electrical_contact~vendor_electrical_notes|vendor_elevator_provider~vendor_elevator_contact~vendor_elevator_notes|vendor_enviro_cleanup_provider~vendor_enviro_cleanup_contact~vendor_enviro_cleanup_notes|vendor_exterminator_provider~vendor_exterminator_contact~vendor_exterminator_notes|vendor_facade_provider~vendor_facade_contact~vendor_facade_notes|vendor_fire_alarm_monitor_provider~vendor_fire_alarm_monitor_contact~vendor_fire_alarm_monitor_notes|vendor_fire_alarm_repair_provider~vendor_fire_alarm_repair_contact~vendor_fire_alarm_repair_notes|vendor_generator_provider~vendor_generator_contact~vendor_generator_notes|vendor_glass_boardup_provider~vendor_glass_boardup_contact~vendor_glass_boardup_notes|vendor_graffitti_vandal_provider~vendor_graffitti_vandal_contact~vendor_graffitti_vandal_notes|vendor_hvac_repair_provider~vendor_hvac_repair_contact~vendor_hvac_repair_notes|vendor_handrail_provider~vendor_handrail_contact~vendor_handrail_notes|vendor_irrigation_provider~vendor_irrigation_contact~vendor_irrigation_notes|vendor_janitorial_provider~vendor_janitorial_contact~vendor_janitorial_notes|vendor_landscaping_provider~vendor_landscaping_contact~vendor_landscaping_notes|vendor_locksmith_provider~vendor_locksmith_contact~vendor_locksmith_notes|vendor_masonry_provider~vendor_masonry_contact~vendor_masonry_notes|vendor_oil_supply_provider~vendor_oil_supply_contact~vendor_oil_supply_notes|vendor_plot_light_repair_provider~vendor_plot_light_repair_contact~vendor_plot_light_repair_notes|vendor_plot_sweeping_provider~vendor_plot_sweeping_contact~vendor_plot_sweeping_notes|vendor_painting_provider~vendor_painting_contact~vendor_painting_notes|vendor_payphone_provider~vendor_payphone_contact~vendor_payphone_notes|vendor_plumbing_provider~vendor_plumbing_contact~vendor_plumbing_notes|vendor_retentionpond_provider~vendor_retentionpond_contact~vendor_retentionpond_notes|vendor_roof_repair_provider~vendor_roof_repair_contact~vendor_roof_repair_notes|vendor_security_provider~vendor_security_contact~vendor_security_notes|vendor_sewer_septic_drain_clearing_provider~vendor_sewer_septic_drain_clearing_contact~vendor_sewer_septic_drain_clearing_notes|vendor_sewer_septic_plumbing_provider~vendor_sewer_septic_plumbing_contact~vendor_sewer_septic_plumbing_notes|vendor_sidewalk_provider~vendor_sidewalk_contact~vendor_sidewalk_notes|vendor_signage_provider~vendor_signage_contact~vendor_signage_notes|vendor_smoke_water_restore_provider~vendor_smoke_water_restore_contact~vendor_smoke_water_restore_notes|vendor_snow_removal_provider~vendor_snow_removal_contact~vendor_snow_removal_notes|vendor_towing_provider~vendor_towing_contact~vendor_towing_notes|vendor_trashremoval_provider~vendor_trashremoval_contact~vendor_trashremoval_notes|vendor_flooring_provider~vendor_flooring_contact~vendor_flooring_notes").split("|");
+
+            var propertyDataTableEdit = '<div class="panel-heading paneltitle text-center"><b>Property Data</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+            var parkingLotLightingTableEdit = '<div class="panel-heading paneltitle text-center"><b>Parking Lot Lighting</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+            var roofTableEdit = '<div class="panel-heading paneltitle text-center"><b>Roof</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+            var parkingLotTableEdit = '<div class="panel-heading paneltitle text-center"><b>Parking Lot</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+            var buildingTableEdit = '<div class="panel-heading paneltitle text-center"><b>Building</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+            var lockboxCombosTableEdit = '<div class="panel-heading paneltitle text-center"><b>Lockbox Combos </b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+            var MarketingTableEdit = '<div class="panel-heading paneltitle text-center"><b>Marketing </b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+            var vendorCommentsTableEdit = '<div class="panel-heading paneltitle text-center"><b>Vendor Comments </b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <tbody>';
+
+            var utilityServiceCompaniesTableEdit = '<div class="panel-heading paneltitle text-center"><b>Utility Service Companies</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <thead><tr>  <td> Service</td>  <td> Provider</td>  <td> Phone Number</td></tr></thead><tbody>';
+
+            var municipalServicesTableEdit = '<div class="panel-heading paneltitle text-center"><b>Municipal Services</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <thead><tr>  <td> Service</td>  <td> Provider</td>  <td> Phone Number</td></tr></thead><tbody>';
+
+            var vendorsandContractorsTableEdit = '<div class="panel-heading paneltitle text-center"><b>Vendors and Contractors</b></div>\
+                                     <table class="table table-striped table-bordered table-hover">\
+                                      <thead><tr>  <td> Service</td>  <td> Provider</td>  <td> Contact</td> <td>Contact Information</td></tr></thead><tbody>';
+
+            $.ajax({
+                url: "@Url.Action("GetPropertyDetailsFromPropertySheet", "Details")",
+                data: { PropertyID: propertyID },
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (i, record) {
+                        var checkcDataPresent = 0, countRecord = 0;
+                        for (var i = 0; i < propertyDataTableHeader.length; i++) {
+                            countRecord = countRecord + 1;
+                            // if (checkIsNull(record["" + propertyDataColumn[i] + ""], "") != "" && countRecord < 17) {
+                            if (checkIsNull(propertyDataColumn[i], "") != "" && countRecord < 17) {
+                                //this bolck for Property Data
+                                checkcDataPresentPropertyData = checkcDataPresentPropertyData + 1;
+                                propertyDataTableEdit = propertyDataTableEdit + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                            <td class='col-md-7'> <input type='text'  class='form-control input-sm' id='" + propertyDataColumn[i] + "'  value='" + record["" + propertyDataColumn[i] + ""] + "'/></td>\
+                                         </tr>";
+                            } else if (checkIsNull(propertyDataColumn[i], "") != "" && countRecord > 17 && countRecord < 26) {
+                                //this bolck for packing lot
+                                checkcDataPresentPacking = checkcDataPresentPacking + 1;
+                                if (propertyDataColumn[i] == "parkinglot_location_of_controls" || propertyDataColumn[i] == "parkinglot_other" || propertyDataColumn[i] == "parkinglot_other_lighting_controls") {
+                                    parkingLotLightingTableEdit = parkingLotLightingTableEdit + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                        <td class='col-md-7'> <textarea   class='form-control textarea input-sm' id='" + propertyDataColumn[i] + "'  >" + record["" + propertyDataColumn[i] + ""] + "</textarea></td>\
+                                         </tr>";
+                                } else {
+                                    parkingLotLightingTableEdit = parkingLotLightingTableEdit + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                        <td class='col-md-7'> <input type='text'  class='form-control input-sm' id='" + propertyDataColumn[i] + "'  value='" + record["" + propertyDataColumn[i] + ""] + "'/></td>\
+                                         </tr>";
+                                }
+                            } else if ((checkIsNull(propertyDataColumn[i], "") != "") && (countRecord > 26 && countRecord < 28)) {
+                                //this bolck for Roof
+                                checkcDataPresentRoof = checkcDataPresentRoof + 1;
+                                roofTableEdit = roofTableEdit + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                            <td class='col-md-7'> <input type='text'  class='form-control input-sm' id='" + propertyDataColumn[i] + "'  value='" + record["" + propertyDataColumn[i] + ""] + "'/></td>\
+                                         </tr>";
+                            } else if ((checkIsNull(propertyDataColumn[i], "") != "") && (countRecord > 28 && countRecord < 33)) {
+                                //this bolck for Packing Lot
+                                checkcDataPresentPackingLot = checkcDataPresentPackingLot + 1;
+                                parkingLotTableEdit = parkingLotTableEdit + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                             <td class='col-md-7'> <input type='text'  class='form-control input-sm' id='" + propertyDataColumn[i] + "'  value='" + record["" + propertyDataColumn[i] + ""] + "'/></td>\
+                                         </tr>";
+                            }
+                            else if ((checkIsNull(propertyDataColumn[i], "") != "") && (countRecord > 33 && countRecord < 38)) {
+                                //this bolck for Building
+                                checkcDataPresentBuilding = checkcDataPresentBuilding + 1;
+                                buildingTableEdit = buildingTableEdit + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                             <td class='col-md-7'> <input type='text'  class='form-control input-sm' id='" + propertyDataColumn[i] + "'  value='" + record["" + propertyDataColumn[i] + ""] + "'/></td>\
+                                         </tr>";
+                            }
+                            else if ((checkIsNull(propertyDataColumn[i], "") != "") && (countRecord > 38 && countRecord < 45)) {
+                                //this bolck for Building
+                                checkcDataPresentLockboxCom = checkcDataPresentLockboxCom + 1;
+                                lockboxCombosTableEdit = lockboxCombosTableEdit + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                            <td class='col-md-7'> <input type='text'  class='form-control input-sm' id='" + propertyDataColumn[i] + "'  value='" + record["" + propertyDataColumn[i] + ""] + "'/></td>\
+                                         </tr>";
+                            }
+                            else if ((checkIsNull(propertyDataColumn[i], "") != "") && (countRecord > 45 && countRecord < 48)) {
+                                //this bolck for Marketing
+                                checkcDataPresentMarketing = checkcDataPresentMarketing + 1;
+                                MarketingTableEdit = MarketingTableEdit + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                            <td class='col-md-7'> <input type='text'  class='form-control input-sm' id='" + propertyDataColumn[i] + "'  value='" + record["" + propertyDataColumn[i] + ""] + "'/></td>\
+                                         </tr>";
+                            }
+                            else if ((checkIsNull(propertyDataColumn[i], "") != "") && (countRecord >= 49 && countRecord <= 49)) {
+                                //this bolck for Vendor Comments
+                                checkcDataPresentVendorComments = checkcDataPresentVendorComments + 1;
+                                vendorCommentsTableEdit = vendorCommentsTableEdit + "<tr>\
+                                        <th class='col-md-5'>" + propertyDataTableHeader[i] + " </th>\
+                                            <td class='col-md-7'> <textarea class='form-control textarea'  id='" + propertyDataColumn[i] + "'>" + record["" + propertyDataColumn[i] + ""] + "</textarea></td>\
+                                         </tr>";
+                            } else if ((countRecord >= 51 && countRecord <= 54)) {
+                                //this bolck for twice tr
+                                if (propertyDataTableHeader[i] != "") {
+                                    var propertyDataColumnArry = propertyDataColumn[i].split("~");
+                                    if ((checkIsNull(propertyDataColumnArry[0], "") != "") || (checkIsNull(propertyDataColumnArry[1], "") != "")) {
+                                        checkcDataPresentUlitityService = checkcDataPresentUlitityService + 1;
+                                        utilityServiceCompaniesTableEdit = utilityServiceCompaniesTableEdit + "<tr>\
+                                                <th class='col-md-4'>" + propertyDataTableHeader[i] + " </th>\
+                                                    <td class='col-md-4'> <input type='text'  class='form-control input-sm' id='" + propertyDataColumnArry[0] + "'  value='" + record["" + propertyDataColumnArry[0] + ""] + "'/></td>\
+                                                    <td class='col-md-4'> <input type='text'  class='form-control input-sm' id='" + propertyDataColumnArry[1] + "'  value='" + record["" + propertyDataColumnArry[1] + ""] + "'/></td>\
+                                                 </tr>";
+                                    }
+                                }
+                            }
+                            else if ((countRecord >= 55 && countRecord <= 60)) {
+                                //this bolck for twice tr
+                                if (propertyDataTableHeader[i] != "") {
+                                    var propertyDataColumnArry = propertyDataColumn[i].split("~");
+                                    if ((checkIsNull(propertyDataColumnArry[0], "") != "") || (checkIsNull(propertyDataColumnArry[1], "") != "")) {
+                                        checkcDataPresentMunicipalService = checkcDataPresentMunicipalService + 1;
+                                        municipalServicesTableEdit = municipalServicesTableEdit + "<tr>\
+                                                <th class='col-md-4'>" + propertyDataTableHeader[i] + " </th>\
+                                                    <td class='col-md-4'> <input type='text'  class='form-control input-sm' id='" + propertyDataColumnArry[0] + "'  value='" + record["" + propertyDataColumnArry[0] + ""] + "'/></td>\
+                                                    <td class='col-md-4'> <input type='text'  class='form-control input-sm' id='" + propertyDataColumnArry[1] + "'  value='" + record["" + propertyDataColumnArry[1] + ""] + "'/></td>\
+                                                 </tr>";
+                                    }
+                                }
+                            }
+                            else if ((countRecord >= 61 && countRecord <= 100)) {
+                                //this bolck for twice tr
+                                //alert("Coutnt:" + countRecord + "Val:" + propertyDataTableHeader[i] + "P column:" + propertyDataColumn[i]);
+                                if (propertyDataTableHeader[i] != "") {
+                                    var propertyDataColumnArry = propertyDataColumn[i].split("~");
+                                    if ((checkIsNull(propertyDataColumnArry[0], "") != "") || (checkIsNull(propertyDataColumnArry[1], "") != "")) {
+                                        checkcDataPresentVendorAndContractor = checkcDataPresentVendorAndContractor + 1;
+                                        vendorsandContractorsTableEdit = vendorsandContractorsTableEdit + "<tr>\
+                                                <th class='col-md-3'>" + propertyDataTableHeader[i] + " </th>\
+                                                    <td class='col-md-3'> <input type='text'  class='form-control input-sm' id='" + propertyDataColumnArry[0] + "'  value='" + record["" + propertyDataColumnArry[0] + ""] + "'/></td>\
+                                                    <td class='col-md-3'> <input type='text'  class='form-control input-sm' id='" + propertyDataColumnArry[1] + "'  value='" + record["" + propertyDataColumnArry[1] + ""] + "'/></td>\
+                                                    <td class='col-md-3'> <textarea class='form-control textarea' id='" + propertyDataColumnArry[2] + "' >" + record["" + propertyDataColumnArry[2] + ""] + "</textarea></td>\
+                                                 </tr>";
+                                    }
+                                }
+                            }
+
+                        }
+                        propertyDataTableEdit = propertyDataTableEdit + '<tbody></table>';
+                        parkingLotLightingTableEdit = parkingLotLightingTableEdit + '<tbody></table>';
+                        roofTableEdit = roofTableEdit + '<tbody></table>';
+                        parkingLotTableEdit = parkingLotTableEdit + '<tbody></table>';
+                        buildingTableEdit = buildingTableEdit + '<tbody></table>';
+                        lockboxCombosTableEdit = lockboxCombosTableEdit + '<tbody></table>';
+                        MarketingTableEdit = MarketingTableEdit + '<tbody></table>';
+                        vendorCommentsTableEdit = vendorCommentsTableEdit + '<tbody></table>';
+                        utilityServiceCompaniesTableEdit = utilityServiceCompaniesTableEdit + '<tbody></table>';
+                        municipalServicesTableEdit = municipalServicesTableEdit + '<tbody></table>';
+                        vendorsandContractorsTableEdit = vendorsandContractorsTableEdit + '<tbody></table>';
+
+                        $("#tblPropertyDataEdit").html(propertyDataTableEdit);
+                        $("#tblParkingLotLightingEdit").html(parkingLotLightingTableEdit);
+                        $("#tblRoofEdit").html(roofTableEdit);
+                        $("#tblParkingLotEdit").html(parkingLotTableEdit);
+                        $("#tblBuildingEdit").html(buildingTableEdit);
+                        $("#tblLockboxCombosEdit").html(lockboxCombosTableEdit);
+                        $("#tblMarketingEdit").html(MarketingTableEdit);
+                        $("#tblUtilityServiceCompaniesEdit").html(utilityServiceCompaniesTableEdit);
+                        $("#tblMunicipalServicesEdit").html(municipalServicesTableEdit);
+                        $("#tblVendorsandContractorsEdit").html(vendorsandContractorsTableEdit);
+                        $("#tblVendorCommentsEdit").html(vendorCommentsTableEdit);
+
+                        // $("#customModalLabel").html("Property Data Sheet");
+                    });
+                    //to check if data is present in table
+
+                },
+                error: function () {
+                    // alert("Failed! Please try again.");
+                }
+            });
+
+            /*******************************************************************/
+
+            $('#example-single-2').multiselect({
+                onChange: function (option, checked, select) {
+                    if (checked == true) {
+                        $("#" + $(option).val()).css("display", "Block");
+                        $("#message").html("");
+                    } else {
+                        $("#" + $(option).val()).css("display", "none");
+                    }
+
+                }
+            });
+
+
+
+            $(function () {
+                $('#customModal').modal({
+                    keyboard: true
+                })
+            });
+        });
+
+        $("#saveDataSheet").click(function () {
+            dataArry = { propertyid: propertyID, property_type: checkIsNull($('#property_type').val(), ' '), date_property_acquired: checkIsNull($('#date_property_acquired').val(), ' '), current_owner: checkIsNull($('#current_owner').val(), ' '), original_architect: checkIsNull($('#original_architect').val(), ' '), original_developer: checkIsNull($('#original_developer').val(), ' '), original_engineers: checkIsNull($('#original_engineers').val(), ' '), year_built: checkIsNull($('#year_built').val(), ' '), original_gla: checkIsNull($('#original_gla').val(), ' '), renovation_expansion: checkIsNull($('#renovation_expansion').val(), ' '), current_gla: checkIsNull($('#current_gla').val(), ' '), acres_building: checkIsNull($('#acres_building').val(), ' '), acres_parkinglot: checkIsNull($('#acres_parkinglot').val(), ' '), acres_project_total: checkIsNull($('#acres_project_total').val(), ' '), outparcel_tenants: checkIsNull($('#outparcel_tenants').val(), ' '), acres_maintained: checkIsNull($('#acres_maintained').val(), ' '), percent_acres_bedding_plants: checkIsNull($('#percent_acres_bedding_plants').val(), ' '), number_dormant_months_year: checkIsNull($('#number_dormant_months_year').val(), ' '), parkinglot_number_of_poles: checkIsNull($('#parkinglot_number_of_poles').val(), ' '), parkinglot_number_of_fixtures: checkIsNull($('#parkinglot_number_of_fixtures').val(), ' '), parkinglot_type_of_fixture: checkIsNull($('#parkinglot_type_of_fixture').val(), ' '), parkinglot_location_of_controls: checkIsNull($('#parkinglot_location_of_controls').val(), ' '), parkinglot_other: checkIsNull($('#parkinglot_other').val(), ' '), parkinglot_other_lighting: checkIsNull($('#parkinglot_other_lighting').val(), ' '), parkinglot_other_lighting_controls: checkIsNull($('#parkinglot_other_lighting_controls').val(), ' '), roof: checkIsNull($('#roof').val(), ' '), parking_spaces: checkIsNull($('#parking_spaces').val(), ' '), parking_spaces_handicapped: checkIsNull($('#parking_spaces_handicapped').val(), ' '), parking_ratio: checkIsNull($('#parking_ratio').val(), ' '), parking_sealcoat_overlay: checkIsNull($('#parking_sealcoat_overlay').val(), ' '), building_fire_sprinkler: checkIsNull($('#building_fire_sprinkler').val(), ' '), building_hvac: checkIsNull($('#building_hvac').val(), ' '), building_construction: checkIsNull($('#building_construction').val(), ' '), building_key_notes: checkIsNull($('#building_key_notes').val(), ' '), lockbox_location_01: checkIsNull($('#lockbox_location_01').val(), ' '), lockbox_code_01: checkIsNull($('#lockbox_code_01').val(), ' '), lockbox_location_02: checkIsNull($('#lockbox_location_02').val(), ' '), lockbox_code_02: checkIsNull($('#lockbox_code_02').val(), ' '), lockbox_location_03: checkIsNull($('#lockbox_location_03').val(), ' '), lockbox_code_03: checkIsNull($('#lockbox_code_03').val(), ' '), marketing_fund: checkIsNull($('#marketing_fund').val(), ' '), marketing_contracted_to: checkIsNull($('#marketing_contracted_to').val(), ' '), utility_electric_text: checkIsNull($('#utility_electric_text').val(), ' '), utility_electric_provider: checkIsNull($('#utility_electric_provider').val(), ' '), utility_electric_phone: checkIsNull($('#utility_electric_phone').val(), ' '), utility_gas_text: checkIsNull($('#utility_gas_text').val(), ' '), utility_gas_provider: checkIsNull($('#utility_gas_provider').val(), ' '), utility_gas_phone: checkIsNull($('#utility_gas_phone').val(), ' '), utility_water_sewer_text: checkIsNull($('#utility_water_sewer_text').val(), ' '), utility_water_sewer_provider: checkIsNull($('#utility_water_sewer_provider').val(), ' '), utility_water_sewer_phone: checkIsNull($('#utility_water_sewer_phone').val(), ' '), utility_telephone_text: checkIsNull($('#utility_telephone_text').val(), ' '), utility_telephone_provider: checkIsNull($('#utility_telephone_provider').val(), ' '), utility_telephone_phone: checkIsNull($('#utility_telephone_phone').val(), ' '), municipal_police_text: checkIsNull($('#municipal_police_text').val(), ' '), municipal_police_provider: checkIsNull($('#municipal_police_provider').val(), ' '), municipal_police_phone: checkIsNull($('#municipal_police_phone').val(), ' '), municipal_fire_text: checkIsNull($('#municipal_fire_text').val(), ' '), municipal_fire_provider: checkIsNull($('#municipal_fire_provider').val(), ' '), municipal_fire_phone: checkIsNull($('#municipal_fire_phone').val(), ' '), municipal_buildingdept_text: checkIsNull($('#municipal_buildingdept_text').val(), ' '), municipal_buildingdept_provider: checkIsNull($('#municipal_buildingdept_provider').val(), ' '), municipal_buildingdept_phone: checkIsNull($('#municipal_buildingdept_phone').val(), ' '), municipal_publicworks_text: checkIsNull($('#municipal_publicworks_text').val(), ' '), municipal_publicworks_provider: checkIsNull($('#municipal_publicworks_provider').val(), ' '), municipal_publicworks_phone: checkIsNull($('#municipal_publicworks_phone').val(), ' '), municipal_highwaydept_text: checkIsNull($('#municipal_highwaydept_text').val(), ' '), municipal_highwaydept_provider: checkIsNull($('#municipal_highwaydept_provider').val(), ' '), municipal_highwaydept_phone: checkIsNull($('#municipal_highwaydept_phone').val(), ' '), vendor_cardaccess_provider: checkIsNull($('#vendor_cardaccess_provider').val(), ' '), vendor_cardaccess_contact: checkIsNull($('#vendor_cardaccess_contact').val(), ' '), vendor_cardaccess_notes: checkIsNull($('#vendor_cardaccess_notes').val(), ' '), vendor_door_repair_provider: checkIsNull($('#vendor_door_repair_provider').val(), ' '), vendor_door_repair_contact: checkIsNull($('#vendor_door_repair_contact').val(), ' '), vendor_door_repair_notes: checkIsNull($('#vendor_door_repair_notes').val(), ' '), vendor_eifs_provider: checkIsNull($('#vendor_eifs_provider').val(), ' '), vendor_eifs_contact: checkIsNull($('#vendor_eifs_contact').val(), ' '), vendor_eifs_notes: checkIsNull($('#vendor_eifs_notes').val(), ' '), vendor_electrical_provider: checkIsNull($('#vendor_electrical_provider').val(), ' '), vendor_electrical_contact: checkIsNull($('#vendor_electrical_contact').val(), ' '), vendor_electrical_notes: checkIsNull($('#vendor_electrical_notes').val(), ' '), vendor_elevator_provider: checkIsNull($('#vendor_elevator_provider').val(), ' '), vendor_elevator_contact: checkIsNull($('#vendor_elevator_contact').val(), ' '), vendor_elevator_notes: checkIsNull($('#vendor_elevator_notes').val(), ' '), vendor_enviro_cleanup_provider: checkIsNull($('#vendor_enviro_cleanup_provider').val(), ' '), vendor_enviro_cleanup_contact: checkIsNull($('#vendor_enviro_cleanup_contact').val(), ' '), vendor_enviro_cleanup_notes: checkIsNull($('#vendor_enviro_cleanup_notes').val(), ' '), vendor_exterminator_provider: checkIsNull($('#vendor_exterminator_provider').val(), ' '), vendor_exterminator_contact: checkIsNull($('#vendor_exterminator_contact').val(), ' '), vendor_exterminator_notes: checkIsNull($('#vendor_exterminator_notes').val(), ' '), vendor_facade_provider: checkIsNull($('#vendor_facade_provider').val(), ' '), vendor_facade_contact: checkIsNull($('#vendor_facade_contact').val(), ' '), vendor_facade_notes: checkIsNull($('#vendor_facade_notes').val(), ' '), vendor_fire_alarm_monitor_provider: checkIsNull($('#vendor_fire_alarm_monitor_provider').val(), ' '), vendor_fire_alarm_monitor_contact: checkIsNull($('#vendor_fire_alarm_monitor_contact').val(), ' '), vendor_fire_alarm_monitor_notes: checkIsNull($('#vendor_fire_alarm_monitor_notes').val(), ' '), vendor_fire_alarm_repair_provider: checkIsNull($('#vendor_fire_alarm_repair_provider').val(), ' '), vendor_fire_alarm_repair_contact: checkIsNull($('#vendor_fire_alarm_repair_contact').val(), ' '), vendor_fire_alarm_repair_notes: checkIsNull($('#vendor_fire_alarm_repair_notes').val(), ' '), vendor_generator_provider: checkIsNull($('#vendor_generator_provider').val(), ' '), vendor_generator_contact: checkIsNull($('#vendor_generator_contact').val(), ' '), vendor_generator_notes: checkIsNull($('#vendor_generator_notes').val(), ' '), vendor_glass_boardup_provider: checkIsNull($('#vendor_glass_boardup_provider').val(), ' '), vendor_glass_boardup_contact: checkIsNull($('#vendor_glass_boardup_contact').val(), ' '), vendor_glass_boardup_notes: checkIsNull($('#vendor_glass_boardup_notes').val(), ' '), vendor_graffitti_vandal_provider: checkIsNull($('#vendor_graffitti_vandal_provider').val(), ' '), vendor_graffitti_vandal_contact: checkIsNull($('#vendor_graffitti_vandal_contact').val(), ' '), vendor_graffitti_vandal_notes: checkIsNull($('#vendor_graffitti_vandal_notes').val(), ' '), vendor_hvac_repair_provider: checkIsNull($('#vendor_hvac_repair_provider').val(), ' '), vendor_hvac_repair_contact: checkIsNull($('#vendor_hvac_repair_contact').val(), ' '), vendor_hvac_repair_notes: checkIsNull($('#vendor_hvac_repair_notes').val(), ' '), vendor_handrail_provider: checkIsNull($('#vendor_handrail_provider').val(), ' '), vendor_handrail_contact: checkIsNull($('#vendor_handrail_contact').val(), ' '), vendor_handrail_notes: checkIsNull($('#vendor_handrail_notes').val(), ' '), vendor_irrigation_provider: checkIsNull($('#vendor_irrigation_provider').val(), ' '), vendor_irrigation_contact: checkIsNull($('#vendor_irrigation_contact').val(), ' '), vendor_irrigation_notes: checkIsNull($('#vendor_irrigation_notes').val(), ' '), vendor_janitorial_provider: checkIsNull($('#vendor_janitorial_provider').val(), ' '), vendor_janitorial_contact: checkIsNull($('#vendor_janitorial_contact').val(), ' '), vendor_janitorial_notes: checkIsNull($('#vendor_janitorial_notes').val(), ' '), vendor_landscaping_provider: checkIsNull($('#vendor_landscaping_provider').val(), ' '), vendor_landscaping_contact: checkIsNull($('#vendor_landscaping_contact').val(), ' '), vendor_landscaping_notes: checkIsNull($('#vendor_landscaping_notes').val(), ' '), vendor_locksmith_provider: checkIsNull($('#vendor_locksmith_provider').val(), ' '), vendor_locksmith_contact: checkIsNull($('#vendor_locksmith_contact').val(), ' '), vendor_locksmith_notes: checkIsNull($('#vendor_locksmith_notes').val(), ' '), vendor_masonry_provider: checkIsNull($('#vendor_masonry_provider').val(), ' '), vendor_masonry_contact: checkIsNull($('#vendor_masonry_contact').val(), ' '), vendor_masonry_notes: checkIsNull($('#vendor_masonry_notes').val(), ' '), vendor_oil_supply_provider: checkIsNull($('#vendor_oil_supply_provider').val(), ' '), vendor_oil_supply_contact: checkIsNull($('#vendor_oil_supply_contact').val(), ' '), vendor_oil_supply_notes: checkIsNull($('#vendor_oil_supply_notes').val(), ' '), vendor_plot_light_repair_provider: checkIsNull($('#vendor_plot_light_repair_provider').val(), ' '), vendor_plot_light_repair_contact: checkIsNull($('#vendor_plot_light_repair_contact').val(), ' '), vendor_plot_light_repair_notes: checkIsNull($('#vendor_plot_light_repair_notes').val(), ' '), vendor_plot_sweeping_provider: checkIsNull($('#vendor_plot_sweeping_provider').val(), ' '), vendor_plot_sweeping_contact: checkIsNull($('#vendor_plot_sweeping_contact').val(), ' '), vendor_plot_sweeping_notes: checkIsNull($('#vendor_plot_sweeping_notes').val(), ' '), vendor_painting_provider: checkIsNull($('#vendor_painting_provider').val(), ' '), vendor_painting_contact: checkIsNull($('#vendor_painting_contact').val(), ' '), vendor_painting_notes: checkIsNull($('#vendor_painting_notes').val(), ' '), vendor_payphone_provider: checkIsNull($('#vendor_payphone_provider').val(), ' '), vendor_payphone_contact: checkIsNull($('#vendor_payphone_contact').val(), ' '), vendor_payphone_notes: checkIsNull($('#vendor_payphone_notes').val(), ' '), vendor_plumbing_provider: checkIsNull($('#vendor_plumbing_provider').val(), ' '), vendor_plumbing_contact: checkIsNull($('#vendor_plumbing_contact').val(), ' '), vendor_plumbing_notes: checkIsNull($('#vendor_plumbing_notes').val(), ' '), vendor_retentionpond_provider: checkIsNull($('#vendor_retentionpond_provider').val(), ' '), vendor_retentionpond_contact: checkIsNull($('#vendor_retentionpond_contact').val(), ' '), vendor_retentionpond_notes: checkIsNull($('#vendor_retentionpond_notes').val(), ' '), vendor_roof_repair_provider: checkIsNull($('#vendor_roof_repair_provider').val(), ' '), vendor_roof_repair_contact: checkIsNull($('#vendor_roof_repair_contact').val(), ' '), vendor_roof_repair_notes: checkIsNull($('#vendor_roof_repair_notes').val(), ' '), vendor_security_provider: checkIsNull($('#vendor_security_provider').val(), ' '), vendor_security_contact: checkIsNull($('#vendor_security_contact').val(), ' '), vendor_security_notes: checkIsNull($('#vendor_security_notes').val(), ' '), vendor_sewer_septic_drain_clearing_provider: checkIsNull($('#vendor_sewer_septic_drain_clearing_provider').val(), ' '), vendor_sewer_septic_drain_clearing_contact: checkIsNull($('#vendor_sewer_septic_drain_clearing_contact').val(), ' '), vendor_sewer_septic_drain_clearing_notes: checkIsNull($('#vendor_sewer_septic_drain_clearing_notes').val(), ' '), vendor_sewer_septic_plumbing_provider: checkIsNull($('#vendor_sewer_septic_plumbing_provider').val(), ' '), vendor_sewer_septic_plumbing_contact: checkIsNull($('#vendor_sewer_septic_plumbing_contact').val(), ' '), vendor_sewer_septic_plumbing_notes: checkIsNull($('#vendor_sewer_septic_plumbing_notes').val(), ' '), vendor_sidewalk_provider: checkIsNull($('#vendor_sidewalk_provider').val(), ' '), vendor_sidewalk_contact: checkIsNull($('#vendor_sidewalk_contact').val(), ' '), vendor_sidewalk_notes: checkIsNull($('#vendor_sidewalk_notes').val(), ' '), vendor_signage_provider: checkIsNull($('#vendor_signage_provider').val(), ' '), vendor_signage_contact: checkIsNull($('#vendor_signage_contact').val(), ' '), vendor_signage_notes: checkIsNull($('#vendor_signage_notes').val(), ' '), vendor_smoke_water_restore_provider: checkIsNull($('#vendor_smoke_water_restore_provider').val(), ' '), vendor_smoke_water_restore_contact: checkIsNull($('#vendor_smoke_water_restore_contact').val(), ' '), vendor_smoke_water_restore_notes: checkIsNull($('#vendor_smoke_water_restore_notes').val(), ' '), vendor_snow_removal_provider: checkIsNull($('#vendor_snow_removal_provider').val(), ' '), vendor_snow_removal_contact: checkIsNull($('#vendor_snow_removal_contact').val(), ' '), vendor_snow_removal_notes: checkIsNull($('#vendor_snow_removal_notes').val(), ' '), vendor_towing_provider: checkIsNull($('#vendor_towing_provider').val(), ' '), vendor_towing_contact: checkIsNull($('#vendor_towing_contact').val(), ' '), vendor_towing_notes: checkIsNull($('#vendor_towing_notes').val(), ' '), vendor_trashremoval_provider: checkIsNull($('#vendor_trashremoval_provider').val(), ' '), vendor_trashremoval_contact: checkIsNull($('#vendor_trashremoval_contact').val(), ' '), vendor_trashremoval_notes: checkIsNull($('#vendor_trashremoval_notes').val(), ' '), vendor_flooring_provider: checkIsNull($('#vendor_flooring_provider').val(), ' '), vendor_flooring_contact: checkIsNull($('#vendor_flooring_contact').val(), ' '), vendor_flooring_notes: checkIsNull($('#vendor_flooring_notes').val(), ' '), vendor_comments: checkIsNull($('#vendor_comments').val(), ' ') };
+            $.ajax({
+                type: "POST", //HTTP POST Method
+                url: '@Url.Action("UpdatePropertyDataSheet", "Details")',
+                data: dataArry,
+                datatype: "json",
+                success: function (result) {
+                    $("#message").html("<span class='alert-success'>Your information updated successfully.</span>");
+                },
+                error: function (result) {
+                    $("#message").html("<span class='alert-danger'>Your information has beed failed to update</span>");
+                }
+
+            });
+        });
+
+        $(".totalItem").click(function () {
+            var itemName = $(this).attr("name");
+            var propertyID = checkIsNull(fnGetParameterByName("propertyID"), "");
+            if (propertyID == "") {
+                alertify.alert("There are problem in connection. Please contact with system admin.");
+                return false;
+            }
+            if (itemName == "Work Proposal") {
+                window.location = "/Details/ProductDetails?category=Work%20Request&property=" + propertyID;
+            } else if (itemName == "Work Order") {
+                window.location = "/Details/ProductDetails?category=Work Order&property=" + propertyID;
+            } else if (itemName == "Property Inspections") {
+                window.location = "/Details/ProductDetails?category=Property Inspections&property=" + propertyID;
+            } else if (itemName == "Snow Removal") {
+                window.location = "/Details/ProductDetails?category=Snow Removal&property=" + propertyID;
+            }
+            //alert(itemName);
+        });
+
+    });
+
+
+</script>
+@foreach (var item in Model)
+{
+    @model IEnumerable<UniSourceV2.prIndividualPropertyInfoV2_Result>
+    @section Scripts{
+        <script>
+            $(document).ready(function () {
+                //to set site manu
+                var propertyID = checkIsNull(fnGetParameterByName("propertyID"), "");
+                if (propertyID != "") {
+                    $("#liPropertyName").html("@Html.DisplayFor(modelItem => item.displayname)");
+                    $("#liPropertyName").attr("href", "/Details/PropertyDetails?propertyID=" + propertyID);
+                    $("#liWorkRequest").attr("href", "/Details/ProductDetails?category=Work Request&property=" + propertyID);
+                    $("#liWorkOrder").attr("href", "/Details/ProductDetails?category=Work Order&property=" + propertyID);
+                    $("#liPropertyInspection").attr("href", "/Details/ProductDetails?category=Property Inspections&property=" + propertyID);
+                    $("#liSnowRemoval").attr("href", "/Details/ProductDetails?category=Snow Removal&property=" + propertyID);
+
+                    $(".expand-menu").addClass("collapse in");
+                    $(".expand-menu").attr("aria-expanded", "true");
+                    $(".expand-menu").css("display", "Block");
+
+                    //to show property tital in modal
+                    $("#customModalLabel").html("Property Data Sheet of @Html.DisplayFor(modelItem => item.displayname)");
+                }
+                //alert("propertyID: "+propertyID);
+
+
+
+                $('#myModal').on('shown.bs.modal', function () {
+                    var point = new google.maps.LatLng("@Html.DisplayFor(modelItem => item.gps_latitude)", " @Html.DisplayFor(modelItem => item.gps_longitude)");
+                    var map = new google.maps.Map(document.getElementById('mapCanvas'), {
+                        mapTypeId: google.maps.MapTypeId.ROADMAP,
+                        zoom: 13,
+                        center: point
+                    });
+
+                    var contentString = '<div id="content"><div id="siteNotice">' + '</div>' + '<h5 id="firstHeading" class="firstHeading">Property Name:</h5>' +
+     '<div id="bodyContent"><p>"@Html.DisplayFor(modelItem => item.displayname)"</p></div></div>';
+                    var infowindow = new google.maps.InfoWindow({
+                        content: contentString
+                    });
+
+                    var marker = new google.maps.Marker({
+                        position: point,
+                        map: map, icon: 'http://www.google.com/intl/en_us/mapfiles/ms/icons/red-dot.png',
+                        title: "@Html.DisplayFor(modelItem => item.address1)"
+                    });
+
+
+                    infowindow.open(map, marker);
+
+
+
+
+
+
+                    $("#myModalLabel").html("Map of Property @Html.DisplayFor(modelItem => item.displayname)");
+                });
+
+                $(".checkSiteDocumentType").change(function () {
+                    //alert(this.submit());
+                });
+
+                //to upload document using jquery
+                $(".document-upload").click(function () {
+                    fnProgress(true);
+                    var filesUploadID = "";
+                    var category = "";
+                    var tableID = "";
+                    var existsMgsTRID = "";
+                    if ($(this).attr("name") == "SiteDocument") {
+                        filesUploadID = "siteDocument";
+                        category = "Site Document";
+                        tableID = "tblSiteDocument";
+                        existsMgsTRID = "siteDocumentExistMgs";
+                    } else if ($(this).attr("name") == "SiteOverlay") {
+                        filesUploadID = "siteOverlayDocument";
+                        category = "Site Overlay";
+                        tableID = "tblSiteOverlay";
+                        existsMgsTRID = "siteOverlayExistMgs";
+                    } else {
+                        alertify.alert("Fail to upload document.");
+                        return false;
+                    }
+                    var files = document.getElementById(filesUploadID).files;
+                    if (files.length > 0) {
+                        if (window.FormData !== undefined) {
+                            var data = new FormData();
+                            for (var x = 0; x < files.length; x++) {
+                                data.append("file" + x, files[x]);
+                            }
+                            $("#" + filesUploadID).val("");
+                            $.ajax({
+                                url: '/Details/UploadFile?FileType=Site Document&Category=' + category + '&folderName=' + propertyID,
+                                type: "POST",
+                                contentType: false,
+                                processData: false,
+                                data: data,
+                                success: function (data) {
+                                    var dataArry = data.split("|");
+                                    // console.log(dataArry[0]);
+                                    if (dataArry[0] == "True" || dataArry[0] == true) {
+                                        var tableTr = '<tr>\
+                                            <td>' + dataArry[2] + '</td>\
+                                            <td align="center">\
+                                                <a target="_blank" href="'+ dataArry[3] + '">View</a>\
+                                            </td>\
+                                            <td align="center">\
+                                                <a href="/Details/Download?ImagePath=~' + dataArry[3] + '&fileName=' + dataArry[2] + '" title="Click here to download">Download</a>\
+                                            </td>\
+                                        </tr>';
+                                        $("table tr#" + existsMgsTRID).remove();
+                                        $("#" + tableID + " tbody").append(tableTr);
+                                        fnProgress(false);
+                                    }
+                                    else {
+                                        alertify.alert("Your file does not support system.");
+                                        fnProgress(false);
+                                        return false;
+                                    }
+
+
+
+                                },
+                                error: function (xhr, status, p3, p4) {
+                                    fnProgress(false);
+                                    var err = "Error " + " " + status + " " + p3 + " " + p4;
+                                    if (xhr.responseText && xhr.responseText[0] == "{")
+                                        err = JSON.parse(xhr.responseText).Message;
+                                    console.log(err);
+                                }
+                            });
+                        } else {
+                            alertify.alert("This browser doesn't support HTML5 file uploads!");
+                            fnProgress(false);
+                        }
+                    } else {
+                        alertify.alert("Please select your file.");
+                        fnProgress(false);
+                    }
+                });
+
+            });
+
+            function mapsDetails(divID, addrerss, region) {
+                //  alert("" + addrerss, region);
+
+            }
+        </script>
+    }
+
+    <div class="row">
+        <!--Custom Modal -->
+        <div class="modal fade" id="customModal" tabindex="-1" role="dialog"
+            aria-labelledby="myModalLabel" aria-hidden="true">
+
+            <div class="modal-dialog" style="width: 60% !important;">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <button type="button" onclick="javascript:window.location.reload()" class="close" data-dismiss="modal" aria-hidden="true">
+                            ×
+                        </button>
+
+                        <h4 class="modal-title" id="customModalLabel"></h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div id="customModalBody">
+                            <select id="example-single-2" multiple="multiple"></select>
+                        </div>
+                        <div id="customModalBodyDetails" style="height: 450px; overflow-y: scroll"></div>
+                        <div id="message"></div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" onclick="javascript:window.location.reload()" data-dismiss="modal">
+                            Close
+                        </button>
+
+                        <button type="button" id="saveDataSheet" class="btn btn-primary">
+                            Submit changes
+                        </button>
+                    </div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+
+        </div>
+        <!-- /.modal -->
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+            aria-labelledby="myModalLabel" aria-hidden="true">
+
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            ×
+                        </button>
+
+                        <h4 class="modal-title" id="myModalLabel"></h4>
+                    </div>
+
+                    <div class="modal-body">
+                        <div id="mapCanvas" style="width: auto; height: 500px;"></div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            Close
+                        </button>
+                    </div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+
+        </div>
+        <!-- /.modal -->
+
+
+        <div class="col-lg-12">
+            <h1 class="page-header">@Html.DisplayFor(modelItem => item.displayname)</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <div class="row">
+        <div class="col-lg-8 col-md-12 col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">Property: @Html.DisplayFor(modelItem => item.displayname)
+                    </h4>
+                </div>
+                <div class="panel-body">
+                    <table style="width: 100%;" class='table-condensed'>
+                        <tr>
+                            <td>
+                                <b>Address:  </b>@Html.DisplayFor(modelItem => item.address1) @{if (item.address1 != "")
+                                                                                                {
+                                    <button class="btn btn-primary btn-map" data-toggle="modal" data-target="#myModal"><i class="uni-icon btn-map"></i></button>
+                                                                                                }
+                                }
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Property Manager:  </b>@Html.DisplayFor(modelItem => item.propertymanager)</td>
+                        </tr>
+                        <tr>
+                            <td><b>Sweeping Frequency: </b>@Html.DisplayFor(modelItem => item.Recurringwork)</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3 col-xs-6">
+                    <div class="panel panel-primary totalItem" id="workRequest" name="Work Proposal">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="uni-icon icon-work medium"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge count-total" id="totalWorkRequest" name="All">@Html.DisplayFor(modelItem => item.WorkRequst)</div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer panel-footer-property">
+                            <div>
+                                Work Proposal<br />
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-6">
+                    <div class="panel panel-red totalItem" name="Work Order">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="uni-icon icon-inspec medium"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge count-total" id="totalWorkOrder" name="All">@Html.DisplayFor(modelItem => item.WorkOrder)</div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer panel-footer-property">
+                            <div>Work Order</div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-6">
+                    <div class="panel panel-green totalItem" id="propertyInspections" name="Property Inspections">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <span class="uni-icon icon-request medium"></span>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge count-total" id="totalPropertyInspections" name="All">@Html.DisplayFor(modelItem => item.PropertyInspection)</div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer panel-footer-property">
+                            <div>Property Inspections</div>
+                            <div class="clearfix"></div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-3 col-xs-6">
+                    <div class="panel panel-yellow totalItem" name="Snow Removal">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="uni-icon icon-snow1 medium"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge count-total" id="totalSnowRemoval" name="All">@Html.DisplayFor(modelItem => item.SnowReport)</div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-footer panel-footer-property">
+                            <div>Snow Report</div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h1 class="page-header">Property Data Sheet</h1>
+            <select id="example-single" multiple="multiple"></select>
+            <a id="editPropertyDataSheet" class="btn btn-primary UniAdminPermission">Update Datasheet</a>
+            <div class="property-data-sheet" style="padding-top: 10px;">
+                <div class="panel panel-default">
+                    <div id="tblPropertyData" style="display: none"></div>
+                    <div id="tblParkingLotLighting" style="display: none"></div>
+                    <div id="tblRoof" style="display: none"></div>
+                    <div id="tblParkingLot" style="display: none"></div>
+                    <div id="tblBuilding" style="display: none"></div>
+                    <div id="tblLockboxCombos" style="display: none"></div>
+                    <div id="tblMarketing" style="display: none"></div>
+                    <div id="tblUtilityServiceCompanies" style="display: none"></div>
+                    <div id="tblMunicipalServices" style="display: none"></div>
+                    <div id="tblVendorsandContractors" style="display: none"></div>
+                    <div id="tblVendorComments" style="display: none"></div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-12 col-xs-12 padding-zero">
+            <div class="col-lg-12 col-md-6 col-xs-12">
+                <div class="panel panel-success">
+                    <div class="panel-body">
+                        <div class="tbl">
+                            @{
+                                                                                                var imageName = (@Html.DisplayFor(modelItem => item.propertyid)).ToString();
+                                                                                                imageName = "../PropertyPictures/" + imageName + ".jpg";
+                                <img id="propertyImage" class="propety-image" src="@imageName" />
+                            }
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-6 col-xs-12">
+                <div class="panel panel-success" style="align-content: center">
+                    <div class="panel-heading">
+                        Site Documents
+
+                    </div>
+
+
+                    <table class="table table-striped table-bordered table-hover" id="tblSiteDocument" width="100%">
+                        <thead>
+                            <tr class="table-header">
+                                <td align="center">Document</td>
+                                <td align="center">View</td>
+                                <td align="center">Download</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+
+                                                                                                DirectoryInfo directoryInfo = new DirectoryInfo(Server.MapPath("~/Docs/" + @Html.DisplayFor(modelItem => item.propertyid) + "/"));
+                                                                                                if (directoryInfo.Exists)
+                                                                                                {
+                                                                                                    string internalExtension = string.Concat("*.", "*");
+                                                                                                    FileInfo[] fileInfo = directoryInfo.GetFiles(internalExtension, SearchOption.AllDirectories);
+
+                                                                                                    foreach (FileInfo fileInfoTemp in fileInfo)
+                                                                                                    {
+                                                                                                        // ListItem listItem = new ListItem(fileInfoTemp.Name, fileInfoTemp.Name);
+                                                                                                        // FilesList.Items.Add(listItem);
+
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => fileInfoTemp.Name)
+                                    </td>
+                                    <td align="center"><i class="fa fa-eye" aria-hidden="true"></i>
+                                        @Html.ActionLink("View", "../Docs/" + @Html.DisplayFor(modelItem => item.propertyid) + "/" + @Html.DisplayFor(modelItem => fileInfoTemp.Name), new { @Admin = "Admin" }, new { @target = "_blank" })
+                                    </td>
+                                    <td align="center"><i class="fa fa-download" aria-hidden="true"></i>
+                                        @Html.ActionLink("Download", "Download", new { ImagePath = "~/Docs/" + @Html.DisplayFor(modelItem => item.propertyid) + "/" + @Html.DisplayFor(modelItem => fileInfoTemp.Name), fileName = @Html.DisplayFor(modelItem => fileInfoTemp.Name) }, new { @Title = "Click here to download" })
+                                    </td>
+                                </tr>
+
+                                                                                                    }
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                <tr id="siteDocumentExistMgs">
+                                    <td colspan="3" align="center">Documents does not exists.
+                                    </td>
+                                </tr>
+                                                                                                }
+
+                            }
+                        </tbody>
+                    </table>
+                    <div class="panel-footer UniAdminPermission">
+                        <input type="file" name="file" id="siteDocument" class="checkSiteDocumentType" style="width: 75%;" />
+                        <input type="button" id="fileUpload" class="btn-info document-upload" name="SiteDocument" value="Upload" />
+                    </div>
+
+                </div>
+                <div class="panel panel-success" style="align-content: center">
+                    <div class="panel-heading">
+                        Site Overlays
+                    </div>
+                    <table class="table table-striped table-bordered table-hover" id="tblSiteOverlay" width="100%">
+                        <thead>
+                            <tr class="table-header">
+                                <td align="center">Document</td>
+                                <td align="center">View</td>
+                                <td align="center">Download</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+
+                                                                                                DirectoryInfo directoryInfoOverlay = new DirectoryInfo(Server.MapPath("~/Overlays/" + @Html.DisplayFor(modelItem => item.propertyid) + "/"));
+                                                                                                if (directoryInfoOverlay.Exists)
+                                                                                                {
+                                                                                                    string internalExtension = string.Concat("*.", "*");
+                                                                                                    FileInfo[] fileInfo = directoryInfoOverlay.GetFiles(internalExtension, SearchOption.AllDirectories);
+
+                                                                                                    foreach (FileInfo fileInfoTemp in fileInfo)
+                                                                                                    {
+                                                                                                        // ListItem listItem = new ListItem(fileInfoTemp.Name, fileInfoTemp.Name);
+                                                                                                        // FilesList.Items.Add(listItem);
+
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => fileInfoTemp.Name)
+                                    </td>
+                                    <td align="center"><i class="fa fa-eye" aria-hidden="true"></i>
+                                        @Html.ActionLink("View", "../Overlays/" + @Html.DisplayFor(modelItem => item.propertyid) + "/" + @Html.DisplayFor(modelItem => fileInfoTemp.Name), new { @Admin = "Admin" }, new { @target = "_blank" })
+                                    </td>
+                                    <td align="center"><i class="fa fa-download" aria-hidden="true"></i>
+                                        @Html.ActionLink("Download", "Download", new { ImagePath = "~/Overlays/" + @Html.DisplayFor(modelItem => item.propertyid) + "/" + @Html.DisplayFor(modelItem => fileInfoTemp.Name), fileName = @Html.DisplayFor(modelItem => fileInfoTemp.Name) }, new { @Title = "Click here to download" })
+                                    </td>
+                                </tr>
+
+                                                                                                    }
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                <tr id="siteOverlayExistMgs">
+                                    <td colspan="3" align="center">Documents does not exists.
+                                    </td>
+                                </tr>
+                                                                                                }
+
+                            }
+                        </tbody>
+                    </table>
+                    <div class="panel-footer UniAdminPermission">
+                        <input type="file" id="siteOverlayDocument" name="file" style="width: 75%;" />
+                        <input type="submit" class="btn-info document-upload" name="SiteOverlay" value="Upload" />
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "Reports";
+}
+@section Scripts{
+    <script>
+        function redirectReportDetailsPage() {
+            fnProgress(true);
+            alertify.success("Redirect to report page.");
+            $.ajax({
+                type: "POST", //HTTP POST Method
+                async: false,
+                url: '@Url.Action("Reports", "Report")',
+                data: {
+                    Action: "New",
+                    optional: "",
+                    RedirecPage: "reports.aspx"
+                },
+                datatype: "json",
+                success: function (result) {
+                    fnProgress(false);
+                    window.open(result, '_blank');
+                },
+                error: function (result) {
+                    fnProgress(false);
+                    alertify.alert("fail");
+                }
+
+            });
+        }
+     </script>
+    }
+
+<div class='wrapper' style="padding-top:25px">
+    <button class="btn btn-success" type="button" id="submitInformation" onclick="redirectReportDetailsPage()">&nbsp; View Report Details &nbsp;</button>
+</div>

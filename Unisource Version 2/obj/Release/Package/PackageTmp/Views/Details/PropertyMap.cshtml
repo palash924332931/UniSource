@@ -1,0 +1,67 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/bootstrap.js"></script>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/sb-admin-2.css" rel="stylesheet" />
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJEVoE5Ix-7HPh0OJWDLV0LgnaFAVslmE&amp;sensor=true"></script>
+    <meta name="viewport" content="width=device-width" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var address = fnGetParameterByName("Address");
+            loadMaps("map-canvas", address);
+        });
+        function loadMaps(divID, addrers) {
+            var address1 = addrers;
+            var address2 = 'New York, US';
+
+            //var map = new google.maps.Map(document.getElementById('map-canvas'), {
+            //    zoom: 4,
+            //    center: new google.maps.LatLng(35.00, -25.00)
+            //});
+
+            var gc = new google.maps.Geocoder();
+
+            gc.geocode({ 'address': address1 }, function (res1, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    var map = new google.maps.Map(document.getElementById(divID), {
+                        zoom: 12,
+                        position: res1[0].geometry.location,
+                        center: res1[0].geometry.location
+                    });
+                    new google.maps.Marker({
+                        position: res1[0].geometry.location,
+                        map: map
+                    });
+
+                }
+            });
+
+
+        }
+        function fnGetParameterByName(name) {
+            name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+            var regexS = "[\\?&]" + name + "=([^&#]*)";
+            var regex = new RegExp(regexS);
+            var results = regex.exec(window.location.href);
+            if (results == null)
+                return "";
+            else
+                return decodeURIComponent(results[1].replace(/\+/g, ""));
+        }
+    </script>
+
+    <title>PropertyMap</title>
+</head>
+<body>
+    <div class="position-center">
+        <div id="map-canvas"></div>
+    </div>
+</body>
+</html>

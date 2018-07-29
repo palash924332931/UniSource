@@ -1,0 +1,49 @@
+﻿@{
+    ViewBag.Title = "MapDetails";
+}
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCJEVoE5Ix-7HPh0OJWDLV0LgnaFAVslmE&amp;sensor=true"></script>
+
+<h2>MapDetails</h2>
+@section Scripts{
+<script>
+   $(document).ready(function () {
+        //  alert("call OL");
+       loadMaps("map-canvas", "Dhaka");
+        //   googleMapsCall("'Html.DisplayFor(modelItem => item.region)'");
+       //googleMapsCall("Chalna");
+      // initMap();
+     });
+
+    function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 8,
+            center: { lat: -34.397, lng: 150.644 }
+        });
+        var geocoder = new google.maps.Geocoder();
+
+       // document.getElementById('submit').addEventListener('click', function () {
+           // geocodeAddress(geocoder, map);
+       // });
+    }
+
+    function geocodeAddress(geocoder, resultsMap) {
+        // var address = document.getElementById('address').value;
+        var address = "Bangladesh";
+        geocoder.geocode({ 'address': address }, function (results, status) {
+            if (status === google.maps.GeocoderStatus.OK) {
+                resultsMap.setCenter(results[0].geometry.location);
+                var marker = new google.maps.Marker({
+                    map: resultsMap,
+                    position: results[0].geometry.location
+                });
+            } else {
+                alert('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+
+</script>
+    }
+<div class="position-center">
+    <div id="map-canvas"></div>
+</div>

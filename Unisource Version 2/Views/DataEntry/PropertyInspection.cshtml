@@ -1,0 +1,1265 @@
+﻿@{
+    ViewBag.Title = "Blank";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts {
+   
+    <script type="text/javascript">
+        tempDeletedImageLink = "";
+        $(document).ready(function () {
+            fnProgress(true);
+            classInspection.loadInspectionPageContent();
+
+            //to unchecked radio
+            var allRadios = $('input:radio');
+            var booRadio;
+            for (var x = 0; x < allRadios.length; x++) {
+                allRadios[x].onclick = function () {
+                    if (booRadio == this) {
+                        this.checked = false;
+                        booRadio = null;
+                    } else {
+                        booRadio = this;
+                    }
+                };
+            }
+
+        });
+
+
+
+        var classInspection = {
+            category: checkIsNull(fnGetParameterByName("category"), ""),
+            propertyID: checkIsNull(fnGetParameterByName("propertyID"), ""),
+            titleOfTable: 'Mowing of Grass|Edging Around Curbs|Removal of Weeds|Trimming of Shrubs|Watering (if necessary)|Condition of Irrigation System|Condition of Plants|Island Trash Removal|Cleanliness of Fence lines|Condition of Retention Pond|Condition of Vacant Out lots|Condition of Island Curbing|Sightline Visibility|EXTERIORLANDSCAPING|Parking Lot Lights|Wall Packs|Canopy Lights|Sidewalk Lights|Pylon Sign(s)|Time Clock Settings|Stock of Bulbs|Condition of Light poles, bases|EXTERIORLIGHTING|Exterior Masonry|Tuck pointing|	Gutters, Downspouts and Splashblocks|Condition of Bollards|Sidewalks|Graffiti|Condition of Pay Phones|Condition of Bike Racks|Condition of Canopies|Cleanliness of Fascia|Cleanliness of Skylights|Condition of Support Columns|Condition of Sidewalk Benches|Condition of Rear Doors/Labeled|Condition of Trash Cans|BUILDINGEXTERIOR|Service Corridor Lighting|Service Corridor Floors/Walls|	Condition of Fire Extinguishers|Trash Rooms/Dumpster Areas|	Condition of Dock Areas|Condition of Management Office|	Cleanliness of Offices|NON-PUBLICAREAS|Cleanliness|	Asphalt Repairs|	Illegal Dumping|	Parking Bumper Condition|	Shopping Carts Collected|	Cart Corral Condition|Striping|Crack Filling|Handicapped Areas|Curbs|Sewer Caps|Condition of Traffic Signs|	Cleanliness of Dumpster Areas|Removal of Abandoned Cars|Vegetation Growth in cracks|PARKINGLOTS|Presentation of Space for Releasing Activity (List each vacancy in Comments.)|	Make sure locks work w/ lockbox keys|Check for Roof Leaks, Stained Ceiling Tiles|Installation of Leasing Signs|Cleanliness of Storefront|Cleanliness of Interior|Cleaning of Windows|Other Damages Observed|VACANTSTORES|	Condition of Floor|	Cleanliness/Appearance of Shop|	Storage of Flammables|Organization of Tools/Supplies|Cleanliness of Truck & Equipment|Labeling of Keys in Key box|Condition of HVAC Equipment|All vacant and LL keys in lockbox|MAINTENANCESHOP|	Riser Room Cleanliness|	Riser Room Pressures Checked|	Valves Chained in Open Position|Maps Current|Doors Labeled|	Hot Work Permit Sign|Shutdown Procedure Sign|Check for Current Inspection Tags|Sign Inspection Log|MECHANICELECTRICALROOMS|Storefront Clean|Storefront Signs Clean and Lit|	Windows Cleaned and Displayed|Window cracks, failures|TENANTDETAILS|Condition of Plant Material|Condition of Planter Boxes|Condition of Floor Grates|INTERIORLANDSCAPING|Skylights|Diffusers|Fluorescents|Incandescent|Spotlights|Exit/Emergency Lights|INTERIORLIGHTING|Mall Entrances|Storefronts|Flooring|General Cleanliness|Drinking Fountains|Trash Receptacles|Railings|Cleanliness of Restrooms, All fixtures operable|Directories Clean and UP|Basements- water infiltration, trash, unauthorized activity|BUILDINGINTERIOR|',
+            tableColumn: 'exteriorlandscaping_mowingofgrass|exteriorlandscaping_edgingaroundcurbs|exteriorlandscaping_removalofweeds|exteriorlandscaping_trimmingofshrubs|exteriorlandscaping_wateringifnecessary|exteriorlandscaping_conditionofirrigationsystem|exteriorlandscaping_conditionofplants|exteriorlandscaping_islandtrashremoval|exteriorlandscaping_cleanlinessoffencelines|exteriorlandscaping_conditionofretentionpond|exteriorlandscaping_conditionofvacantoutlots|exteriorlandscaping_conditionofislandcurbing|exteriorlandscaping_sightlinevisibility|~|exteriorlighting_parkinglotlights|exteriorlighting_wallpacks|exteriorlighting_canopylights|exteriorlighting_sidewalklights|exteriorlighting_pylonsigns|exteriorlighting_timeclocksettings|exteriorlighting_stockofbulbs|exteriorlighting_conditionoflightpoles|~|buildingexterior_exteriormasonry|buildingexterior_tuckpointing|buildingexterior_guttersanddownspouts|buildingexterior_conditionofbollards|buildingexterior_sidewalks|buildingexterior_graffiti|buildingexterior_conditionofpayphones|buildingexterior_conditionofbikeracks|buildingexterior_conditionofcanopies|buildingexterior_cleanlinessoffascia|buildingexterior_cleanlinessofskylights|buildingexterior_conditionofsupportcolumns|buildingexterior_conditionofsidewalkbenches|buildingexterior_conditionofreardoorslabeled|buildingexterior_conditionoftrashcans|~|nonpublicareas_servicecorridorlighting|nonpublicareas_servicecorridorfloorswalls|nonpublicareas_conditionoffireextinguishers|nonpublicareas_trashroomsdumpsterareas|nonpublicareas_conditionofdockareas|nonpublicareas_conditionofmanagementoffice|nonpublicareas_cleanlinessofoffices|~|parkinglots_cleanliness|parkinglots_asphaltrepairs|parkinglots_illegaldumping|parkinglots_parkingbumpercondition|parkinglots_shoppingcartscollected|parkinglots_cartcorralcondition|parkinglots_striping|parkinglots_crackfilling|parkinglots_handicappedareas|parkinglots_curbs|parkinglots_sewercaps|parkinglots_conditionoftrafficsigns|parkinglots_cleanlinessofdumpsterareas|parkinglots_removalofabandonedcars|parkinglots_vegitationgrowthincracks|~|vacantstores_presentationofspaceforreleasingactivity|vacantstores_makesurelockswork|vacantstores_checkforroofleaks|vacantstores_installationofleasingsigns|vacantstores_cleanlinessofstorefront|vacantstores_cleanlinessofinterior|vacantstores_cleaningofwindows|vacantstores_otherdamagesobserved|~|maintenanceshop_conditionoffloor|maintenanceshop_cleanlinessappearanceofshop|maintenanceshop_storageofflammables|maintenanceshop_organizationoftoolssupplies|maintenanceshop_cleanlinessoftruckandequipment|maintenanceshop_labelingofkeysinkeybox|maintenanceshop_conditionofhvacequipment|maintenanceshop_allvacantandllkeysinlockbox|~|mechanicelectricalrooms_riserroomcleanliness|mechanicelectricalrooms_riserroompressureschecked|mechanicelectricalrooms_valveschainedinopenposition|mechanicelectricalrooms_mapscurrent|mechanicelectricalrooms_doorslabeled|mechanicelectricalrooms_hotworkpermitsign|mechanicelectricalrooms_shutdownproceduresign|mechanicelectricalrooms_checkforcurrentinspectiontags|mechanicelectricalrooms_signinspectionlog|~|tenantdetails_storefrontclean|tenantdetails_storefrontsignscleanandlit|tenantdetails_windowscleanedanddisplayed|tenantdetails_windowcracksfailures|~|interiorlandscaping_conditionofplantmaterial|interiorlandscaping_conditionofplanterboxes|interiorlandscaping_conditionoffloorgrates|~|interiorlighting_skylights|interiorlighting_diffusers|interiorlighting_fluorescents|interiorlighting_incandescent|interiorlighting_spotlights|interiorlighting_exitemergencylights|~|buildinginterior_mallentrances|buildinginterior_storefronts|buildinginterior_flooring|buildinginterior_generalcleanliness|buildinginterior_drinkingfountains|buildinginterior_trashreceptacles|buildinginterior_railings|buildinginterior_cleanlinessofrestrooms|buildinginterior_directoriescleanandup|buildinginterior_basementswatertrashunauthentry|~',
+            tableHeader: '<table class="table table-striped table-bordered table-hover insptable">\
+                <tbody>\
+                    <tr>\
+                        <th class="col-md-4"></th>\
+                        <th class="col-md-2 text-center">N/A</th>\
+                        <th class="col-md-2 text-center">ABOVE STANDARD</th>\
+                        <th class="col-md-2 text-center">STANDARD </th>\
+                        <th class="col-md-2 text-center">BELOW STANDARD  </th>\
+                        <th></th>\
+                    </tr>',
+            loadInspectionPageContent: function () {
+                var titleOfTableArry = this.titleOfTable.split('|');
+                var tableColumnArry = this.tableColumn.split('|');
+                var tableHeader = this.tableHeader;
+                var action = this.category;
+                var tableBody = "";
+                var commentsHere = "";
+
+                for (var i = 0; i < tableColumnArry.length; i++) {
+                    if (tableColumnArry[i] == '~') {
+                        var tableDom = tableHeader + tableBody + "</table>";
+                        $("#" + titleOfTableArry[i]).html(tableDom);
+                        tableBody = "";
+                    } else {
+                        if (tableColumnArry[i] == "vacantstores_otherdamagesobserved") {
+                            tableBody = tableBody + '<tr>\
+                                <th>' + titleOfTableArry[i] + '</th>\
+                                 <td>\
+                                    <input name="' + tableColumnArry[i] + '" class="' + tableColumnArry[i] + '" value="0" type="radio" id="' + tableColumnArry[i] + '-0" style="display:none">\
+                                    <label for="' + tableColumnArry[i] + '-0" class="na text-center" style="display:none">na</label>\
+                                </td>\
+                                <td>\
+                                    <input name="' + tableColumnArry[i] + '" class="' + tableColumnArry[i] + '" value="1" type="radio" id="' + tableColumnArry[i] + '-1" style="display:none">\
+                                    <label for="' + tableColumnArry[i] + '-1" class="up text-center" style="display:none">up</label>\
+                                </td>\
+                               <td>\
+                                    <input name="' + tableColumnArry[i] + '" class="' + tableColumnArry[i] + '" value="2" type="radio" id="' + tableColumnArry[i] + '-2" style="display:none">\
+                                    <label for="' + tableColumnArry[i] + '-2" class="ok text-center" style="display:none">ok</label>\
+                                </td>\
+                                 <td>\
+                                    <input name="' + tableColumnArry[i] + '" class="' + tableColumnArry[i] + '" value="3" type="radio" id="' + tableColumnArry[i] + '-3" style="display:none">\
+                                    <label for="' + tableColumnArry[i] + '-3" class="down text-center" style="display:none">down</label>\
+                                </td>\
+                               <td>\
+                                    <a href="#" id="id-Comments-' + tableColumnArry[i] + '" onclick="classInspection.showModal(\'' + tableColumnArry[i] + '\')"><i class="glyphicon glyphicon-plus-sign" aria-hidden="true"></i></a>\
+                                    <input type="text" class="itemcoment" id="comments-' + tableColumnArry[i] + '" />\
+                                </td>\
+                            </tr>';
+                        } else {
+                            tableBody = tableBody + '<tr>\
+                            <th>' + titleOfTableArry[i] + '</th>\
+                                <td>\
+                                <input name="' + tableColumnArry[i] + '" class="' + tableColumnArry[i] + '" value="0" type="radio" id="' + tableColumnArry[i] + '-0">\
+                                <label for="' + tableColumnArry[i] + '-0" class="na text-center">na</label>\
+                            </td>\
+                            <td>\
+                                <input name="' + tableColumnArry[i] + '" class="' + tableColumnArry[i] + '" value="1" type="radio" id="' + tableColumnArry[i] + '-1">\
+                                <label for="' + tableColumnArry[i] + '-1" class="up text-center">up</label>\
+                            </td>\
+                            <td>\
+                                <input name="' + tableColumnArry[i] + '" class="' + tableColumnArry[i] + '" value="2" type="radio" id="' + tableColumnArry[i] + '-2">\
+                                <label for="' + tableColumnArry[i] + '-2" class="ok text-center">ok</label>\
+                            </td>\
+                                <td>\
+                                <input name="' + tableColumnArry[i] + '" class="' + tableColumnArry[i] + '" value="3" type="radio" id="' + tableColumnArry[i] + '-3">\
+                                <label for="' + tableColumnArry[i] + '-3" class="down text-center">down</label>\
+                            </td>\
+                            <td>\
+                                <a href="#" id="id-Comments-' + tableColumnArry[i] + '" onclick="classInspection.showModal(\'' + tableColumnArry[i] + '\')"><i class="glyphicon glyphicon-plus-sign" aria-hidden="true"></i></a>\
+                                <input type="text" class="itemcoment" id="comments-' + tableColumnArry[i] + '" />\
+                            </td>\
+                        </tr>';
+                        }
+                    }
+                }
+
+                if (action == 'edit') {
+                    $("#saveInspectionInformation").val("Update");
+                    $("#wpheader").html("Property Inspection");
+                    $("#adv-search").css("display", "none");
+                    $(".editPropertise").css("display", "block");
+                    this.loadInfromationFromDBUsingID();
+                } else {
+                    $("#wpheader").html("Perform an Inspection");
+                    if("@Session["UserFullName"]"!=null){
+                        $("#createdBy").html('@Session["UserFullName"].ToString()');
+                        $("#ReportedDate").html("@DateTime.Now.ToString("g")")
+                    }
+
+                    $.ajax({
+                        type: "POST", //HTTP POST Method
+                        url: '@Url.Action("ActivityOnFile", "DataEntry")',
+                        data: {
+                            Action: "Delete",
+                            filePath: "~/Content/Temp/Inspection",
+                            optional: "TemFolderDelete"
+                        },
+                        datatype: "json",
+                        success: function (result) {
+
+                        },
+                        error: function (result) {
+                            alertify.alert("fail");
+                        }
+
+                    });
+                    this.loadPropertiesInformationList();
+                }
+
+                //this.loadPropertiesInformationList();
+                //fnProgress(false);
+            },
+            insertInspectionInformation: function () {
+                var tableColumnArry = this.tableColumn.split('|');
+                var action = this.category;
+                var tableHeader = this.tableHeader;
+                alertify.confirm("Do you want to save your information?", function (e) {
+                    if (e) {
+                        fnProgress(true);
+                        alertify.success("You've clicked Save");
+                        var batchID = checkIsNull(fnGetParameterByName("specificID"), "null");
+                        if (action == "edit") {
+                            action = "Update";
+                        } else {
+                            action = "New";
+                        }
+                        var approvalStatus = $("#approvalList").val();
+                        var propertyID = checkIsNull($("#propertyID").html(), "");
+                        if (propertyID == "") {
+                            alertify.alert("Please select property.");
+                            return false;
+                        }
+
+                        var valuesArry = "";
+                        for (var i = 0; i < tableColumnArry.length; i++) {
+                            if (tableColumnArry[i] != '~') {
+                                if (tableColumnArry[i] == "vacantstores_otherdamagesobserved") {
+                                    valuesArry = valuesArry + " " + checkIsNull($("#comments-" + tableColumnArry[i]).val(), " ");
+                                } else {
+                                    $("." + tableColumnArry[i]).each(function () {
+                                        if ($(this).is(":checked") == true) {
+                                            valuesArry = valuesArry + $(this).val() + "" + checkIsNull($("#comments-" + tableColumnArry[i]).val(), " ");
+                                        }
+                                    });
+                                }
+
+                                valuesArry = valuesArry + "|";
+                            }
+                        }
+                        //post data uisng jquery
+                        var sendMail = $("#servicemail").prop("checked") == true ? "true" : "false";
+                        $.ajax({
+                            url: "@Url.Action("PropertyInspection", "DataEntry")",
+                            data: { PropertyID: propertyID, ApprovalStatus: approvalStatus, ValuesArray: valuesArry, ItemCategory: "Inspection", Action: action, BatchID: batchID, TempDeletedImage: tempDeletedImageLink, SendMail: sendMail },
+                            type: "POST",
+                            dataType: "json",
+                            success: function (data) {
+                                window.location = data;
+                                fnProgress(false);
+                            },
+                            error: function () {
+                                alertify.alert("Failed! Please try again.");
+                                fnProgress(false);
+                            }
+                        });
+                            } else {
+                                alertify.error("You've clicked Cancel");
+                                fnProgress(false);
+                                return false;
+                            }
+                });
+            },
+            loadInfromationFromDBUsingID: function () {
+                fnProgress(true);
+                var propertyID = this.propertyID;
+                var tableColumnArry = this.tableColumn.split('|');
+                var titleOfTableArry = this.titleOfTable.split('|');
+                var batchID = checkIsNull(fnGetParameterByName("specificID"), "");
+                if (batchID == "") {
+                    alertify.alert("System fail to load information");
+                    fnProgress(false);
+                    return false;
+                }
+                $.ajax({
+                    url: "@Url.Action("PropertyInspection", "DataEntry")",
+                    data: { PropertyID: propertyID, BatchID: batchID, ItemCategory: "Inspection", Action: "GetInfo" },
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        $.each(data, function (i, record) {
+                            var statusOfInspected = false;
+                            var approvalStatus = record["approvalstatus"];
+                            $("#propertyID").html(record["propertyid"]);
+                            $("#propertyName").html(record["PropertyName"]);
+                            $("#propertyImage").attr("src", "../PropertyPictures/" + record.propertyid + ".jpg");
+                            $("#createdBy").html(checkIsNull(record.RequestBy, ""));
+                            $("#ReportedDate").html(checkIsNull(record["dateentered"], "") + " " + checkIsNull(record["timeentered"], ""));
+
+                            //to show side menu
+                            classUniSource.fnSiteSubMenuShow(record.propertyid, record.PropertyName, "liPropertyInspection");
+
+                            $("#approvalList").val(approvalStatus);
+                            for (var col = 0; col < tableColumnArry.length; col++) {
+                                if (tableColumnArry[col] == '~' && statusOfInspected == true) {
+                                    $("#inspected-" + titleOfTableArry[col]).css("display", "block");
+                                    statusOfInspected = false;
+                                }
+                                else if ($.trim(checkIsNull(record[tableColumnArry[col]], "")) != "") {
+                                    statusOfInspected = true;
+                                    $("#" + tableColumnArry[col] + "-" + record[tableColumnArry[col]].slice(0, 1)).prop('checked', true);
+                                    //to shwo data in commend text comments-exteriorlandscaping_mowingofgrass
+                                    $("#comments-" + tableColumnArry[col]).val(record[tableColumnArry[col]].slice(1, record[tableColumnArry[col]].length));
+                                    if (checkIsNull(record[tableColumnArry[col]].slice(1, -1), "") != "") {
+                                        $("#id-Comments-" + tableColumnArry[col]).addClass("commentsAlready");
+                                    }
+                                }
+                            }
+                        });
+                        fnProgress(false);
+                    },
+                    error: function () {
+                        alertify.alert("Failed! Please try again.");
+                        fnProgress(false);
+                        return false;
+                    }
+                });
+
+            },
+            reviewInspectionInformation: function () {
+                var tableColumnArry = this.tableColumn.split('|');
+                var action = this.category;
+                var tableHeader = this.tableHeader;
+                var titleOfTableArry = this.titleOfTable.split('|');
+                var category = this.category;
+                var reviewTable = "";
+                var tableBody = "";
+
+                fnProgress(true);
+                alertify.success("Showing review");
+                var batchID = checkIsNull(fnGetParameterByName("specificID"), "null");
+                var propertyID = checkIsNull($("#propertyID").html(), "");
+                if (propertyID == "") {
+                    $("#tbPropertiesList").focus();
+                    alertify.alert("Please select property.");
+                    fnProgress(false);
+                    return false;
+                }
+                //to check input anything
+                var checkInput = false;
+                $("#accordion input:radio").each(function () {
+                    if (this.checked == true) {
+                        checkInput = true;
+                    }
+                });
+                if (checkInput != true) {
+                    alertify.alert("Please perform at least one inspection.");
+                    fnProgress(false);
+                    return false;
+                }
+                //end of checking input
+
+                //to get values and bind in a array
+                $('#propertyReviewModal').modal('show');//to show modal
+                var valuesArry = "";
+                for (var i = 0; i < tableColumnArry.length; i++) {
+                    if (tableColumnArry[i] == '~') {
+                        valuesArry = valuesArry + '~|';
+                    }
+                    else {
+                        $("." + tableColumnArry[i]).each(function () {
+                            if ($(this).is(":checked") == true) {
+                                valuesArry = valuesArry + $(this).val() + "" + checkIsNull($("#comments-" + tableColumnArry[i]).val(), " ");
+                            }
+                        });
+                        valuesArry = valuesArry + "|";
+                    }
+                }
+
+                //render html table with values
+                var checkVal = false;
+                currentValuesArry = valuesArry.split("|");
+                for (var col = 0; col < tableColumnArry.length; col++) {
+                    if (tableColumnArry[col] == '~') {
+                        var tableDom = '<table  class="table table-striped table-bordered table-hover insptable">\
+                                               <tr  class="table-success" style="background-color:#dff0d8;text-align:center"><td colspan="3">' + titleOfTableArry[col] + '</td></tr>\
+                                           <tr><th></th><th>Inspected</th><th style="width: 50%;" >Comments</th></tr>' + tableBody + '</table></br>';
+                        tableBody = "";
+                        if (checkVal) {
+                            reviewTable = reviewTable + tableDom;
+                            checkVal = false;
+                        }
+                    } else {
+                        if (tableColumnArry[col] != '~' && checkIsNull(currentValuesArry[col], "") != "") {
+                            checkVal = true;
+                            var inspectVal = currentValuesArry[col].slice(0, 1);
+                            var CommentsVal = currentValuesArry[col].slice(1, currentValuesArry[col].length);
+
+                            tableBody = tableBody + ' <tr>\
+                                         <th>' + titleOfTableArry[col] + '</th>';
+
+                            if (inspectVal == '0') {
+                                tableBody = tableBody + '<td>\
+                                                <input type="radio" id="exteriorlandscaping_mowingofgrass-' + col + '" value="0" class="exteriorlandscaping_mowingofgrass' + col + '" name="exteriorlandscaping_mowingofgrass' + col + '" checked="checked">\
+                                                <label class="na text-center" for="exteriorlandscaping_mowingofgrass-' + col + '">na</label>\
+                                            </td>';
+                            } else if (inspectVal == '1') {
+                                tableBody = tableBody + '<td>\
+                                                <input type="radio" id="exteriorlandscaping_mowingofgrass-' + col + '" value="1" class="exteriorlandscaping_mowingofgrass' + col + '" name="exteriorlandscaping_mowingofgrass' + col + '" checked="checked">\
+                                                <label class="up text-center" for="exteriorlandscaping_mowingofgrass-' + col + '">na</label>\
+                                            </td>';
+                            } else if (inspectVal == '2') {
+                                tableBody = tableBody + '<td>\
+                                                <input type="radio" id="exteriorlandscaping_mowingofgrass-' + col + '" value="2" class="exteriorlandscaping_mowingofgrass' + col + '" name="exteriorlandscaping_mowingofgrass' + col + '" checked="checked">\
+                                                <label class="ok text-center" for="exteriorlandscaping_mowingofgrass-' + col + '">na</label>\
+                                            </td>';
+                            } else if (inspectVal == '3') {
+                                tableBody = tableBody + '<td>\
+                                                <input type="radio" id="exteriorlandscaping_mowingofgrass-0" value="0" class="exteriorlandscaping_mowingofgrass' + col + '" name="exteriorlandscaping_mowingofgrass' + col + '" checked="checked">\
+                                                <label class="down text-center" for="exteriorlandscaping_mowingofgrass-0">na</label>\
+                                            </td>';
+                            } else {
+                                tableBody = tableBody + '<td></td>';
+                            }
+
+
+                            tableBody = tableBody + '<td>\
+                                            <span>' + CommentsVal + '</span>\
+                                        </td>\
+                                    </tr>';
+                        }
+
+                    }
+                }
+                //end of render html
+                //to bind status of PI
+                var statusInforOfPI = "";
+                if (category != "new") {
+                    statusInforOfPI = "<b>Update Status: </b> " + $("#approvalList :selected").text();
+                }
+
+                $("#modalBody").html(reviewTable + "<br/>" + statusInforOfPI);// to show table
+                //bind image section
+                var imageTable = '<div style="overflow-x:auto;"><table><tr>';
+                var counter = 0;
+                $("#imageListPropertyInspection img").each(function () {
+                    counter = counter + 1;
+                    var existingImageUrl = $(this).attr("src");
+                    imageTable = imageTable + '<td class="tdImageUpload" id="' + counter + '" name="" onClick="removeImageformTamp(this)" title="Click to view."><img src="' + existingImageUrl + '" class="uploadedImage img-thumbnail"/></td>';
+                });
+                imageTable = imageTable + '</table></div>';
+                $("#modalBody2").html(imageTable + '<input type="checkbox" id="confirmCheckbox" onclick="fnConfirmationCheckbox(this)"> I hereby certify that all information given is true to the best of my knowledge and belief.');// to show table
+
+                //$("#saveModalInformation").bind("click", "classInspection.insertInspectionInformation()");
+                fnProgress(false);
+            },
+            loadPropertiesInformationList: function () {
+                //get all items of property
+                var category = this.category;
+                var propertyID = this.propertyID;
+                try {
+                    var propertyDataSet = [];
+                    var serchList = [];
+                    $.ajax({
+                        url: "@Url.Action("GetAllPropertyList", "DataEntry")",
+                        data: "",
+                        type: "GET",
+                        dataType: "json",
+                        success: function (data) {
+                            $.each(data, function (i, record) {
+                                serchList.push(record.displayname);
+                                propertyDataSet.push({ DisplayName: record.displayname, PropertyID: record.propertyid, Address: record.address1, TaxRate: record.tax_rate });
+                                //propertyDataSet.push({ DisplayName: record.displayname, PropertyID: record.propertyid, Address: record.address1 });
+                            });
+
+                            //to show property information after loading dom
+                            if (propertyID != "") {
+                                for (var i = 0; i < propertyDataSet.length; i++) {
+                                    //to show information check condition
+                                    if (propertyID == propertyDataSet[i]["PropertyID"]) {
+                                        $("#propertyID").html(propertyDataSet[i]["PropertyID"]);
+                                        $("#address").html(propertyDataSet[i]["Address"]);
+                                        $("#propertyName").html(propertyDataSet[i]["DisplayName"]);
+                                        $("#propertyImage").attr("src", "../PropertyPictures/" + propertyDataSet[i]["PropertyID"] + ".jpg");
+                                        //to build left site menu
+                                        classUniSource.fnSiteSubMenuShow(propertyID, propertyDataSet[i]["DisplayName"], "liPropertyInspection");
+                                        if (category != "edit") {
+                                            //$("#esttax").val(propertyDataSet[i]["TaxRate"]);// for text rate
+                                        }
+                                        break;
+                                    }
+                                }
+                            } else {
+                                return false;
+                            }
+
+                            $('#propertyImage').error(function () {
+                                $("#propertyImage").attr("src", "../Content/imgs/noimages.png");
+                            });
+
+                            //to bind search properties
+                            $('#tbPropertiesList').autocomplete({
+                                source: serchList,
+                                minLength: 0,
+                                scroll: true,
+                                change: function () {
+                                    var proertyName = $(this).val();
+                                    for (var i = 0; i < propertyDataSet.length; i++) {
+                                        //to show information check condition
+                                        if (proertyName == propertyDataSet[i]["DisplayName"]) {
+                                            $("#propertyID").html(propertyDataSet[i]["PropertyID"]);
+                                            $("#address").html(propertyDataSet[i]["Address"]);
+                                            $("#propertyName").html(propertyDataSet[i]["DisplayName"]);
+                                            $("#esttax").val(propertyDataSet[i]["TaxRate"]);// for text rate
+                                            $("#propertyImage").attr("src", "../PropertyPictures/" + propertyDataSet[i]["PropertyID"] + ".jpg");
+                                            break;
+                                        }
+                                    }
+                                }
+                            }).focus(function () {
+                                $(this).autocomplete("search", "");
+                            });
+                            fnProgress(false);
+                        },
+                        error: function () {
+                            //alert("Failed! Please try again.");
+                        }
+                    });
+                        } catch (err) {
+                            alritify.alert(err.message);
+                        }
+
+            },
+            showModal: function (ID) {
+                //if (action == 'edit')
+                var action = this.category;
+
+                var propertyID = checkIsNull($("#propertyID").html(), "");
+                var batchID = checkIsNull(fnGetParameterByName("specificID"), "");
+                var counter = 0;
+                $('#myModal').modal('show');
+                $('#imageUploadedTable td').remove();//to remove all image from dom
+                //to bind existing image
+                if (action != 'edit') {
+                    $("#imageListPropertyInspection img").each(function () {
+                        counter = counter + 1;
+                        var existingImageUrl = $(this).attr("src");
+                        if (existingImageUrl.indexOf("" + ID + "") != -1) {
+                            $("#id-Comments-" + ID).addClass("commentsAlready");
+                            $('#imageUploadedTable tr').append('<td class="tdImageUpload" id="' + ID + counter + '" name="" onClick="removeImageformTamp(this)" title="Click to view."><img src="' + existingImageUrl + '" class="uploadedImage img-thumbnail"/></td>');
+                        }
+
+                    });
+                }
+
+                //to set image name
+                $("#fu-my-auto-upload").attr("name", ID);
+                var existingCmts = checkIsNull($("#comments-" + ID).val(), "");
+                $("#comments").val(existingCmts);
+                //to unbind image and comments
+                $("#cancelComments").unbind();
+                $("#cancelComments").bind("click", function () {
+                    fnProgress(true);
+                    var counter = 0;
+                    $("#imageUploadedTable img").each(function () {
+                        counter = counter + 1;
+                        var imgScr = $(this).attr('src').replace("..", "~");
+                        var imageName = imgScr.split("/")[5];
+
+                        $.ajax({
+                            type: "POST", //HTTP POST Method
+                            url: '@Url.Action("ActivityOnFile", "DataEntry")',
+                            data: {
+                                Action: "Delete",
+                                filePath: imgScr,
+                                optional: ""
+                            },
+                            datatype: "json",
+                            success: function (result) {
+                                //fnProgress(false);
+                            },
+                            error: function (result) {
+                                alertify.alert("fail");
+                            }
+
+                        });
+                    });
+                    //modal hide;
+                    fnProgress(false);
+                    $('#myModal').modal('hide');
+                });
+
+                $("#saveComments").unbind("click");
+                $("#saveComments").bind("click", function () {
+                    $("#comments-" + ID).val($("#comments").val())
+                    if (checkIsNull($("#comments").val(), "") != "") {
+                        $("#id-Comments-" + ID).addClass("commentsAlready");
+                    } else {
+                        if (!$("#id-Comments-" + ID).hasClass("hasImage")) {
+                            $("#id-Comments-" + ID).removeClass("commentsAlready");
+                        }
+
+                    }
+                    $("#comments").val("");
+                    $('#myModal').modal('hide');
+                    //to move image file temp to actual folder
+                    if (batchID != "") {
+
+                        var counter = 0;
+                        $("#imageUploadedTable img").each(function () {
+                            counter = counter + 1;
+                            var imgScr = $(this).attr('src');
+                            var imageName = imgScr.split("/")[5];
+                            var imageID = imgScr.split("/")[5].split(".")[0];
+
+                            $('#imageListPropertyInspection tr').append('<td class="tdImageUpload" id="' + imageID + '-' + counter + '" name="' + imgScr + '" onClick="classInspection.removeImageformTamp(this)" title="Click to view."><img src="' + imgScr + '" name="' + imageName + '" class="uploadedImage img-thumbnail"/></td>');
+                        });
+
+
+                    } else {
+                        $.ajax({
+                            type: "POST", //HTTP POST Method
+                            url: '@Url.Action("GetAllFiles", "DataEntry")',
+                            data: {
+                                Category: "Inspection",
+                                Action: "TempFolder",
+                                PropertyID: "",
+                                SourceFolder: "Inspection",
+                                BatchID: ""
+                            },
+                            datatype: "json",
+                            success: function (result) {
+                                if (checkIsNull(result, "") != "") {
+                                    $('#imageListPropertyInspection td').remove();
+                                    var resultArry = result.split("~");
+                                    for (var i = 0; i < resultArry.length - 1; i++) {
+                                        var resultArrySplit = resultArry[i].split("|");
+                                        $('#imageListPropertyInspection tr').append('<td class="tdImageUpload" id="' + resultArrySplit[1] + '" name="' + resultArrySplit[2] + '" onClick="classInspection.removeImageformTamp(this)" title="Click to view."><img src="' + resultArrySplit[2] + '" name="' + resultArrySplit[0] + '" class="uploadedImage img-thumbnail"/></td>');
+                                    }
+                                }
+                            },
+                            error: function (result) {
+                                alertify.alert("fail");
+                            }
+
+                        });
+
+                    }
+
+
+                });
+
+            },
+            addImage: function (e) {
+                // fnProgress(true);
+                var files = e.target.files;
+                if (files.length > 0) {
+                    if (window.FormData !== undefined) {
+                        var data = new FormData();
+                        for (var x = 0; x < files.length; x++) {
+                            data.append("file" + x, files[x]);
+                        }
+
+                        $.ajax({
+                            type: "POST",
+                            url: '/DataEntry/UploadImage?folderName="Inspection"',
+                            contentType: false,
+                            processData: false,
+                            data: data,
+                            success: function (data) {
+                                var dataArry = data.split("|");
+                                console.log(dataArry[0]);
+                                if (dataArry[0] == "True" || dataArry[0] == true) {
+                                    $("#errorImageUpload").html("");
+                                    $('#imageUploadedTable tr').append('<td class="tdImageUpload" id="' + dataArry[2] + '" name="' + dataArry[3] + '" onClick="removeImageformTamp(this)" title="Click to view."><img src="' + dataArry[3] + '" class="uploadedImage img-thumbnail"/></td>');
+                                    fnProgress(false);
+                                }
+                                else {
+                                    $("#errorImageUpload").html("<span class='alert-danger'>" + dataArry[1] + "</span>");
+                                    fnProgress(false);
+                                }
+                            },
+                            error: function (xhr, status, p3, p4) {
+                                fnProgress(false);
+                                var err = "Error " + " " + status + " " + p3 + " " + p4;
+                                if (xhr.responseText && xhr.responseText[0] == "{")
+                                    err = JSON.parse(xhr.responseText).Message;
+                                console.log(err);
+                            }
+                        });
+                    } else {
+                        alertify.alert("This browser doesn't support file uploads!");
+                    }
+                }
+
+            },
+            removeImageFromServer: function (attrb) {
+                var imageURL = $(attrb).attr("name");
+                var tdID = $(attrb).attr("id");
+                alertify.confirm("Do you want to remove this image?", function (e) {
+                    if (e) {
+                        alertify.success("You've clicked remove");
+                        var filePath = imageURL.replace("..", "~");
+
+
+                        tempDeletedImageLink = tempDeletedImageLink + filePath + "|";
+                        $("td#" + tdID).remove();
+                        $("#divImage").css("display", "none");
+
+                       @* $.ajax({
+                            type: "POST", //HTTP POST Method
+                            url: '@Url.Action("ActivityOnFile", "DataEntry")',
+                            data: {
+                                Action: "Delete",
+                                filePath: filePath,
+                                optional: ""
+                            },
+                            datatype: "json",
+                            success: function (result) {
+                                $("td#" + tdID).remove();
+                                $("#divImage").css("display", "none");
+
+                            },
+                            error: function (result) {
+                                alertify.alert("fail");
+                            }
+
+                        });*@
+                    } else {
+                        alertify.error("You've clicked Cancel");
+                        fnProgress(false);
+                        return false;
+                    }
+                });
+
+            },
+            removeImageformTamp: function (attrb) {
+                var imageURL = $(attrb).attr("name");
+                var tdID = $(attrb).attr("id");
+                $("#divImage").css("display", "block");
+                var imageName = checkIsNull($("#" + tdID + " img").attr("name"), "");
+                if (imageName != "") {
+                    if (imageName.indexOf("-") != -1) {
+                        $("#fullImageName").html(imageName.split("-")[0].toUpperCase());
+                    } else {
+                        $("#fullImageName").html(imageName.toUpperCase());
+                    }
+                }
+
+                //bind shift function
+                $("#leftShift").unbind();
+                $("#leftShift").bind("click", function () {
+                    var preID = $(attrb).closest('td').prev().attr('id');
+                    if (checkIsNull(preID, "") != "") {
+                        classInspection.removeImageformTamp($(attrb).closest('td').prev());
+                    }
+                });
+
+
+                $("#rightShift").unbind();
+                $("#rightShift").bind("click", function () {
+                    var nextID = $(attrb).closest('td').next().attr('id');
+                    if (checkIsNull(nextID, "") != "") {
+                        classInspection.removeImageformTamp($(attrb).closest('td').next());
+                    }
+                });
+
+
+                //to set source image
+                $("#btnDelete").attr("name", imageURL + "|" + tdID);
+                $("#imgFull").attr("src", imageURL);
+                //bind delete function
+                $("#btnDelete").unbind("click");
+                $("#btnDelete").bind("click", function () {
+                    var imgInfo = $(this).attr("name");
+                    var imageURL = imgInfo.split("|")[0];
+                    var tdID = imgInfo.split("|")[1];
+                    alertify.confirm("Do you want to remove this image?", function (e) {
+                        if (e) {
+                            alertify.success("You've clicked remove");
+                            var filePath = imageURL.replace("..", "~");
+                            tempDeletedImageLink = tempDeletedImageLink + filePath + "|";
+                            $("td#" + tdID).remove();
+                            $("#divImage").css("display", "none");                           
+                        } else {
+                            alertify.error("You've clicked Cancel");
+                            fnProgress(false);
+                            return false;
+                        }
+                    });
+                });
+
+                $("#btnClose").bind("click", function () {
+                    $("#divImage").css("display", "none");
+                });
+
+            },
+            cancelBtnAction: function () {
+                var propertyID = this.propertyID;
+                var batchID = this.batchID;
+                if (propertyID == "" || batchID == "") {
+                    alertify.alert("System Fail to Action");
+                    return false;
+                }
+                alertify.confirm("Do you want to Back to Inspection List?", function (e) {
+                    if (e) {
+                        alertify.success("Back to Inspection List");
+                        window.location = "/Details/ProductDetails?category=Property%20Inspections&property=" + propertyID + "";
+                    }
+                    else {
+                        alertify.error("You've clicked Cancel");
+                        return false;
+                    }
+                });
+
+
+            },
+            checkStatusForDelete: function (attr) {
+                var propertyID = this.propertyID;
+                var batchID = checkIsNull(fnGetParameterByName("specificID"), "");
+                if ($(attr).val() == "Delete") {
+                        if (propertyID == "" || batchID == "") {
+                            return false;
+                        }
+                        alertify.confirm("Do you want to delete your information?", function (e) {
+                            if (e) {
+                                alertify.error("Deleting your info.");
+                                $.ajax({
+                                    type: "POST", //HTTP POST Method
+                                    url: '@Url.Action("DeleteRecord", "DataEntry")',
+                                    data: {
+                                        PropertyID: propertyID,
+                                        UniqueID: batchID,
+                                        Category: "Property Inspection"
+                                    },
+                                    datatype: "json",
+                                    success: function (data) {
+                                        if (data == "Deleted") {
+                                            window.location = "/Details/ProductDetails?category=Property Inspections&property=" + propertyID;
+                                        }
+                                        fnProgress(false);
+                                    },
+                                    error: function (result) {
+                                        fnProgress(false);
+                                        alertify.alert("fail");
+                                    }
+
+                                });
+                            } else {
+                                alertify.error("You've clicked Cancel");
+                                fnProgress(false);
+                                return false;
+                            }
+                        });
+                    }
+
+            }
+        };
+
+        //custom click dropdown
+        $("#propertySearch").click(function () {
+            $('#tbPropertiesList').focus();
+        });
+
+        //$("#confirmCheckbox").click(function () {
+        //    alert("click func");
+        //    if ($("#confirmCheckbox").prop("checked")) {
+        //        alert("click checked ");
+        //        $("#saveModalInformation").attr("disabled", false);
+        //    } else {
+
+        //    }
+        //});
+        //to show inspected
+        $(".inspected").click(function () {
+            var instectedID = $(this).attr("id");
+            $("#" + instectedID + " input:radio").each(function () {
+                if ($(this).prop("checked") == true) {
+                    $("#inspected-" + instectedID).css("display", "block");
+                    return false
+                } else {
+                    $("#inspected-" + instectedID).css("display", "none");
+                }
+            });
+
+            //
+        });
+        //panel expand collups
+        $('.collapse').on('shown.bs.collapse', function () {
+            $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+        }).on('hidden.bs.collapse', function () {
+            $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+        });
+
+        function fnConfirmationCheckbox(attrb) {
+            if ($("#confirmCheckbox").prop("checked")) {
+                $("#saveModalInformation").attr("disabled", false);
+            } else {
+                $("#saveModalInformation").attr("disabled", true);
+            }
+        }
+
+
+        //email send option visible
+        $("#approvalList").change("click", function () {
+            var approvalstatus = Number(checkIsNull($("#approvalList").val(), 0));
+            if (approvalstatus == 1) {
+                $("#mailcheck").css("display", "block");
+                $("#servicemail").prop("checked", true);
+            }
+            else {
+                $("#mailcheck").css("display", "none");
+                $("#servicemail").prop("checked", false);
+            }
+
+        });
+    </script>
+}
+<style>
+    input[type=radio] {
+        display: none;
+    }
+</style>
+<div class="col-lg-12" style="padding-left: 0px; padding-right: 0px;">
+    <h2 class="page-header" id="wpheader"></h2>
+</div>
+<div class="row">
+    <div class="col-md-9">
+        <div class="panel panel-info">
+            <div class="panel-body">
+                <div class="input-group" id="adv-search" style="padding-bottom: 10px;">
+                    <input type="text" id="tbPropertiesList" class="form-control" placeholder="Select a Property" />
+                    <span class="btn input-group-addon" id="propertySearch"><span class="caret" aria-hidden="true"></span></span>
+                </div>
+                <table align="center">
+                    <tr>
+                        <td>
+                            <label for="usr">Inspection For: &nbsp;</label><label id="propertyID"></label>
+                            -
+                            <label id="propertyName"></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="usr">Created By: &nbsp;</label><label id="createdBy"></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <label for="usr">Created Date: &nbsp;</label> <label id="ReportedDate"></label>
+                        </td>
+                    </tr>
+                    @* <tr>
+                               <td>
+                                   <label for="usr">Property Name:</label>
+                               </td>
+                               <td>
+
+                               </td>
+                           </tr>
+                        <tr>
+                               <td>
+                                   <label for="usr">Address:</label>
+                               </td>
+                               <td>
+                                   <label id="address"></label>
+                               </td>
+                           </tr>*@
+                </table>
+
+                <div style="display: none;" class="text-center">
+                    <div class="show-grid">
+                        <div class="progress" id="progressBar">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="input-group">
+                                <span class="input-group-addon">Work Proposal #
+                                </span>
+                                <input type="text" id="workProposal" class="form-control" readonly="true">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-md-offset-2">
+                            <div class="input-group">
+                                <span class="input-group-addon">Date Created
+                                </span>
+                                <input type="text" id="createdDate" class="form-control" readonly="true">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-success">
+                    <div class="panel-heading" role="tab" id="heading1" data-toggle="collapse" data-parent="#accordion" href="#collapse1" aria-controls="collapse1">
+                        <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                        <div class="text-center">
+                            <b>EXTERIOR LANDSCAPING </b>
+                            <div id="inspected-EXTERIORLANDSCAPING" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                        </div>
+                    </div>
+                    <div id="collapse1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading1">
+                        <div class="panel-body">
+                            <div id="EXTERIORLANDSCAPING" class="inspected"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading" role="tab" id="heading3" data-toggle="collapse" data-parent="#accordion" href="#collapse3" aria-controls="collapse3">
+                        <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                        <div class="text-center">
+                            <b>BUILDING EXTERIOR</b>
+                            <div id="inspected-BUILDINGEXTERIOR" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                        </div>
+                    </div>
+                    <div id="collapse3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading3">
+                        <div class="panel-body">
+                            <div id="BUILDINGEXTERIOR" class="inspected"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading" role="tab" id="heading4" data-toggle="collapse" data-parent="#accordion" href="#collapse4" aria-controls="collapse4">
+                        <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                        <div class="text-center">
+                            <b>NON-PUBLIC AREAS</b>
+                            <div id="inspected-NON-PUBLICAREAS" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                        </div>
+                    </div>
+                    <div id="collapse4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading4">
+                        <div class="panel-body">
+                            <div id="NON-PUBLICAREAS" class="inspected"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading" role="tab" id="heading5" data-toggle="collapse" data-parent="#accordion" href="#collapse5" aria-controls="collapse5">
+                        <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                        <div class="text-center">
+                            <b>PARKING LOTS      </b>
+                            <div id="inspected-PARKINGLOTS" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                        </div>
+                    </div>
+                    <div id="collapse5" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading5">
+                        <div class="panel-body">
+                            <div id="PARKINGLOTS" class="inspected"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading" role="tab" id="heading6" data-toggle="collapse" data-parent="#accordion" href="#collapse6" aria-controls="collapse6">
+                        <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                        <div class="text-center">
+                            <b>VACANT STORES     </b>
+                            <div id="inspected-VACANTSTORES" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                        </div>
+                    </div>
+                    <div id="collapse6" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading6">
+                        <div class="panel-body">
+                            <div id="VACANTSTORES" class="inspected"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 
+                <div class="panel panel-success">
+                    <div class="panel-heading" role="tab" id="heading2" data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-controls="collapse2">
+                        <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                        <div class="text-center">
+                            <b>EXTERIOR LIGHTING     </b>
+                            <div id="inspected-EXTERIORLIGHTING" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                        </div>
+                    </div>
+                    <div id="collapse2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading2">
+                        <div class="panel-body">
+                            <div id="EXTERIORLIGHTING" class="inspected"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading" role="tab" id="heading7" data-toggle="collapse" data-parent="#accordion" href="#collapse7" aria-controls="collapse7">
+                        <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                        <div class="text-center">
+                            <b>MAINTENANCE SHOP      </b>
+                            <div id="inspected-MAINTENANCESHOP" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                        </div>
+                    </div>
+                    <div id="collapse7" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading7">
+                        <div class="panel-body">
+                            <div id="MAINTENANCESHOP" class="inspected"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading" role="tab" id="heading8" data-toggle="collapse" data-parent="#accordion" href="#collapse8" aria-controls="collapse8">
+                        <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                        <div class="text-center">
+                            <b>MECHANIC/ELECTRICAL ROOMS  </b>
+                            <div id="inspected-MECHANICELECTRICALROOMS" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                        </div>
+                    </div>
+                    <div id="collapse8" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading8">
+                        <div class="panel-body">
+                            <div id="MECHANICELECTRICALROOMS" class="inspected"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading" role="tab" id="heading9" data-toggle="collapse" data-parent="#accordion" href="#collapse9" aria-controls="collapse9">
+                        <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                        <div class="text-center">
+                            <b>TENANT DETAILS</b>
+                            <div id="inspected-TENANTDETAILS" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                        </div>
+                    </div>
+                    <div id="collapse9" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading9">
+                        <div class="panel-body">
+                            <div id="TENANTDETAILS" class="inspected"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading" role="tab" id="heading10" data-toggle="collapse" data-parent="#accordion" href="#collapse10" aria-controls="collapse10">
+                        <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                        <div class="text-center">
+                            <b>INTERIOR LANDSCAPING  </b>
+                            <div id="inspected-INTERIORLANDSCAPING" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                        </div>
+                    </div>
+                    <div id="collapse10" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading10">
+                        <div class="panel-body">
+                            <div id="INTERIORLANDSCAPING" class="inspected"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading" role="tab" id="heading11" data-toggle="collapse" data-parent="#accordion" href="#collapse11" aria-controls="collapse11">
+                        <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                        <div class="text-center">
+                            <b>INTERIOR LIGHTING     </b>
+                            <div id="inspected-INTERIORLIGHTING" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                        </div>
+                    </div>
+                    <div id="collapse11" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading11">
+                        <div class="panel-body">
+                            <div id="INTERIORLIGHTING" class="inspected"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-success">
+                    <div class="panel-heading" role="tab" id="heading12" data-toggle="collapse" data-parent="#accordion" href="#collapse12" aria-controls="collapse12">
+                        <div style="float: left;"><span class="glyphicon glyphicon-plus"></span></div>
+                        <div class="text-center">
+                            <b>BUILDING INTERIOR</b>
+                            <div id="inspected-BUILDINGINTERIOR" style="float: right; display: none;"><i class="uni-icon icon-inspect inspect"></i></div>
+                        </div>
+                    </div>
+                    <div id="collapse12" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading12">
+                        <div class="panel-body">
+                            <div id="BUILDINGINTERIOR" class="inspected"></div>
+                        </div>
+                    </div>
+                </div>
+                -->
+            </div>
+            <div class="panel panel-warning" style="display: block;overflow-x:auto;">
+                <label>Images</label>
+                <table id="imageListPropertyInspection">
+                    <tr>
+                        @{
+                            string propertyID = Request.QueryString["propertyID"];
+                            string guiID = Request.QueryString["specificID"];
+                            var counter = 0;
+
+                            if (propertyID != null && guiID != null)
+                            {
+                                var rootPath = "~/PropertyInspections/" + propertyID + "/" + guiID + "/";
+                                var rootPathForHTML = "../PropertyInspections/" + propertyID + "/" + guiID + "/";
+                                DirectoryInfo directoryInfoOverlay = new DirectoryInfo(Server.MapPath(rootPath));
+                                if (directoryInfoOverlay.Exists)
+                                {
+
+                                    string internalExtension = string.Concat("*.", "*");
+                                    FileInfo[] fileInfo = directoryInfoOverlay.GetFiles(internalExtension, SearchOption.AllDirectories);
+                                    //FileInfo[] fileInfo = directoryInfoOverlay.GetFiles().Where(x => x.Name.Contains("s1")).ToArray();
+
+                                    foreach (FileInfo fileInfoTemp in fileInfo)
+                                    {
+                                        counter = counter + 1;
+                                        //string fileID = DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Year.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + DateTime.Now.Millisecond.ToString();
+                                        string fileID = DateTime.Now.ToString("yyyyMMddhhmmssffffff") + counter;
+                            <td class="tdImageUpload" name="@rootPathForHTML@fileInfoTemp.Name" id="@fileID" onClick="classInspection.removeImageformTamp(this)">
+                                <img src='@rootPathForHTML@fileInfoTemp.Name' name="@fileInfoTemp.Name" class="uploadedImage img-thumbnail">
+                            </td>
+
+
+                                    }
+                                }
+                            }
+                        }
+                    </tr>
+                </table>
+            </div>
+            <div class="row editPropertise" style="display: none">
+                <div class="col-md-4 has-default">
+                    <div class="input-group">
+                        <span class="input-group-addon">Update Status:</span>
+                        <select class="form-control" id="approvalList" onchange="classInspection.checkStatusForDelete(this)">
+                            <option value="0">Pending</option>
+                            <option value="1">Approved</option>
+                            <option value="2">Rejected</option>
+                            <option value="Delete">Delete</option>
+                        </select>
+
+                    </div>
+                </div>
+                 <div class="col-md-8" id="mailcheck" style="display:none;">
+                                    <input type="checkbox" id="servicemail">
+                                    Send E-mail                               
+                    </div>
+            </div>
+            <div class='wrapper text-center'>
+                <button id="reset" class="btn btn-warning" type="button" name="" onclick="classInspection.cancelBtnAction()">Cancel</button>
+                <input type="button" class="btn btn-success" value="Submit" id="saveInspectionInformation" onclick="classInspection.insertInspectionInformation()" style="display: none" />
+                <input type="button" class="btn btn-success" value="Review" id="" onclick="classInspection.reviewInspectionInformation()" />
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div id="createWorkOrder"></div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="tbl">
+                    <img id="propertyImage" src="" class="propety-image">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Additional info</h4>
+            </div>
+            <div class="modal-body">
+                <fieldset class="form-group">
+                    <label for="exampleTextarea">Comments:</label>
+                    <textarea class="form-control" id="comments" rows="2"></textarea>
+                </fieldset>
+                <div class="panel panel-warning">
+                    <label>Images</label>
+                    <div id="errorImageUpload" class="danger"></div>
+
+                    <div class="input-group newproPerties">
+                        <div class="input-group">
+                            <table id="imageUploadedTable" class="table-bordered">
+                                <tbody>
+                                    <tr></tr>
+                                </tbody>
+                            </table>
+                            <div class="input-group-addon" style="width: 0px; padding: 0px !important;">
+                                <span class="btn btn-success btn-file">
+                                    <input type="file" value="" name="" class="closeproPerties" id="fu-my-auto-upload" onchange="classUniSource.fnImageUploadOnChange(this,'InspectionModal','imageUploadedTable')">
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancelComments" class="btn btn-default">Close</button>
+                <button type="button" id="saveComments" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="propertyReviewModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content ">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" style="text-align: center" id="modalHeader">Review Property Inspection</h4>
+            </div>
+            <div class="modal-body" id="modalBody"></div>
+            <div class="modal-body" id="modalBody2"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Back</button>
+                <button type="button" id="saveModalInformation" onclick="classInspection.insertInspectionInformation()" class="btn btn-default" disabled>Submit</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<div id="divImage" class="info" style="display: none">
+    <table style="height: 100%; width: 100%">
+        <tr>
+            <td valign="middle" align="center">
+                <div class="input-group">
+                    <span class="input-group-btn" style="width: 0% !important;">
+                        <button class="btn btn-info" type="button" id="leftShift"><i class="fa fa-chevron-left fa-3x"></i></button>
+                    </span>
+                    <img id="imgFull" alt="" src="" style="" />
+                    <span class="input-group-btn" style="width: 0% !important;">
+                        <button class="btn btn-info" type="button" id="rightShift"><i class="fa fa-chevron-right fa-3x"></i></button>
+                    </span>
+                </div>
+
+                <a style="color: red;" href="#" id="btnDelete" title="click here to remove this image">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </a>
+                &nbsp;
+                <a style="color: yellow;" href="#" id="btnClose" title="click here to cancel">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+            </td>
+        </tr>
+    </table>
+</div>
+
+

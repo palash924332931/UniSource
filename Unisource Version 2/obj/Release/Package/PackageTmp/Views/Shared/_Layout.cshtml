@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Unisource Property Management Portal</title>
+    <link rel="shortcut icon" href="~/Content/imgs/uni.ico.png" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/alertify.core.css" rel="stylesheet" />
+    <link href="~/Content/alertify.default.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-timepicker.min.css" rel="stylesheet" />
+    <link href="~/Content/dataTables.bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/dataTables.responsive.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.css" rel="stylesheet" type="text/css" />
+
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/bootstrap-datepicker.js"></script>
+    <script src="~/Scripts/alertify.min.js"></script>
+    <script src="~/Scripts/bootstrap-timepicker.min.js"></script>
+    <script src="~/Scripts/metisMenu.js"></script>
+    <script src="~/Scripts/bootstrap-multiselect.js"></script>
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
+     <script src="~/Scripts/jquery-ui-1.9.2.min.js"></script>
+   
+</head>
+<body>
+    <div id="wrapper">
+        <!-- Navigation -->
+        @Html.Action("Index", "Navbar")
+        <div id="page-wrapper">
+            @RenderBody()
+        </div>
+        <!-- /#page-wrapper -->
+    </div>
+
+    <div id="divLoading" style="display: none; margin: 0px; padding: 0px; position: fixed; right: 0px; top: 0px; width: 100%; height: 100%; background-color: rgb(102, 102, 102); z-index: 30001; opacity: 0.8;">
+        <div style="position: absolute; color: White; top: 45%; left: 45%;">
+            <img src="~/Content/imgs/ajax-loader.gif" />
+        </div>
+    </div>
+   
+
+  
+    <script src="@Url.Content("~/Scripts/masterLib.js")"></script>
+   
+    <script src="@Url.Content("~/Scripts/sb-admin-2.js")"></script>
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+        $(document).ready(function () {
+
+            //role access for WO menu link
+            if ("@Session["allowenterworkorder"].ToString()" != "Yes") {
+                $("#WorkOrderCreation").css("display", "none");
+            }
+
+
+            //to redirect login page
+            var loginUser = '@Session["UserID"]';
+            if (loginUser == null) {
+                window.location = "/Login/HomeLogin?area=admin";
+            }
+            var columnVisibility = false, coumnNumber = 0;
+            var element = document.getElementById('dataTables');
+            if (typeof (element) != 'undefined' && element != null) {
+                if ($("#dataTables").hasClass("dataTable-column-hide")) {
+                    coumnNumber = Number(checkIsNull($("#dataTables").attr('name'), 0));
+                    columnVisibility = false;
+                } else {
+                    coumnNumber = 0;
+                    columnVisibility = true;
+                }
+
+                oTable = $('#dataTables').DataTable({
+                    responsive: true,
+                    "bLengthChange": false,
+                    "iDisplayLength": 13,
+                    "columnDefs": [
+            {
+                "targets": [coumnNumber],
+                "visible": columnVisibility,
+                "searchable": true
+            }]
+                });
+                $('#dataTables tbody').on('click', 'tr', function () {
+
+                    if ($(this).hasClass('selected')) {
+                        $(this).removeClass('selected');
+                    }
+                    else {
+
+                        oTable.$('tr.selected').removeClass('selected');
+                        $(this).addClass('selected');
+                    }
+                });
+            } else {
+                //alert("No");
+            }
+
+
+            // click action on data table using in property 
+            $('#propertyDataTable tbody').on('click', 'tr', function () {
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                }
+                else {
+                    $('tr.selected').removeClass('selected');
+                    $(this).addClass('selected');
+                }
+            });
+
+            //Search and clear
+            $('#searchText').keyup(function () {
+                $("#propertyDataTable").DataTable().search($(this).val()).draw();
+            });
+            $("#clearSearchText").click(function () {
+                $("#searchText").val('');
+                $("#propertyDataTable").DataTable().search($(this).val()).draw();
+            });
+            
+
+
+            $('#myInputTextField').keyup(function () {
+                oTable.search($(this).val()).draw();
+            });
+
+
+
+            $("#clearbtn").click(function () {
+                $("#propertyDataTableSearch").val('');
+                $("#propertyDataTable").DataTable().search($(this).val()).draw();
+
+            });
+
+
+        });
+
+        //oTable = $('#dataTables-example').DataTable();
+
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+

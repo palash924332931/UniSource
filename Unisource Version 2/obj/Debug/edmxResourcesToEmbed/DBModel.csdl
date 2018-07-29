@@ -1,0 +1,1476 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Unisource_Model" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+  <EntityType Name="user">
+    <Key>
+      <PropertyRef Name="username" />
+    </Key>
+    <Property Name="username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="allowsubmitform1" Type="Byte" />
+    <Property Name="allowsubmitform2" Type="Byte" />
+    <Property Name="allowdailyreportuploads" Type="Byte" />
+    <Property Name="allowreportstatuschange" Type="Byte" />
+    <Property Name="alloweditlogins" Type="Byte" />
+    <Property Name="alloweditprops" Type="Byte" />
+    <Property Name="allowsoftwaredownload" Type="Byte" />
+    <Property Name="viewreports1" Type="Byte" />
+    <Property Name="viewreports2" Type="Byte" />
+    <Property Name="viewreports3" Type="Byte" />
+    <Property Name="fullname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="emailaddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="phonenumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="allowenterworkorder" Type="Byte" />
+    <Property Name="alloweditworkorder" Type="Byte" />
+    <Property Name="allowshowcost" Type="Byte" />
+    <Property Name="allowviewvendors" Type="Byte" />
+    <Property Name="allowviewpropdatasheets" Type="Byte" />
+    <Property Name="clientcode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="alloweditbrixmorwo" Type="Byte" />
+    <Property Name="allowedapprovebrixinvoices" Type="Byte" />
+    <Property Name="allowedapprovebrixinvoices_ondemand" Type="Byte" />
+    <Property Name="allowedapprovebrixinvoices_viewonly" Type="Byte" />
+    <Property Name="forcestartpage" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="onlyallowiosaudits" Type="Int32" />
+    <Property Name="uniadmin" Type="Byte" />
+    <Property Name="univendor" Type="Byte" />
+  </EntityType>
+  <EntityContainer Name="DBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="users" EntityType="Self.user" />
+    <FunctionImport Name="prCategoryWiseMasterInfo" ReturnType="Collection(Unisource_Model.prCategoryWiseMasterInfo_Result)">
+      <Parameter Name="PropertyCategory" Mode="In" Type="String" />
+      <Parameter Name="PropertyID" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prCategoryWiseMasterInfoV2" ReturnType="Collection(Unisource_Model.prCategoryWiseMasterInfoV2_Result)">
+      <Parameter Name="PropertyCategory" Mode="In" Type="String" />
+      <Parameter Name="PropertyID" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prTotalItemsUserWise" ReturnType="Collection(Unisource_Model.prTotalItemsUserWise_Result)">
+      <Parameter Name="UserID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prUserInfo" ReturnType="Collection(Unisource_Model.prUserInfo_Result)">
+      <Parameter Name="UserName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prUserLogin" ReturnType="Collection(Int32)">
+      <Parameter Name="UserID" Mode="In" Type="String" />
+      <Parameter Name="Password" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prUserWiseMasterInfo" ReturnType="Collection(Unisource_Model.prUserWiseMasterInfo_Result1)">
+      <Parameter Name="UserName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prPropertyDataPropertyWise" ReturnType="Collection(Unisource_Model.prPropertyDataPropertyWise_Result)">
+      <Parameter Name="PropertyID" Mode="In" Type="String" />
+      <Parameter Name="UserID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prUserLoginV2" ReturnType="Collection(Unisource_Model.prUserLoginV2_Result)">
+      <Parameter Name="UserID" Mode="In" Type="String" />
+      <Parameter Name="Password" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="pIworkRequestInfo" ReturnType="Collection(Unisource_Model.pIworkRequestInfo_Result)">
+      <Parameter Name="PropertyID" Mode="In" Type="String" />
+      <Parameter Name="DatePerformed" Mode="In" Type="DateTime" />
+      <Parameter Name="TimePerform" Mode="In" Type="String" />
+      <Parameter Name="BatchNumber" Mode="In" Type="String" />
+      <Parameter Name="ApprovalStatus" Mode="In" Type="String" />
+      <Parameter Name="ReportHeader" Mode="In" Type="String" />
+      <Parameter Name="ReportText" Mode="In" Type="String" />
+      <Parameter Name="Hazard" Mode="In" Type="String" />
+      <Parameter Name="Maintenance" Mode="In" Type="String" />
+      <Parameter Name="CostEstimate" Mode="In" Type="String" />
+      <Parameter Name="UserID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="pUPropertiesDataSheet">
+      <Parameter Name="propertyid" Mode="In" Type="String" />
+      <Parameter Name="property_type" Mode="In" Type="String" />
+      <Parameter Name="date_property_acquired" Mode="In" Type="String" />
+      <Parameter Name="current_owner" Mode="In" Type="String" />
+      <Parameter Name="original_architect" Mode="In" Type="String" />
+      <Parameter Name="original_developer" Mode="In" Type="String" />
+      <Parameter Name="original_engineers" Mode="In" Type="String" />
+      <Parameter Name="year_built" Mode="In" Type="String" />
+      <Parameter Name="original_gla" Mode="In" Type="String" />
+      <Parameter Name="renovation_expansion" Mode="In" Type="String" />
+      <Parameter Name="current_gla" Mode="In" Type="String" />
+      <Parameter Name="acres_building" Mode="In" Type="String" />
+      <Parameter Name="acres_parkinglot" Mode="In" Type="String" />
+      <Parameter Name="acres_project_total" Mode="In" Type="String" />
+      <Parameter Name="outparcel_tenants" Mode="In" Type="String" />
+      <Parameter Name="acres_maintained" Mode="In" Type="String" />
+      <Parameter Name="percent_acres_bedding_plants" Mode="In" Type="String" />
+      <Parameter Name="number_dormant_months_year" Mode="In" Type="String" />
+      <Parameter Name="parkinglot_number_of_poles" Mode="In" Type="String" />
+      <Parameter Name="parkinglot_number_of_fixtures" Mode="In" Type="String" />
+      <Parameter Name="parkinglot_type_of_fixture" Mode="In" Type="String" />
+      <Parameter Name="parkinglot_location_of_controls" Mode="In" Type="String" />
+      <Parameter Name="parkinglot_other" Mode="In" Type="String" />
+      <Parameter Name="parkinglot_other_lighting" Mode="In" Type="String" />
+      <Parameter Name="parkinglot_other_lighting_controls" Mode="In" Type="String" />
+      <Parameter Name="roof" Mode="In" Type="String" />
+      <Parameter Name="parking_spaces" Mode="In" Type="String" />
+      <Parameter Name="parking_spaces_handicapped" Mode="In" Type="String" />
+      <Parameter Name="parking_ratio" Mode="In" Type="String" />
+      <Parameter Name="parking_sealcoat_overlay" Mode="In" Type="String" />
+      <Parameter Name="building_fire_sprinkler" Mode="In" Type="String" />
+      <Parameter Name="building_hvac" Mode="In" Type="String" />
+      <Parameter Name="building_construction" Mode="In" Type="String" />
+      <Parameter Name="building_key_notes" Mode="In" Type="String" />
+      <Parameter Name="lockbox_location_01" Mode="In" Type="String" />
+      <Parameter Name="lockbox_code_01" Mode="In" Type="String" />
+      <Parameter Name="lockbox_location_02" Mode="In" Type="String" />
+      <Parameter Name="lockbox_code_02" Mode="In" Type="String" />
+      <Parameter Name="lockbox_location_03" Mode="In" Type="String" />
+      <Parameter Name="lockbox_code_03" Mode="In" Type="String" />
+      <Parameter Name="marketing_fund" Mode="In" Type="String" />
+      <Parameter Name="marketing_contracted_to" Mode="In" Type="String" />
+      <Parameter Name="utility_electric_text" Mode="In" Type="String" />
+      <Parameter Name="utility_electric_provider" Mode="In" Type="String" />
+      <Parameter Name="utility_electric_phone" Mode="In" Type="String" />
+      <Parameter Name="utility_gas_text" Mode="In" Type="String" />
+      <Parameter Name="utility_gas_provider" Mode="In" Type="String" />
+      <Parameter Name="utility_gas_phone" Mode="In" Type="String" />
+      <Parameter Name="utility_water_sewer_text" Mode="In" Type="String" />
+      <Parameter Name="utility_water_sewer_provider" Mode="In" Type="String" />
+      <Parameter Name="utility_water_sewer_phone" Mode="In" Type="String" />
+      <Parameter Name="utility_telephone_text" Mode="In" Type="String" />
+      <Parameter Name="utility_telephone_provider" Mode="In" Type="String" />
+      <Parameter Name="utility_telephone_phone" Mode="In" Type="String" />
+      <Parameter Name="municipal_police_text" Mode="In" Type="String" />
+      <Parameter Name="municipal_police_provider" Mode="In" Type="String" />
+      <Parameter Name="municipal_police_phone" Mode="In" Type="String" />
+      <Parameter Name="municipal_fire_text" Mode="In" Type="String" />
+      <Parameter Name="municipal_fire_provider" Mode="In" Type="String" />
+      <Parameter Name="municipal_fire_phone" Mode="In" Type="String" />
+      <Parameter Name="municipal_buildingdept_text" Mode="In" Type="String" />
+      <Parameter Name="municipal_buildingdept_provider" Mode="In" Type="String" />
+      <Parameter Name="municipal_buildingdept_phone" Mode="In" Type="String" />
+      <Parameter Name="municipal_publicworks_text" Mode="In" Type="String" />
+      <Parameter Name="municipal_publicworks_provider" Mode="In" Type="String" />
+      <Parameter Name="municipal_publicworks_phone" Mode="In" Type="String" />
+      <Parameter Name="municipal_highwaydept_text" Mode="In" Type="String" />
+      <Parameter Name="municipal_highwaydept_provider" Mode="In" Type="String" />
+      <Parameter Name="municipal_highwaydept_phone" Mode="In" Type="String" />
+      <Parameter Name="vendor_cardaccess_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_cardaccess_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_cardaccess_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_door_repair_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_door_repair_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_door_repair_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_eifs_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_eifs_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_eifs_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_electrical_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_electrical_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_electrical_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_elevator_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_elevator_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_elevator_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_enviro_cleanup_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_enviro_cleanup_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_enviro_cleanup_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_exterminator_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_exterminator_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_exterminator_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_facade_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_facade_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_facade_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_fire_alarm_monitor_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_fire_alarm_monitor_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_fire_alarm_monitor_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_fire_alarm_repair_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_fire_alarm_repair_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_fire_alarm_repair_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_generator_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_generator_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_generator_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_glass_boardup_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_glass_boardup_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_glass_boardup_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_graffitti_vandal_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_graffitti_vandal_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_graffitti_vandal_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_hvac_repair_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_hvac_repair_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_hvac_repair_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_handrail_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_handrail_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_handrail_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_irrigation_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_irrigation_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_irrigation_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_janitorial_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_janitorial_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_janitorial_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_landscaping_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_landscaping_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_landscaping_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_locksmith_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_locksmith_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_locksmith_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_masonry_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_masonry_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_masonry_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_oil_supply_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_oil_supply_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_oil_supply_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_plot_light_repair_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_plot_light_repair_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_plot_light_repair_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_plot_sweeping_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_plot_sweeping_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_plot_sweeping_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_painting_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_painting_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_painting_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_payphone_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_payphone_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_payphone_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_plumbing_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_plumbing_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_plumbing_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_retentionpond_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_retentionpond_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_retentionpond_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_roof_repair_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_roof_repair_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_roof_repair_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_security_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_security_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_security_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_sewer_septic_drain_clearing_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_sewer_septic_drain_clearing_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_sewer_septic_drain_clearing_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_sewer_septic_plumbing_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_sewer_septic_plumbing_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_sewer_septic_plumbing_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_sidewalk_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_sidewalk_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_sidewalk_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_signage_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_signage_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_signage_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_smoke_water_restore_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_smoke_water_restore_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_smoke_water_restore_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_snow_removal_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_snow_removal_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_snow_removal_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_towing_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_towing_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_towing_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_trashremoval_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_trashremoval_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_trashremoval_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_flooring_provider" Mode="In" Type="String" />
+      <Parameter Name="vendor_flooring_contact" Mode="In" Type="String" />
+      <Parameter Name="vendor_flooring_notes" Mode="In" Type="String" />
+      <Parameter Name="vendor_comments" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prAllPropertiesUserWise" ReturnType="Collection(Unisource_Model.prAllPropertiesUserWise_Result1)">
+      <Parameter Name="UserID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="pIdailyReports">
+      <Parameter Name="wPID" Mode="In" Type="String" />
+      <Parameter Name="propertyid" Mode="In" Type="String" />
+      <Parameter Name="dateperformed" Mode="In" Type="String" />
+      <Parameter Name="TimePerform" Mode="In" Type="String" />
+      <Parameter Name="dateentered" Mode="In" Type="String" />
+      <Parameter Name="timeentered" Mode="In" Type="String" />
+      <Parameter Name="guid" Mode="In" Type="String" />
+      <Parameter Name="ApprovalStatus" Mode="In" Type="String" />
+      <Parameter Name="ReportHeader" Mode="In" Type="String" />
+      <Parameter Name="ReportText" Mode="In" Type="String" />
+      <Parameter Name="hazard" Mode="In" Type="String" />
+      <Parameter Name="maintenance" Mode="In" Type="String" />
+      <Parameter Name="pic1" Mode="In" Type="String" />
+      <Parameter Name="pic2" Mode="In" Type="String" />
+      <Parameter Name="pic3" Mode="In" Type="String" />
+      <Parameter Name="pic4" Mode="In" Type="String" />
+      <Parameter Name="pic5" Mode="In" Type="String" />
+      <Parameter Name="costestimate" Mode="In" Type="String" />
+      <Parameter Name="costtotal" Mode="In" Type="String" />
+      <Parameter Name="taxrate" Mode="In" Type="String" />
+      <Parameter Name="userID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prGetAllServices" ReturnType="Collection(Unisource_Model.prGetAllServices_Result)">
+      <Parameter Name="PropertyID" Mode="In" Type="String" />
+      <Parameter Name="UserID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prGetUserInformation" ReturnType="Collection(Unisource_Model.prGetUserInformation_Result)">
+      <Parameter Name="UserID" Mode="In" Type="String" />
+      <Parameter Name="Type" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="pIWorkOrder">
+      <Parameter Name="wonumber" Mode="In" Type="String" />
+      <Parameter Name="propertyid" Mode="In" Type="String" />
+      <Parameter Name="dateperformed" Mode="In" Type="String" />
+      <Parameter Name="timeperformed" Mode="In" Type="String" />
+      <Parameter Name="dateentered" Mode="In" Type="String" />
+      <Parameter Name="timeentered" Mode="In" Type="String" />
+      <Parameter Name="approvalstatus" Mode="In" Type="String" />
+      <Parameter Name="worktobedone" Mode="In" Type="String" />
+      <Parameter Name="request_name" Mode="In" Type="String" />
+      <Parameter Name="request_email" Mode="In" Type="String" />
+      <Parameter Name="request_phone" Mode="In" Type="String" />
+      <Parameter Name="workcompleted" Mode="In" Type="String" />
+      <Parameter Name="business_unit" Mode="In" Type="String" />
+      <Parameter Name="company_unit" Mode="In" Type="String" />
+      <Parameter Name="DNEcost" Mode="In" Type="String" />
+      <Parameter Name="UNIcost" Mode="In" Type="String" />
+      <Parameter Name="UNIcontractor_cost" Mode="In" Type="String" />
+      <Parameter Name="batchnumber" Mode="In" Type="String" />
+      <Parameter Name="username" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="pUDailyReports">
+      <Parameter Name="propertyid" Mode="In" Type="String" />
+      <Parameter Name="batchnumber" Mode="In" Type="String" />
+      <Parameter Name="reportheader" Mode="In" Type="String" />
+      <Parameter Name="reporttext" Mode="In" Type="String" />
+      <Parameter Name="hazard" Mode="In" Type="String" />
+      <Parameter Name="maintenance" Mode="In" Type="String" />
+      <Parameter Name="costestimate" Mode="In" Type="String" />
+      <Parameter Name="taxrate" Mode="In" Type="String" />
+      <Parameter Name="costtotal" Mode="In" Type="String" />
+      <Parameter Name="approvalstatus" Mode="In" Type="String" />
+      <Parameter Name="notes" Mode="In" Type="String" />
+      <Parameter Name="UserID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="PIPropertyInspection">
+      <Parameter Name="action" Mode="In" Type="String" />
+      <Parameter Name="propertyid" Mode="In" Type="String" />
+      <Parameter Name="dateentered" Mode="In" Type="String" />
+      <Parameter Name="dateperformed" Mode="In" Type="String" />
+      <Parameter Name="timeentered" Mode="In" Type="String" />
+      <Parameter Name="username" Mode="In" Type="String" />
+      <Parameter Name="approvalstatus" Mode="In" Type="String" />
+      <Parameter Name="batchnumber" Mode="In" Type="String" />
+      <Parameter Name="exteriorlandscaping_mowingofgrass" Mode="In" Type="String" />
+      <Parameter Name="exteriorlandscaping_edgingaroundcurbs" Mode="In" Type="String" />
+      <Parameter Name="exteriorlandscaping_removalofweeds" Mode="In" Type="String" />
+      <Parameter Name="exteriorlandscaping_trimmingofshrubs" Mode="In" Type="String" />
+      <Parameter Name="exteriorlandscaping_wateringifnecessary" Mode="In" Type="String" />
+      <Parameter Name="exteriorlandscaping_conditionofirrigationsystem" Mode="In" Type="String" />
+      <Parameter Name="exteriorlandscaping_conditionofplants" Mode="In" Type="String" />
+      <Parameter Name="exteriorlandscaping_islandtrashremoval" Mode="In" Type="String" />
+      <Parameter Name="exteriorlandscaping_cleanlinessoffencelines" Mode="In" Type="String" />
+      <Parameter Name="exteriorlandscaping_conditionofretentionpond" Mode="In" Type="String" />
+      <Parameter Name="exteriorlandscaping_conditionofvacantoutlots" Mode="In" Type="String" />
+      <Parameter Name="exteriorlandscaping_conditionofislandcurbing" Mode="In" Type="String" />
+      <Parameter Name="exteriorlandscaping_sightlinevisibility" Mode="In" Type="String" />
+      <Parameter Name="exteriorlighting_parkinglotlights" Mode="In" Type="String" />
+      <Parameter Name="exteriorlighting_wallpacks" Mode="In" Type="String" />
+      <Parameter Name="exteriorlighting_canopylights" Mode="In" Type="String" />
+      <Parameter Name="exteriorlighting_sidewalklights" Mode="In" Type="String" />
+      <Parameter Name="exteriorlighting_pylonsigns" Mode="In" Type="String" />
+      <Parameter Name="exteriorlighting_timeclocksettings" Mode="In" Type="String" />
+      <Parameter Name="exteriorlighting_stockofbulbs" Mode="In" Type="String" />
+      <Parameter Name="exteriorlighting_conditionoflightpoles" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_exteriormasonry" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_tuckpointing" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_guttersanddownspouts" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_conditionofbollards" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_sidewalks" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_graffiti" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_conditionofpayphones" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_conditionofbikeracks" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_conditionofcanopies" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_cleanlinessoffascia" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_cleanlinessofskylights" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_conditionofsupportcolumns" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_conditionofsidewalkbenches" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_conditionofreardoorslabeled" Mode="In" Type="String" />
+      <Parameter Name="buildingexterior_conditionoftrashcans" Mode="In" Type="String" />
+      <Parameter Name="nonpublicareas_servicecorridorlighting" Mode="In" Type="String" />
+      <Parameter Name="nonpublicareas_servicecorridorfloorswalls" Mode="In" Type="String" />
+      <Parameter Name="nonpublicareas_conditionoffireextinguishers" Mode="In" Type="String" />
+      <Parameter Name="nonpublicareas_trashroomsdumpsterareas" Mode="In" Type="String" />
+      <Parameter Name="nonpublicareas_conditionofdockareas" Mode="In" Type="String" />
+      <Parameter Name="nonpublicareas_conditionofmanagementoffice" Mode="In" Type="String" />
+      <Parameter Name="nonpublicareas_cleanlinessofoffices" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_cleanliness" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_asphaltrepairs" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_illegaldumping" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_parkingbumpercondition" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_shoppingcartscollected" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_cartcorralcondition" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_striping" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_crackfilling" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_handicappedareas" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_curbs" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_sewercaps" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_conditionoftrafficsigns" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_cleanlinessofdumpsterareas" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_removalofabandonedcars" Mode="In" Type="String" />
+      <Parameter Name="parkinglots_vegitationgrowthincracks" Mode="In" Type="String" />
+      <Parameter Name="vacantstores_presentationofspaceforreleasingactivity" Mode="In" Type="String" />
+      <Parameter Name="vacantstores_makesurelockswork" Mode="In" Type="String" />
+      <Parameter Name="vacantstores_checkforroofleaks" Mode="In" Type="String" />
+      <Parameter Name="vacantstores_installationofleasingsigns" Mode="In" Type="String" />
+      <Parameter Name="vacantstores_cleanlinessofstorefront" Mode="In" Type="String" />
+      <Parameter Name="vacantstores_cleanlinessofinterior" Mode="In" Type="String" />
+      <Parameter Name="vacantstores_cleaningofwindows" Mode="In" Type="String" />
+      <Parameter Name="vacantstores_otherdamagesobserved" Mode="In" Type="String" />
+      <Parameter Name="maintenanceshop_conditionoffloor" Mode="In" Type="String" />
+      <Parameter Name="maintenanceshop_cleanlinessappearanceofshop" Mode="In" Type="String" />
+      <Parameter Name="maintenanceshop_storageofflammables" Mode="In" Type="String" />
+      <Parameter Name="maintenanceshop_organizationoftoolssupplies" Mode="In" Type="String" />
+      <Parameter Name="maintenanceshop_cleanlinessoftruckandequipment" Mode="In" Type="String" />
+      <Parameter Name="maintenanceshop_labelingofkeysinkeybox" Mode="In" Type="String" />
+      <Parameter Name="maintenanceshop_conditionofhvacequipment" Mode="In" Type="String" />
+      <Parameter Name="maintenanceshop_allvacantandllkeysinlockbox" Mode="In" Type="String" />
+      <Parameter Name="mechanicelectricalrooms_riserroomcleanliness" Mode="In" Type="String" />
+      <Parameter Name="mechanicelectricalrooms_riserroompressureschecked" Mode="In" Type="String" />
+      <Parameter Name="mechanicelectricalrooms_valveschainedinopenposition" Mode="In" Type="String" />
+      <Parameter Name="mechanicelectricalrooms_mapscurrent" Mode="In" Type="String" />
+      <Parameter Name="mechanicelectricalrooms_doorslabeled" Mode="In" Type="String" />
+      <Parameter Name="mechanicelectricalrooms_hotworkpermitsign" Mode="In" Type="String" />
+      <Parameter Name="mechanicelectricalrooms_shutdownproceduresign" Mode="In" Type="String" />
+      <Parameter Name="mechanicelectricalrooms_checkforcurrentinspectiontags" Mode="In" Type="String" />
+      <Parameter Name="mechanicelectricalrooms_signinspectionlog" Mode="In" Type="String" />
+      <Parameter Name="tenantdetails_storefrontclean" Mode="In" Type="String" />
+      <Parameter Name="tenantdetails_storefrontsignscleanandlit" Mode="In" Type="String" />
+      <Parameter Name="tenantdetails_windowscleanedanddisplayed" Mode="In" Type="String" />
+      <Parameter Name="tenantdetails_windowcracksfailures" Mode="In" Type="String" />
+      <Parameter Name="interiorlandscaping_conditionofplantmaterial" Mode="In" Type="String" />
+      <Parameter Name="interiorlandscaping_conditionofplanterboxes" Mode="In" Type="String" />
+      <Parameter Name="interiorlandscaping_conditionoffloorgrates" Mode="In" Type="String" />
+      <Parameter Name="interiorlighting_skylights" Mode="In" Type="String" />
+      <Parameter Name="interiorlighting_diffusers" Mode="In" Type="String" />
+      <Parameter Name="interiorlighting_fluorescents" Mode="In" Type="String" />
+      <Parameter Name="interiorlighting_incandescent" Mode="In" Type="String" />
+      <Parameter Name="interiorlighting_spotlights" Mode="In" Type="String" />
+      <Parameter Name="interiorlighting_exitemergencylights" Mode="In" Type="String" />
+      <Parameter Name="buildinginterior_mallentrances" Mode="In" Type="String" />
+      <Parameter Name="buildinginterior_storefronts" Mode="In" Type="String" />
+      <Parameter Name="buildinginterior_flooring" Mode="In" Type="String" />
+      <Parameter Name="buildinginterior_generalcleanliness" Mode="In" Type="String" />
+      <Parameter Name="buildinginterior_drinkingfountains" Mode="In" Type="String" />
+      <Parameter Name="buildinginterior_trashreceptacles" Mode="In" Type="String" />
+      <Parameter Name="buildinginterior_railings" Mode="In" Type="String" />
+      <Parameter Name="buildinginterior_cleanlinessofrestrooms" Mode="In" Type="String" />
+      <Parameter Name="buildinginterior_directoriescleanandup" Mode="In" Type="String" />
+      <Parameter Name="buildinginterior_basementswatertrashunauthentry" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prGetRecordID" ReturnType="Collection(String)">
+      <Parameter Name="CategoryName" Mode="In" Type="String" />
+      <Parameter Name="StartChar" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prSnowRemoval">
+      <Parameter Name="Action" Mode="In" Type="String" />
+      <Parameter Name="propertyid" Mode="In" Type="String" />
+      <Parameter Name="dateperformed" Mode="In" Type="String" />
+      <Parameter Name="dateentered" Mode="In" Type="String" />
+      <Parameter Name="timeentered" Mode="In" Type="String" />
+      <Parameter Name="username" Mode="In" Type="String" />
+      <Parameter Name="approvalstatus" Mode="In" Type="String" />
+      <Parameter Name="batchnumber" Mode="In" Type="String" />
+      <Parameter Name="siteconditions_accumulationinches" Mode="In" Type="String" />
+      <Parameter Name="siteconditions_accumulationtype" Mode="In" Type="String" />
+      <Parameter Name="siteconditions_drifting" Mode="In" Type="String" />
+      <Parameter Name="siteconditions_ice" Mode="In" Type="String" />
+      <Parameter Name="siteconditions_traffic" Mode="In" Type="String" />
+      <Parameter Name="weatherconditions_currentprecipitation" Mode="In" Type="String" />
+      <Parameter Name="weatherconditions_currentconditions" Mode="In" Type="String" />
+      <Parameter Name="plowingandclearing_roadsandlotsplowingstatus" Mode="In" Type="String" />
+      <Parameter Name="plowingandclearing_entranceexit" Mode="In" Type="String" />
+      <Parameter Name="plowingandclearing_handicap" Mode="In" Type="String" />
+      <Parameter Name="plowingandclearing_roadandroadways" Mode="In" Type="String" />
+      <Parameter Name="plowingandclearing_roadandroadwaysfront" Mode="In" Type="String" />
+      <Parameter Name="plowingandclearing_roadandroadwaysrear" Mode="In" Type="String" />
+      <Parameter Name="plowingandclearing_roadandroadwaysside" Mode="In" Type="String" />
+      <Parameter Name="plowingandclearing_roadandroadwaysother" Mode="In" Type="String" />
+      <Parameter Name="plowingandclearing_parkingspotsareas" Mode="In" Type="String" />
+      <Parameter Name="plowingandclearing_loadingdocks" Mode="In" Type="String" />
+      <Parameter Name="plowingandclearing_drivethru" Mode="In" Type="String" />
+      <Parameter Name="plowingandclearing_ramps" Mode="In" Type="String" />
+      <Parameter Name="plowingandclearing_deliveryarea" Mode="In" Type="String" />
+      <Parameter Name="plowingandclearing_comments" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_clearsidewalksstatus" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_entrancedoors" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_servicedoors" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_ramps" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_steps" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_gfbidblock" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_privatewalks" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_citywalks" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_comments" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_snowremoval" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_stackingonsite" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_stackingonsitehrs" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_removal" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_removalhrs" Mode="In" Type="String" />
+      <Parameter Name="walksclearing_snowfield" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_roadsandlotsdeicingstatus" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_entranceexit" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_handicap" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_roadandroadways" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_roadandroadwaysfront" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_roadandroadwaysrear" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_roadandroadwaysside" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_roadandroadwaysother" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_parkingspotsareas" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_loadingdocks" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_drivethru" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_ramps" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_deliveryarea" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_comments" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_materialsusedsalt" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_saltbags" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_saltlbs" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_materialsusedcalcium" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_calciumbags" Mode="In" Type="String" />
+      <Parameter Name="deicingandantiicing_calciumlbs" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_deicesidewalksstatus" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_entrancedoors" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_servicedoors" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_ramps" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_steps" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_privatewalks" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_citywalks" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_comments" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_materialsusedblend" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_blendbags" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_blendlbs" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_materialsusedcalcium" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_calciumbags" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_calciumlbs" Mode="In" Type="String" />
+      <Parameter Name="walksdeicing_noserviceperformedsitecheckonly" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_applicator" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_trucknumber" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_timein" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_timeout" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_goundtemperaturein" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_goundtemperatureout" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_airtemperaturein" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_airtemperatureinout" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_siteconditions" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_surfaceswet" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_surfacesdry" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_fallingsnowice" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_fallingsnowrain" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_materialtypeapplied" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_amountintankgallonsstart" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_amountintankgallonsstop" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_totalgallonsused" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_areastreated" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_tipsnozzlesused" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_groundspeed" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_trafficconditions" Mode="In" Type="String" />
+      <Parameter Name="liquidantiicinglog_notes" Mode="In" Type="String" />
+      <Parameter Name="vendorname" Mode="In" Type="String" />
+      <Parameter Name="timearrival" Mode="In" Type="String" />
+      <Parameter Name="timedeparture" Mode="In" Type="String" />
+      <Parameter Name="pic1" Mode="In" Type="String" />
+      <Parameter Name="pic2" Mode="In" Type="String" />
+      <Parameter Name="pic3" Mode="In" Type="String" />
+      <Parameter Name="pic4" Mode="In" Type="String" />
+      <Parameter Name="pic5" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prCategoryWiseMasterInfoForUnisource" ReturnType="Collection(Unisource_Model.prCategoryWiseMasterInfoForUnisource_Result)">
+      <Parameter Name="PropertyCategory" Mode="In" Type="String" />
+      <Parameter Name="PropertyID" Mode="In" Type="String" />
+      <Parameter Name="FromDate" Mode="In" Type="String" />
+      <Parameter Name="ToDate" Mode="In" Type="String" />
+      <Parameter Name="ApplicationStatus" Mode="In" Type="String" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prServiceLogInfo" ReturnType="Collection(Unisource_Model.prServiceLogInfo_Result)">
+      <Parameter Name="WOID" Mode="In" Type="String" />
+      <Parameter Name="UserID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prGetSnowRemovalInfo" ReturnType="Collection(Unisource_Model.prGetSnowRemovalInfo_Result)">
+      <Parameter Name="propertyid" Mode="In" Type="String" />
+      <Parameter Name="batchnumber" Mode="In" Type="String" />
+      <Parameter Name="UserID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prGetDailyReportInfo" ReturnType="Collection(Unisource_Model.prGetDailyReportInfo_Result)">
+      <Parameter Name="BatchNumber" Mode="In" Type="String" />
+      <Parameter Name="UserID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prIndividualPropertyInfoV2" ReturnType="Collection(Unisource_Model.prIndividualPropertyInfoV2_Result)">
+      <Parameter Name="PropertyID" Mode="In" Type="String" />
+      <Parameter Name="UserID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="DeleteRecord" ReturnType="Collection(String)">
+      <Parameter Name="PropertyID" Mode="In" Type="String" />
+      <Parameter Name="UniqueID" Mode="In" Type="String" />
+      <Parameter Name="Category" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="PIXREF">
+      <Parameter Name="BatchID" Mode="In" Type="String" />
+      <Parameter Name="UserID" Mode="In" Type="String" />
+      <Parameter Name="PropertyID" Mode="In" Type="String" />
+      <Parameter Name="RedirectPage" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prGetPropertyInspection" ReturnType="Collection(Unisource_Model.prGetPropertyInspection_Result)">
+      <Parameter Name="PropertyID" Mode="In" Type="String" />
+      <Parameter Name="BatchID" Mode="In" Type="String" />
+      <Parameter Name="UserID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prAllVendorList" ReturnType="Collection(Unisource_Model.prAllVendorList_Result)" />
+    <FunctionImport Name="pIWorkOrderForRaymour">
+      <Parameter Name="wonumber" Mode="In" Type="String" />
+      <Parameter Name="propertyid" Mode="In" Type="String" />
+      <Parameter Name="dateperformed" Mode="In" Type="String" />
+      <Parameter Name="timeperformed" Mode="In" Type="String" />
+      <Parameter Name="dateentered" Mode="In" Type="String" />
+      <Parameter Name="timeentered" Mode="In" Type="String" />
+      <Parameter Name="approvalstatus" Mode="In" Type="String" />
+      <Parameter Name="worktobedone" Mode="In" Type="String" />
+      <Parameter Name="request_name" Mode="In" Type="String" />
+      <Parameter Name="request_email" Mode="In" Type="String" />
+      <Parameter Name="request_phone" Mode="In" Type="String" />
+      <Parameter Name="workcompleted" Mode="In" Type="String" />
+      <Parameter Name="business_unit" Mode="In" Type="String" />
+      <Parameter Name="company_unit" Mode="In" Type="String" />
+      <Parameter Name="DNEcost" Mode="In" Type="String" />
+      <Parameter Name="UNIcost" Mode="In" Type="String" />
+      <Parameter Name="UNIcontractor_cost" Mode="In" Type="String" />
+      <Parameter Name="batchnumber" Mode="In" Type="String" />
+      <Parameter Name="POID" Mode="In" Type="String" />
+      <Parameter Name="username" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="prGetWorkOrderInfo" ReturnType="Collection(Unisource_Model.prGetWorkOrderInfo_Result)">
+      <Parameter Name="BatchNumber" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="pIWorkOrderFromWorkProposal">
+      <Parameter Name="wonumber" Mode="In" Type="String" />
+      <Parameter Name="propertyid" Mode="In" Type="String" />
+      <Parameter Name="dateperformed" Mode="In" Type="String" />
+      <Parameter Name="timeperformed" Mode="In" Type="String" />
+      <Parameter Name="dateentered" Mode="In" Type="String" />
+      <Parameter Name="timeentered" Mode="In" Type="String" />
+      <Parameter Name="approvalstatus" Mode="In" Type="String" />
+      <Parameter Name="worktobedone" Mode="In" Type="String" />
+      <Parameter Name="request_name" Mode="In" Type="String" />
+      <Parameter Name="request_email" Mode="In" Type="String" />
+      <Parameter Name="request_phone" Mode="In" Type="String" />
+      <Parameter Name="workcompleted" Mode="In" Type="String" />
+      <Parameter Name="business_unit" Mode="In" Type="String" />
+      <Parameter Name="company_unit" Mode="In" Type="String" />
+      <Parameter Name="DNEcost" Mode="In" Type="String" />
+      <Parameter Name="UNIcost" Mode="In" Type="String" />
+      <Parameter Name="UNIcontractor_cost" Mode="In" Type="String" />
+      <Parameter Name="batchnumber_workrequest" Mode="In" Type="String" />
+      <Parameter Name="batchnumber" Mode="In" Type="String" />
+      <Parameter Name="POID" Mode="In" Type="String" />
+      <Parameter Name="username" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="pUWorkOrder" ReturnType="Collection(Unisource_Model.pUWorkOrder_Result)">
+      <Parameter Name="wonumber" Mode="In" Type="String" />
+      <Parameter Name="propertyid" Mode="In" Type="String" />
+      <Parameter Name="approvalstatus" Mode="In" Type="String" />
+      <Parameter Name="worktobedone" Mode="In" Type="String" />
+      <Parameter Name="request_name" Mode="In" Type="String" />
+      <Parameter Name="request_email" Mode="In" Type="String" />
+      <Parameter Name="request_phone" Mode="In" Type="String" />
+      <Parameter Name="workcompleted" Mode="In" Type="String" />
+      <Parameter Name="DNEcost" Mode="In" Type="String" />
+      <Parameter Name="UNIcost" Mode="In" Type="String" />
+      <Parameter Name="UNIcontractor_cost" Mode="In" Type="String" />
+      <Parameter Name="final_approval_username" Mode="In" Type="String" />
+      <Parameter Name="date_estimatedcompletion" Mode="In" Type="String" />
+      <Parameter Name="date_completion" Mode="In" Type="String" />
+      <Parameter Name="UNI125percent" Mode="In" Type="String" />
+      <Parameter Name="UNItax" Mode="In" Type="String" />
+      <Parameter Name="ServiseLog" Mode="In" Type="String" />
+      <Parameter Name="LogDate" Mode="In" Type="DateTime" />
+      <Parameter Name="closedate" Mode="In" Type="String" />
+      <Parameter Name="UserID" Mode="In" Type="String" />
+      <Parameter Name="vendorid" Mode="In" Type="String" />
+      <Parameter Name="poid" Mode="In" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="prCategoryWiseMasterInfo_Result">
+    <Property Type="String" Name="WorkOrderNumber" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="SubmittedDate" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="PerformedDate" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="PropertyName" Nullable="true" MaxLength="75" />
+    <Property Type="String" Name="approvalstatus" Nullable="true" MaxLength="200" />
+  </ComplexType>
+  <ComplexType Name="prCategoryWiseMasterInfoV2_Result">
+    <Property Type="String" Name="WorkOrderNumber" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="SubmittedDate" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="PerformedDate" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="PropertyName" Nullable="true" MaxLength="75" />
+    <Property Type="String" Name="approvalstatus" Nullable="true" MaxLength="200" />
+    <Property Type="String" Name="ID" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="Comments" Nullable="false" MaxLength="1" />
+  </ComplexType>
+  <ComplexType Name="prTotalItemsUserWise_Result">
+    <Property Type="Int32" Name="TotalWOrkOrder" Nullable="true" />
+    <Property Type="Int32" Name="TotalWorkRequest" Nullable="true" />
+    <Property Type="Int32" Name="TotalPropertyInspection" Nullable="true" />
+    <Property Type="Int32" Name="TotalSnowReport" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="prUserInfo_Result">
+    <Property Type="String" Name="password" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="username" Nullable="false" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="prUserWiseMasterInfo_Result">
+    <Property Type="String" Name="propertyid" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="PropertyName" Nullable="true" MaxLength="75" />
+    <Property Type="Int32" Name="WorkOrder" Nullable="true" />
+    <Property Type="Int32" Name="WorkRequst" Nullable="true" />
+    <Property Type="Int32" Name="PropertyInspection" Nullable="true" />
+    <Property Type="Int32" Name="SnowReport" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="prUserWiseMasterInfo_Result1">
+    <Property Type="String" Name="propertyid" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="PropertyName" Nullable="true" MaxLength="75" />
+    <Property Type="String" Name="region" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="city" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="state" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="address1" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="address2" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="zip" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="propertymanager" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="WorkOrder" Nullable="true" />
+    <Property Type="Int32" Name="WorkRequst" Nullable="true" />
+    <Property Type="Int32" Name="PropertyInspection" Nullable="true" />
+    <Property Type="Int32" Name="SnowReport" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="prPropertyDataPropertyWise_Result">
+    <Property Type="String" Name="propertyid" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="property_type" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="date_property_acquired" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="current_owner" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="original_architect" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="original_developer" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="original_engineers" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="year_built" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="original_gla" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="renovation_expansion" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="current_gla" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="acres_building" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="acres_parkinglot" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="acres_project_total" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="outparcel_tenants" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="acres_maintained" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="percent_acres_bedding_plants" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="number_dormant_months_year" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="parkinglot_number_of_poles" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="parkinglot_number_of_fixtures" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="parkinglot_type_of_fixture" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="parkinglot_location_of_controls" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="parkinglot_other" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="parkinglot_other_lighting" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="parkinglot_other_lighting_controls" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="roof" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="parking_spaces" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="parking_spaces_handicapped" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="parking_ratio" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="parking_sealcoat_overlay" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="building_fire_sprinkler" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="building_hvac" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="building_construction" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="building_key_notes" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="lockbox_location_01" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="lockbox_code_01" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="lockbox_location_02" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="lockbox_code_02" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="lockbox_location_03" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="lockbox_code_03" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="marketing_fund" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="marketing_contracted_to" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="utility_electric_text" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="utility_electric_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="utility_electric_phone" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="utility_gas_text" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="utility_gas_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="utility_gas_phone" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="utility_water_sewer_text" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="utility_water_sewer_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="utility_water_sewer_phone" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="utility_telephone_text" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="utility_telephone_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="utility_telephone_phone" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_police_text" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_police_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_police_phone" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_fire_text" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_fire_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_fire_phone" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_buildingdept_text" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_buildingdept_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_buildingdept_phone" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_publicworks_text" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_publicworks_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_publicworks_phone" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_highwaydept_text" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_highwaydept_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="municipal_highwaydept_phone" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_cardaccess_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_cardaccess_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_door_repair_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_door_repair_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_door_repair_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_eifs_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_eifs_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_eifs_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_electrical_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_electrical_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_electrical_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_elevator_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_elevator_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_elevator_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_enviro_cleanup_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_enviro_cleanup_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_enviro_cleanup_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_exterminator_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_exterminator_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_exterminator_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_facade_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_facade_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_facade_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_fire_alarm_monitor_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_fire_alarm_monitor_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_fire_alarm_monitor_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_fire_alarm_repair_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_fire_alarm_repair_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_fire_alarm_repair_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_generator_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_generator_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_generator_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_glass_boardup_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_glass_boardup_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_glass_boardup_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_graffitti_vandal_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_graffitti_vandal_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_graffitti_vandal_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_hvac_repair_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_hvac_repair_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_hvac_repair_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_handrail_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_handrail_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_handrail_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_irrigation_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_irrigation_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_irrigation_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_janitorial_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_janitorial_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_janitorial_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_landscaping_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_landscaping_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_landscaping_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_locksmith_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_locksmith_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_locksmith_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_masonry_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_masonry_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_masonry_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_oil_supply_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_oil_supply_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_oil_supply_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_plot_light_repair_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_plot_light_repair_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_plot_light_repair_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_plot_sweeping_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_plot_sweeping_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_plot_sweeping_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_painting_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_painting_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_painting_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_payphone_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_payphone_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_payphone_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_plumbing_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_plumbing_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_plumbing_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_retentionpond_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_retentionpond_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_retentionpond_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_roof_repair_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_roof_repair_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_roof_repair_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_security_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_security_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_security_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_sewer_septic_drain_clearing_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_sewer_septic_drain_clearing_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_sewer_septic_drain_clearing_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_sewer_septic_plumbing_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_sewer_septic_plumbing_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_sewer_septic_plumbing_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_sidewalk_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_sidewalk_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_sidewalk_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_signage_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_signage_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_signage_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_smoke_water_restore_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_smoke_water_restore_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_smoke_water_restore_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_snow_removal_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_snow_removal_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_snow_removal_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_towing_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_towing_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_towing_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_trashremoval_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_trashremoval_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_trashremoval_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_flooring_provider" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_flooring_contact" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendor_flooring_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendor_comments" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="displayname" Nullable="true" MaxLength="75" />
+    <Property Type="String" Name="vendor_cardaccess_provider" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="prUserLoginV2_Result">
+    <Property Type="String" Name="username" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="password" Nullable="true" MaxLength="50" />
+    <Property Type="Byte" Name="allowsubmitform1" Nullable="true" />
+    <Property Type="Byte" Name="allowsubmitform2" Nullable="true" />
+    <Property Type="Byte" Name="allowdailyreportuploads" Nullable="true" />
+    <Property Type="Byte" Name="allowreportstatuschange" Nullable="true" />
+    <Property Type="Byte" Name="alloweditlogins" Nullable="true" />
+    <Property Type="Byte" Name="alloweditprops" Nullable="true" />
+    <Property Type="Byte" Name="allowsoftwaredownload" Nullable="true" />
+    <Property Type="Byte" Name="viewreports1" Nullable="true" />
+    <Property Type="Byte" Name="viewreports2" Nullable="true" />
+    <Property Type="Byte" Name="viewreports3" Nullable="true" />
+    <Property Type="String" Name="fullname" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="emailaddress" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="phonenumber" Nullable="true" MaxLength="50" />
+    <Property Type="Byte" Name="allowenterworkorder" Nullable="true" />
+    <Property Type="Byte" Name="alloweditworkorder" Nullable="true" />
+    <Property Type="Byte" Name="allowshowcost" Nullable="true" />
+    <Property Type="Byte" Name="allowviewvendors" Nullable="true" />
+    <Property Type="Byte" Name="allowviewpropdatasheets" Nullable="true" />
+    <Property Type="String" Name="clientcode" Nullable="true" MaxLength="50" />
+    <Property Type="Byte" Name="alloweditbrixmorwo" Nullable="true" />
+    <Property Type="Byte" Name="allowedapprovebrixinvoices" Nullable="true" />
+    <Property Type="Byte" Name="allowedapprovebrixinvoices_ondemand" Nullable="true" />
+    <Property Type="Byte" Name="allowedapprovebrixinvoices_viewonly" Nullable="true" />
+    <Property Type="String" Name="forcestartpage" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="onlyallowiosaudits" Nullable="true" />
+    <Property Type="Byte" Name="uniadmin" Nullable="true" />
+    <Property Type="Byte" Name="univendor" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="prAllPropertiesUserWise_Result">
+    <Property Type="String" Name="propertyid" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="displayname" Nullable="true" MaxLength="75" />
+    <Property Type="String" Name="region" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="address1" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="address2" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="zip" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="emailalerts" Nullable="true" MaxLength="4000" />
+    <Property Type="Byte" Name="archived" Nullable="true" />
+    <Property Type="String" Name="emailalerts_wo" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="clientcode" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="emailalerts_wo_progress" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="business_unit" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="company_unit" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="propertymanager" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="city" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="state" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="gps_latitude" Nullable="true" Precision="18" Scale="6" />
+    <Property Type="Decimal" Name="gps_longitude" Nullable="true" Precision="18" Scale="6" />
+    <Property Type="String" Name="tax_auth" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="tax_rate" Nullable="true" Precision="18" Scale="3" />
+    <Property Type="String" Name="emailalerts_wo_edit" Nullable="true" MaxLength="4000" />
+  </ComplexType>
+  <ComplexType Name="pIworkRequestInfo_Result">
+    <Property Type="String" Name="propertyid" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="dateperformed" Nullable="false" MaxLength="10" />
+    <Property Type="String" Name="timeperformed" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="dateentered" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="timeentered" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="batchnumber" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="approvalstatus" Nullable="true" />
+    <Property Type="String" Name="reportheader" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="reporttext" Nullable="true" MaxLength="4000" />
+    <Property Type="Byte" Name="hazard" Nullable="true" />
+    <Property Type="Byte" Name="maintenance" Nullable="true" />
+    <Property Type="String" Name="pic1" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic2" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic3" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic4" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic5" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="costestimate" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="taxrate" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="costtotal" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="username" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="prAllPropertiesUserWise1_Result">
+    <Property Type="String" Name="propertyid" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="displayname" Nullable="true" MaxLength="75" />
+    <Property Type="String" Name="region" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="address1" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="address2" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="zip" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="emailalerts" Nullable="true" MaxLength="4000" />
+    <Property Type="Byte" Name="archived" Nullable="true" />
+    <Property Type="String" Name="emailalerts_wo" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="clientcode" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="emailalerts_wo_progress" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="business_unit" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="company_unit" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="propertymanager" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="city" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="state" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="gps_latitude" Nullable="true" Precision="18" Scale="6" />
+    <Property Type="Decimal" Name="gps_longitude" Nullable="true" Precision="18" Scale="6" />
+    <Property Type="String" Name="tax_auth" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="tax_rate" Nullable="true" Precision="18" Scale="3" />
+    <Property Type="String" Name="emailalerts_wo_edit" Nullable="true" MaxLength="4000" />
+  </ComplexType>
+  <ComplexType Name="prAllPropertiesUserWise1_Result1">
+    <Property Type="String" Name="propertyid" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="displayname" Nullable="true" MaxLength="75" />
+    <Property Type="String" Name="region" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="address1" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="address2" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="zip" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="emailalerts" Nullable="true" MaxLength="4000" />
+    <Property Type="Byte" Name="archived" Nullable="true" />
+    <Property Type="String" Name="emailalerts_wo" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="clientcode" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="emailalerts_wo_progress" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="business_unit" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="company_unit" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="propertymanager" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="city" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="state" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="gps_latitude" Nullable="true" Precision="18" Scale="6" />
+    <Property Type="Decimal" Name="gps_longitude" Nullable="true" Precision="18" Scale="6" />
+    <Property Type="String" Name="tax_auth" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="tax_rate" Nullable="true" Precision="18" Scale="3" />
+    <Property Type="String" Name="emailalerts_wo_edit" Nullable="true" MaxLength="4000" />
+  </ComplexType>
+  <ComplexType Name="prAllPropertiesUserWise_Result1">
+    <Property Type="String" Name="propertyid" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="displayname" Nullable="true" MaxLength="75" />
+    <Property Type="String" Name="region" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="address1" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="address2" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="zip" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="emailalerts" Nullable="true" MaxLength="4000" />
+    <Property Type="Byte" Name="archived" Nullable="true" />
+    <Property Type="String" Name="emailalerts_wo" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="clientcode" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="emailalerts_wo_progress" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="business_unit" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="company_unit" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="propertymanager" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="city" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="state" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="gps_latitude" Nullable="true" Precision="18" Scale="6" />
+    <Property Type="Decimal" Name="gps_longitude" Nullable="true" Precision="18" Scale="6" />
+    <Property Type="String" Name="tax_auth" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="tax_rate" Nullable="true" Precision="18" Scale="3" />
+    <Property Type="String" Name="emailalerts_wo_edit" Nullable="true" MaxLength="4000" />
+  </ComplexType>
+  <ComplexType Name="prGetAllServices_Result">
+    <Property Type="String" Name="categorygroup" Nullable="false" MaxLength="44" />
+    <Property Type="String" Name="category" Nullable="false" MaxLength="44" />
+    <Property Type="String" Name="object_account" Nullable="false" MaxLength="4" />
+    <Property Type="String" Name="service" Nullable="false" MaxLength="51" />
+  </ComplexType>
+  <ComplexType Name="prGetUserInformation_Result">
+    <Property Type="String" Name="username" Nullable="false" MaxLength="50" />
+    <Property Type="Byte" Name="allowsubmitform1" Nullable="true" />
+    <Property Type="Byte" Name="allowsubmitform2" Nullable="true" />
+    <Property Type="Byte" Name="allowdailyreportuploads" Nullable="true" />
+    <Property Type="Byte" Name="allowreportstatuschange" Nullable="true" />
+    <Property Type="Byte" Name="alloweditlogins" Nullable="true" />
+    <Property Type="Byte" Name="alloweditprops" Nullable="true" />
+    <Property Type="Byte" Name="allowsoftwaredownload" Nullable="true" />
+    <Property Type="Byte" Name="viewreports1" Nullable="true" />
+    <Property Type="Byte" Name="viewreports2" Nullable="true" />
+    <Property Type="Byte" Name="viewreports3" Nullable="true" />
+    <Property Type="String" Name="fullname" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="emailaddress" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="phonenumber" Nullable="true" MaxLength="50" />
+    <Property Type="Byte" Name="allowenterworkorder" Nullable="true" />
+    <Property Type="Byte" Name="alloweditworkorder" Nullable="true" />
+    <Property Type="Byte" Name="allowshowcost" Nullable="true" />
+    <Property Type="Byte" Name="allowviewvendors" Nullable="true" />
+    <Property Type="Byte" Name="allowviewpropdatasheets" Nullable="true" />
+    <Property Type="String" Name="clientcode" Nullable="true" MaxLength="50" />
+    <Property Type="Byte" Name="alloweditbrixmorwo" Nullable="true" />
+    <Property Type="Byte" Name="allowedapprovebrixinvoices" Nullable="true" />
+    <Property Type="Byte" Name="allowedapprovebrixinvoices_ondemand" Nullable="true" />
+    <Property Type="Byte" Name="allowedapprovebrixinvoices_viewonly" Nullable="true" />
+    <Property Type="String" Name="forcestartpage" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="onlyallowiosaudits" Nullable="true" />
+    <Property Type="Byte" Name="uniadmin" Nullable="true" />
+    <Property Type="Byte" Name="univendor" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="prCategoryWiseMasterInfoForUnisource_Result">
+    <Property Type="String" Name="ID" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="PropertyID" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="WorkOrderNumber" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="SubmittedDate" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="PerformedDate" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="PropertyName" Nullable="true" MaxLength="75" />
+    <Property Type="String" Name="ApprovalStatus" Nullable="true" MaxLength="200" />
+    <Property Type="String" Name="Comments" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="RefLink" Nullable="true" MaxLength="222" />
+    <Property Type="String" Name="HazardMaintenance" Nullable="false" MaxLength="1" />
+  </ComplexType>
+  <ComplexType Name="prServiceLogInfo_Result">
+    <Property Type="String" Name="WOID" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Serviselog" Nullable="true" />
+    <Property Type="String" Name="UserName" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="LogDate" Nullable="true" MaxLength="4000" />
+  </ComplexType>
+  <ComplexType Name="prGetSnowRemovalInfo_Result">
+    <Property Type="String" Name="propertyid" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="dateperformed" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="dateentered" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="timeentered" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="username" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="approvalstatus" Nullable="true" />
+    <Property Type="String" Name="batchnumber" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="siteconditions_accumulationinches" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="siteconditions_accumulationtype" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="siteconditions_drifting" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="siteconditions_ice" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="siteconditions_traffic" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="weatherconditions_currentprecipitation" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="weatherconditions_currentconditions" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="plowingandclearing_roadsandlotsplowingstatus" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="plowingandclearing_entranceexit" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="plowingandclearing_handicap" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="plowingandclearing_roadandroadways" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="plowingandclearing_roadandroadwaysfront" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="plowingandclearing_roadandroadwaysrear" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="plowingandclearing_roadandroadwaysside" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="plowingandclearing_roadandroadwaysother" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="plowingandclearing_parkingspotsareas" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="plowingandclearing_loadingdocks" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="plowingandclearing_drivethru" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="plowingandclearing_ramps" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="plowingandclearing_deliveryarea" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="plowingandclearing_comments" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="walksclearing_clearsidewalksstatus" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksclearing_entrancedoors" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksclearing_servicedoors" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksclearing_ramps" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksclearing_steps" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksclearing_gfbidblock" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksclearing_privatewalks" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksclearing_citywalks" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksclearing_comments" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="walksclearing_snowremoval" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksclearing_stackingonsite" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksclearing_stackingonsitehrs" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksclearing_removal" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksclearing_removalhrs" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksclearing_snowfield" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_roadsandlotsdeicingstatus" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_entranceexit" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_handicap" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_roadandroadways" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_roadandroadwaysfront" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_roadandroadwaysrear" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_roadandroadwaysside" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_roadandroadwaysother" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_parkingspotsareas" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_loadingdocks" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_drivethru" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_ramps" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_deliveryarea" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_comments" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="deicingandantiicing_materialsusedsalt" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_saltbags" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_saltlbs" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_materialsusedcalcium" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_calciumbags" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="deicingandantiicing_calciumlbs" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksdeicing_deicesidewalksstatus" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksdeicing_entrancedoors" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksdeicing_servicedoors" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksdeicing_ramps" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksdeicing_steps" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksdeicing_privatewalks" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksdeicing_citywalks" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksdeicing_comments" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="walksdeicing_materialsusedblend" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksdeicing_blendbags" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksdeicing_blendlbs" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksdeicing_materialsusedcalcium" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksdeicing_calciumbags" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksdeicing_calciumlbs" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="walksdeicing_noserviceperformedsitecheckonly" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_applicator" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_trucknumber" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_timein" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_timeout" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_goundtemperaturein" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_goundtemperatureout" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_airtemperaturein" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_airtemperatureinout" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_siteconditions" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_surfaceswet" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_surfacesdry" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_fallingsnowice" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_fallingsnowrain" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_materialtypeapplied" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_amountintankgallonsstart" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_amountintankgallonsstop" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_totalgallonsused" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_areastreated" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="liquidantiicinglog_tipsnozzlesused" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_groundspeed" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_trafficconditions" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="liquidantiicinglog_notes" Nullable="true" MaxLength="2500" />
+    <Property Type="String" Name="vendorname" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="timearrival" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="timedeparture" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="pic1" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic2" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic3" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic4" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic5" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="SNID" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="fullname" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="propertyName" Nullable="true" MaxLength="75" />
+    <Property Type="String" Name="Address" Nullable="true" MaxLength="255" />
+  </ComplexType>
+  <ComplexType Name="prGetDailyReportInfo_Result">
+    <Property Type="String" Name="propertyid" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="dateperformed" Nullable="false" MaxLength="10" />
+    <Property Type="String" Name="timeperformed" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="dateentered" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="timeentered" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="batchnumber" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="approvalstatus" Nullable="true" />
+    <Property Type="String" Name="reportheader" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="reporttext" Nullable="true" MaxLength="4000" />
+    <Property Type="Byte" Name="hazard" Nullable="true" />
+    <Property Type="Byte" Name="maintenance" Nullable="true" />
+    <Property Type="String" Name="pic1" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic2" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic3" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic4" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic5" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="costestimate" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="taxrate" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="costtotal" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="username" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="WPID" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Notes" Nullable="true" MaxLength="300" />
+    <Property Type="String" Name="PropertyName" Nullable="true" MaxLength="75" />
+    <Property Type="String" Name="Address" Nullable="true" MaxLength="255" />
+    <Property Type="Int32" Name="WorkOrderStatus" Nullable="true" />
+    <Property Type="String" Name="WorkOrderID" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="prIndividualPropertyInfoV2_Result">
+    <Property Type="String" Name="propertyid" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="displayname" Nullable="true" MaxLength="75" />
+    <Property Type="String" Name="region" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="address1" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="zip" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="propertymanager" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="state" Nullable="true" MaxLength="50" />
+    <Property Type="Decimal" Name="gps_latitude" Nullable="true" Precision="18" Scale="6" />
+    <Property Type="Decimal" Name="gps_longitude" Nullable="true" Precision="18" Scale="6" />
+    <Property Type="String" Name="Recurringwork" Nullable="true" MaxLength="250" />
+    <Property Type="Int32" Name="WorkOrder" Nullable="true" />
+    <Property Type="String" Name="WorkOrderEntryDate" Nullable="true" MaxLength="10" />
+    <Property Type="Int32" Name="WorkRequst" Nullable="true" />
+    <Property Type="String" Name="WorkRequestEntryDate" Nullable="true" MaxLength="10" />
+    <Property Type="Int32" Name="PropertyInspection" Nullable="true" />
+    <Property Type="String" Name="PropertyInspectionEntryDate" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="SnowReport" Nullable="true" />
+    <Property Type="String" Name="SnowReportEntryDate" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="OpenWorkOder" Nullable="true" />
+    <Property Type="Int32" Name="CloseWorkOder" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="prGetPropertyInspection_Result">
+    <Property Type="String" Name="propertyid" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="dateperformed" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="dateentered" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="timeentered" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="username" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="approvalstatus" Nullable="true" />
+    <Property Type="String" Name="batchnumber" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="exteriorlandscaping_mowingofgrass" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlandscaping_edgingaroundcurbs" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlandscaping_removalofweeds" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlandscaping_trimmingofshrubs" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlandscaping_wateringifnecessary" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlandscaping_conditionofirrigationsystem" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlandscaping_conditionofplants" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlandscaping_islandtrashremoval" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlandscaping_cleanlinessoffencelines" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlandscaping_conditionofretentionpond" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlandscaping_conditionofvacantoutlots" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlandscaping_conditionofislandcurbing" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlandscaping_sightlinevisibility" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlighting_parkinglotlights" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlighting_wallpacks" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlighting_canopylights" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlighting_sidewalklights" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlighting_pylonsigns" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlighting_timeclocksettings" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlighting_stockofbulbs" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="exteriorlighting_conditionoflightpoles" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_exteriormasonry" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_tuckpointing" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_guttersanddownspouts" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_conditionofbollards" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_sidewalks" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_graffiti" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_conditionofpayphones" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_conditionofbikeracks" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_conditionofcanopies" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_cleanlinessoffascia" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_cleanlinessofskylights" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_conditionofsupportcolumns" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_conditionofsidewalkbenches" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_conditionofreardoorslabeled" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildingexterior_conditionoftrashcans" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="nonpublicareas_servicecorridorlighting" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="nonpublicareas_servicecorridorfloorswalls" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="nonpublicareas_conditionoffireextinguishers" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="nonpublicareas_trashroomsdumpsterareas" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="nonpublicareas_conditionofdockareas" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="nonpublicareas_conditionofmanagementoffice" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="nonpublicareas_cleanlinessofoffices" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_cleanliness" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_asphaltrepairs" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_illegaldumping" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_parkingbumpercondition" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_shoppingcartscollected" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_cartcorralcondition" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_striping" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_crackfilling" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_handicappedareas" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_curbs" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_sewercaps" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_conditionoftrafficsigns" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_cleanlinessofdumpsterareas" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_removalofabandonedcars" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="parkinglots_vegitationgrowthincracks" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="vacantstores_presentationofspaceforreleasingactivity" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="vacantstores_makesurelockswork" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="vacantstores_checkforroofleaks" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="vacantstores_installationofleasingsigns" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="vacantstores_installationofvisqueen" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="vacantstores_cleanlinessofstorefront" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="vacantstores_cleanlinessofinterior" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="vacantstores_cleaningofwindows" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="vacantstores_cleaningofbathrooms" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="vacantstores_conditionofexitlights" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="vacantstores_conditionofsprinklersystem" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="vacantstores_labelingofutilities" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="vacantstores_thermostatsetting" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="vacantstores_otherdamagesobserved" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="maintenanceshop_conditionoffloor" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="maintenanceshop_cleanlinessappearanceofshop" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="maintenanceshop_storageofflammables" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="maintenanceshop_organizationoftoolssupplies" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="maintenanceshop_cleanlinessoftruckandequipment" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="maintenanceshop_labelingofkeysinkeybox" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="maintenanceshop_conditionofhvacequipment" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="maintenanceshop_allvacantandllkeysinlockbox" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="roof_generalcondition" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="roof_roofhatchlocks" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="roof_conditionofgravel" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="roof_conditionofdrains" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="roof_flashing" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="roof_copings" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="roof_masonry" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="roof_conditionofhvacunits" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="mechanicelectricalrooms_riserroomcleanliness" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="mechanicelectricalrooms_riserroompressureschecked" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="mechanicelectricalrooms_valveschainedinopenposition" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="mechanicelectricalrooms_mapscurrent" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="mechanicelectricalrooms_doorslabeled" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="mechanicelectricalrooms_hotworkpermitsign" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="mechanicelectricalrooms_shutdownproceduresign" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="mechanicelectricalrooms_checkforcurrentinspectiontags" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="mechanicelectricalrooms_signinspectionlog" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="tenantdetails_storefrontclean" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="tenantdetails_storefrontsignscleanandlit" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="tenantdetails_windowscleanedanddisplayed" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="tenantdetails_windowcracksfailures" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="interiorlandscaping_conditionofplantmaterial" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="interiorlandscaping_conditionofplanterboxes" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="interiorlandscaping_conditionoffloorgrates" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="interiorlighting_skylights" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="interiorlighting_diffusers" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="interiorlighting_fluorescents" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="interiorlighting_incandescent" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="interiorlighting_spotlights" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="interiorlighting_exitemergencylights" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildinginterior_mallentrances" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildinginterior_storefronts" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildinginterior_flooring" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildinginterior_generalcleanliness" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildinginterior_drinkingfountains" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildinginterior_trashreceptacles" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildinginterior_railings" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildinginterior_cleanlinessofrestrooms" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildinginterior_directoriescleanandup" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="buildinginterior_basementswatertrashunauthentry" Nullable="true" MaxLength="251" />
+    <Property Type="String" Name="pic1" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic2" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic3" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic4" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="pic5" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="PIID" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="PropertyName" Nullable="true" MaxLength="75" />
+    <Property Type="String" Name="PropertyAddress" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="RequestBy" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="prAllVendorList_Result">
+    <Property Type="String" Name="vendorid" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="name" Nullable="true" MaxLength="150" />
+  </ComplexType>
+  <ComplexType Name="prGetWorkOrderInfo_Result">
+    <Property Type="String" Name="wonumber" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="propertyid" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="dateperformed" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="timeperformed" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="dateentered" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="timeentered" Nullable="true" MaxLength="10" />
+    <Property Type="Int32" Name="approvalstatus" Nullable="true" />
+    <Property Type="String" Name="worktobedone" Nullable="true" MaxLength="4000" />
+    <Property Type="String" Name="request_name" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="request_email" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="request_phone" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="workcompleted" Nullable="true" />
+    <Property Type="String" Name="vendorid" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="inventory" Nullable="true" MaxLength="3000" />
+    <Property Type="String" Name="business_unit" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="company_unit" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="datebrixmorapproved" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="timebrixmorapproved" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="DNEcost" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="UNIcost" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="UNIcontractor_cost" Nullable="true" MaxLength="50" />
+    <Property Type="Byte" Name="final_approval_status" Nullable="true" />
+    <Property Type="String" Name="final_approval_date" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="final_approval_username" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="jde_processed_date" Nullable="true" MaxLength="10" />
+    <Property Type="Int64" Name="jde_unique_number" Nullable="true" />
+    <Property Type="Int64" Name="batchnumber" Nullable="true" />
+    <Property Type="String" Name="dailyreport_batchnumber" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="date_estimatedcompletion" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="date_completion" Nullable="true" MaxLength="10" />
+    <Property Type="String" Name="UNI125percent" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="username" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="UNItax" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="batchnumber_workrequest" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="batchnumber_reports01" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="batchnumber_reports02" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="POID" Nullable="true" MaxLength="100" />
+    <Property Type="String" Name="PropertyName" Nullable="true" MaxLength="75" />
+    <Property Type="String" Name="Address" Nullable="true" MaxLength="255" />
+    <Property Type="String" Name="ClientMode" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="WPREFID" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="vendorname" Nullable="true" MaxLength="150" />
+  </ComplexType>
+  <ComplexType Name="pUWorkOrder_Result">
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="WOID" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Serviselog" Nullable="true" />
+    <Property Type="String" Name="UserName" Nullable="true" MaxLength="50" />
+    <Property Type="DateTime" Name="LogDate" Nullable="true" Precision="23" />
+  </ComplexType>
+</Schema>

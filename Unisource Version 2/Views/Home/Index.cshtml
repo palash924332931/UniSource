@@ -1,0 +1,317 @@
+﻿@{
+    ViewBag.Title = "Home";
+}
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            fnProgress(true);
+            classUniSource.fnGetTotlaNumberofItemsOfFourBlock();
+            /********************load information during dom load**********************************/
+            $.ajax({
+                url: "@Url.Action("Index", "Home")",
+                data: { UserID: 'Admin' },
+                type: "POST",
+                dataType: "json",
+                success: function (data) {
+                    var tableBody = "";
+                    $.each(data, function (i, record) {
+                        tableBody = tableBody + '<tr onclick="javascript:setCurrentPropertiesInfo(\'' + record["propertyid"] + '\',\'' + record["WorkRequst"] + '\',\'' + record["PropertyInspection"] + '\',\'' + record["SnowReport"] + '\',\'' + record["WorkOrder"] + '\')"> <td>\
+                                   <a href="/Details/PropertyDetails?propertyID='+ record["propertyid"] + '" title="Click to show Details of  ' + record["PropertyName"] + '">' + record["propertyid"] + '</a>\
+                               </td>\
+                                <td> '+ record["PropertyName"] + '</td>\
+                                <td>' + record["address1"] + '</td>\
+                                <td>' + record["zip"] + '</td>\
+                               <td>' + record["propertymanager"] + '</td>\
+                           </tr>';
+                    });
+                    $("#propertyDataTable tbody").append(tableBody);
+                    $("#propertyDataTable").DataTable({
+                        responsive: true,
+                        "bLengthChange": false,
+                        "iDisplayLength": 13,
+                        "order": [[1, "desc"]]
+                    });
+
+                    fnProgress(false);
+                },
+                error: function () {
+                    alertify.alert("Failed! Please try again.");
+                    fnProgress(false);
+                    return false;
+                }
+            });
+            /***************************end of load information**********************************/
+            //to redirect total items from image
+            $(".totalItem").click(function () {
+                var category = $(this).attr("name");
+                var propertyID = $("#" + $(this).attr('id') + " .count-total").attr("name");
+                if (propertyID == 'All') {
+                    var url = '@Url.Action("ProductDetails", "Details", new { category = "__category__" })';
+                    url = url.replace('__category__', "Total " + category + "&property=all Property");
+                } else {
+                    var url = '@Url.Action("ProductDetails", "Details", new { category = "__category___property_" })';
+                    url = url.replace('__category__', category);
+                    url = url.replace('_property_', "&property=" + propertyID);
+                }
+                // var url = 'Url.Action("ProductDetails", "Details", new { category = "__category__" })';
+                window.location.href = url;
+
+            });
+
+        });
+
+        //to show total item
+
+        function individualItemDescription(category, itemID, columnID) {
+            $("#myModal").modal('show');
+            // to get items details
+            var tablePropertyDetails = "";
+            $.ajax({
+                url: "@Url.Action("IndividualPropertyDetails", "Home")",
+                data: {
+                    propertyid: itemID
+                },
+                type: "GET",
+                dataType: "json",
+                success: function (data) {
+                    $.each(data, function (i, record) {
+                        // alert("success" + record.propertyid + " 2" + record.displayname);
+                        tablePropertyDetails = '<table class="table table-bordered">\
+                        <tr>\
+                            <td>Property ID</td> <td>'+ record.propertyid + '</td> \
+                        </tr>\
+                        <tr>\
+                            <td>Property Name</td> <td>' + record.displayname + '</td> \
+                        </tr>\
+                         <tr>\
+                             <td>Property Address</td> <td>' + record.address1 + '</td> \
+                        </tr>\
+                        <tr>\
+                            <td>Property City</td> <td>' + record.displayname + '</td> \
+                        </tr>\
+                         <tr>\
+                            <td>Property State</td> <td>' + record.region + '</td> \
+                        </tr>\
+                         <tr>\
+                             <td>Property Zip</td> <td>' + record.zip + '</td> \
+                        </tr>\
+                        <tr>\
+                            <td>Property Manager</td> <td>' + record.propertymanager + '</td> \
+                        </tr>\
+                </table>';
+
+                        var modalContent2 = ' <div class="row">\
+    <div class="col-md-6">\
+    <div class="wdgt1 wdgt-primary">\
+       <div class="wdgt-header"><i class="fa fa-google-plus"></i>Maps</div>\
+        <div class="wdgt-body wdgt-map" style="padding-bottom: 10px; height: 250px;">\
+            <div id="map-canvas" ></div>\
+        </div>\
+    </div>\
+</div>\
+ <div class="col-md-6">\
+    <div class="wdgt wdgt-success">\
+        <div class="wdgt-header"><i class="fa fa-camera-retro"></i>Photos</div>\
+        <div class="wdgt-body">\
+            <div class="tbl">\
+                <img src="../../content/img/bg1.jpg" height="170" />\
+            </div>\
+        </div>\
+    </div>\
+  </div>\
+    <div class="span-12">\
+    <div class="wdgt-header">\
+    <i class="fa fa-list-alt"></i>Details info</div>\
+        <div class="wdgt-body">\
+    <div class="wdgt-body wdgt-table"> ' + tablePropertyDetails + ' </div>\
+            <div class="wdgt wdgt-success">\
+                <div class="wdgt-header"><i class="fa fa-list-alt"></i>Work Proposals</div>\
+                <div class="wdgt-body">\
+        Work Proposals (<a href="/Details/ProductDetails?category=Work%20Request&property=' + record.propertyid + '">' + record.WorkRequst + '</a>)\
+        ; Most recently posted on (' + record.WorkRequestEntryDate + ')\
+                </div>\
+            </div>\
+    <div class="wdgt wdgt-info">\
+                <div class="wdgt-header"><i class="fa fa-check-square"></i>Property Inspections</div>\
+                <div class="wdgt-body">\
+        Property Inspections (<a href="/Details/ProductDetails?category=Property Inspections&property=' + record.propertyid + '">' + record.PropertyInspection + '</a>)\
+        ; Most recently posted on (' + record.PropertyInspectionEntryDate + ')\
+                </div>\
+            </div>\
+    <div class="wdgt wdgt-primary">\
+                <div class="wdgt-header"><i class="fa fa fa-file"></i>Snow Report Forms</div>\
+                <div class="wdgt-body">\
+        Snow Report Forms (<a href="/Details/ProductDetails?category=Snow Removal&property=' + record.propertyid + '">' + record.SnowReport + '</a>))\
+       ; Most recently posted on (' + record.SnowReportEntryDate + ')\
+                </div>\
+            </div>\
+       <div class="wdgt wdgt-warning">\
+                <div class="wdgt-header"><i class="fa-folder-open"></i>Work Orders</div>\
+                <div class="wdgt-body">\
+        Work Orders (<a href="/Details/ProductDetails?category=Work Order&property=' + record.propertyid + '">' + record.WorkOrder + '</a>)\
+       ; Most recently posted on (' + record.WorkOrderEntryDate + ')\
+                <br/>Open Work Order (<a href="/Details/ProductDetails?category=Open Work Order&property=' + record.propertyid + '">' + record.OpenWorkOder + '</a>)\
+                <br/>Close Work Order (<a href="/Details/ProductDetails?category=Close Work Order&property=' + record.propertyid + '">' + record.CloseWorkOder + '</a>)\
+                </div>\
+            </div>\
+    </div>\
+    </div>';
+                        $("#modalHeader").html("Details of Property " + record.displayname + " ");
+                        $("#modalBody").html(modalContent2);
+
+
+
+                    });
+                },
+                error: function () {
+                    $.fn.dataTable.ext.errMode = 'throw';
+                }
+            });
+
+            //  googleMapsCall("Khulna");
+            loadMaps();
+
+        }
+
+        function setCurrentPropertiesInfo(propertyID, numOfWorkRequest, numOfPropertyInspection, numOfSnowRemoval, numOfWorkOrder) {
+            $("#totalWorkRequest").text(numberWithCommas(numOfWorkRequest));
+            $('#totalWorkRequest').attr('name', propertyID);
+            $("#totalPropertyInspections").text(numberWithCommas(numOfPropertyInspection));
+            $('#totalPropertyInspections').attr('name', propertyID);
+            $("#totalSnowRemoval").text(numberWithCommas(numOfSnowRemoval));
+            $('#totalSnowRemoval').attr('name', propertyID);
+            $("#totalWorkOrder").text(numberWithCommas(numOfWorkOrder));
+            $('#totalWorkOrder').attr('name', propertyID);
+        }
+
+    </script>
+
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Property Dashboard</h1>
+    </div>
+</div>
+
+<table class="col-md-12 min-space">
+    <tr>
+        <td style="width: 88%">
+            <input type="text" id="searchText" class="form-control" placeholder="Search Properties">
+        </td>
+        <td style="width: 1%"></td>
+        <td style="width: 5%">
+            <a class="btn btn-default custom-src-cntrl" href="#">Search</a>
+        </td>
+        <td style="width: 1%"></td>
+        <td style="width: 5%">
+            <a id="clearSearchText" class="btn btn-default custom-src-cntrl" href="#">Clear</a>
+        </td>
+    </tr>
+</table>
+
+<div class="row">
+    <div class="col-lg-10 right-padding-zero">
+        <div class="panel-body panel-body-nospace">
+            <div class="dataTable_wrapper">
+                <table class="table table-striped table-bordered table-hover" id="propertyDataTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Property Name</th>
+                            <th>Address</th>
+                            <th>Zip</th>
+                            <th>Manager</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-2 padding-zero table.dataTable">
+        <div class="col-md-12 col-xs-6">
+            <div class="panel panel-primary totalItem" id="workRequest" name="Work Request">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="uni-icon icon-work medium"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge1 count-total" id="totalWorkRequest" name="All"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div>Work Proposal</div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-xs-6">
+            <div class="panel panel-red totalItem" id="workOrder" name="Work Order">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="uni-icon icon-inspec medium"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge1 count-total" id="totalWorkOrder" name="All"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div>Work Order</div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-xs-6">
+            <div class="panel panel-green totalItem" id="propertyInspections" name="Property Inspections">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <span class="uni-icon icon-request medium"></span>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge1 count-total" id="totalPropertyInspections" name="All"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div>Property Inspections</div>
+                    <div class="clearfix"></div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-12 col-xs-6">
+            <div class="panel panel-yellow totalItem" id="snowRemoval" name="Snow Removal">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="uni-icon icon-snow1 medium"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge1 count-total" id="totalSnowRemoval" name="All"></div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div>Snow Report</div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
